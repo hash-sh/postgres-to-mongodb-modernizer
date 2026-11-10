@@ -1,0 +1,83 @@
+{
+ "round": 15,
+ "iteration": 1,
+ "time": "19:43:18",
+ "char": "99/104",
+ "official_mismatch": 1,
+ "llm_tokens_total": 400860,
+ "result": {
+  "slice": 2,
+  "char_passed": 99,
+  "char_total": 104,
+  "char_failures": [
+   {
+    "scenario": "feed",
+    "step": "feed following nobody",
+    "request": "GET /api/articles/feed",
+    "diffs": [
+     "status: expected 200 got 500",
+     "$body.articles: missing (expected [])",
+     "$body.articlesCount: missing (expected 0)",
+     "$body.errors: unexpected key (got {'body': ['<internal error>']})"
+    ]
+   },
+   {
+    "scenario": "feed",
+    "step": "feed with kim",
+    "request": "GET /api/articles/feed",
+    "diffs": [
+     "status: expected 200 got 500",
+     "$body.articles: missing (expected [{'author': {'bio': None, 'followersCount': 1, 'following': True, 'image': None, 'username': 'kim'}, 'body': 'Body of Ki...)",
+     "$body.articlesCount: missing (expected 2)",
+     "$body.errors: unexpected key (got {'body': ['<internal error>']})"
+    ]
+   },
+   {
+    "scenario": "feed",
+    "step": "feed with kim+leo",
+    "request": "GET /api/articles/feed?limit=10",
+    "diffs": [
+     "status: expected 200 got 500",
+     "$body.articles: missing (expected [{'author': {'bio': None, 'followersCount': 1, 'following': True, 'image': None, 'username': 'kim'}, 'body': 'Body of Ki...)",
+     "$body.articlesCount: missing (expected 3)",
+     "$body.errors: unexpected key (got {'body': ['<internal error>']})"
+    ]
+   },
+   {
+    "scenario": "feed",
+    "step": "feed limit 1 offset 1",
+    "request": "GET /api/articles/feed?limit=1&offset=1",
+    "diffs": [
+     "status: expected 200 got 500",
+     "$body.articles: missing (expected [{'author': {'bio': None, 'followersCount': 1, 'following': True, 'image': None, 'username': 'leo'}, 'body': 'Body of Le...)",
+     "$body.articlesCount: missing (expected 3)",
+     "$body.errors: unexpected key (got {'body': ['<internal error>']})"
+    ]
+   },
+   {
+    "scenario": "feed",
+    "step": "feed after unfollow",
+    "request": "GET /api/articles/feed?limit=10",
+    "diffs": [
+     "status: expected 200 got 500",
+     "$body.articles: missing (expected [{'author': {'bio': None, 'followersCount': 1, 'following': True, 'image': None, 'username': 'leo'}, 'body': 'Body of Le...)",
+     "$body.articlesCount: missing (expected 1)",
+     "$body.errors: unexpected key (got {'body': ['<internal error>']})"
+    ]
+   }
+  ],
+  "official_passed": 38,
+  "official_total": 112,
+  "official_mismatch": [
+   "feed.hurl:28"
+  ],
+  "official_baseline_passed": 39,
+  "server_errors": [
+   "Error: data and salt arguments required\n    helper/bcrypt.js:4:17)\n    controllers/user.js:60:33",
+   "MongoServerError: unknown group operator '$size'",
+   "TypeError: tagList is not iterable\n    controllers/articles.js:139:23)\n    controllers/articles.js:139:23)",
+   "TypeError: tagList is not iterable\n    controllers/articles.js:139:23)"
+  ],
+  "ok": false
+ }
+}

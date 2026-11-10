@@ -1,0 +1,27 @@
+{
+ "round": 14,
+ "iteration": 5,
+ "time": "19:42:11",
+ "char": "104/104",
+ "official_mismatch": 1,
+ "llm_tokens_total": 396634,
+ "result": {
+  "slice": 2,
+  "char_passed": 104,
+  "char_total": 104,
+  "char_failures": [],
+  "official_passed": 40,
+  "official_total": 112,
+  "official_mismatch": [
+   "feed.hurl:110"
+  ],
+  "official_baseline_passed": 39,
+  "server_errors": [
+   "Error: data and salt arguments required\n    helper/bcrypt.js:4:17)\n    controllers/user.js:60:33",
+   "TypeError: tagList is not iterable\n    controllers/articles.js:139:23)\n    controllers/articles.js:125:25)",
+   "TypeError: tagList is not iterable\n    controllers/articles.js:139:23)\n    controllers/articles.js:139:23)",
+   "TypeError: tagList is not iterable\n    controllers/articles.js:139:23)"
+  ],
+  "ok": false
+ }
+}

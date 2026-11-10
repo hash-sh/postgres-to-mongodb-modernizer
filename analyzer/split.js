@@ -11,7 +11,7 @@ const fs = require("fs");
 const parser = require("@babel/parser");
 
 function split(code) {
-  const ast = parser.parse(code, { sourceType: "unambiguous" });
+  const ast = parser.parse(code, { sourceType: "unambiguous", errorRecovery: true }); // tolerate redeclarations so they can be repaired
   const out = [];
   for (const node of ast.program.body) {
     // include leading comments with the statement they document

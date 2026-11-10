@@ -1,0 +1,54 @@
+{
+ "round": 14,
+ "iteration": 2,
+ "time": "19:39:37",
+ "char": "101/104",
+ "official_mismatch": 1,
+ "llm_tokens_total": 387956,
+ "result": {
+  "slice": 2,
+  "char_passed": 101,
+  "char_total": 104,
+  "char_failures": [
+   {
+    "scenario": "article_crud",
+    "step": "frank creates 'How to train your dragon'",
+    "request": "POST /api/articles",
+    "diffs": [
+     "$body.article.tagList: expected list of 3 got 2",
+     "$body.article.tagList[1]: expected 'ok' got 'training'"
+    ]
+   },
+   {
+    "scenario": "article_listing_filters_pagination",
+    "step": "ivy creates 'Delta'",
+    "request": "POST /api/articles",
+    "diffs": [
+     "$body.article.tagList: expected list of 3 got 2"
+    ]
+   },
+   {
+    "scenario": "feed",
+    "step": "kim creates 'Kim one'",
+    "request": "POST /api/articles",
+    "diffs": [
+     "$body.article.tagList: expected list of 2 got 1",
+     "$body.article.tagList[0]: expected 'a1' got 'b22'"
+    ]
+   }
+  ],
+  "official_passed": 40,
+  "official_total": 112,
+  "official_mismatch": [
+   "feed.hurl:110"
+  ],
+  "official_baseline_passed": 39,
+  "server_errors": [
+   "Error: data and salt arguments required\n    helper/bcrypt.js:4:17)\n    controllers/user.js:60:33",
+   "TypeError: tagList is not iterable\n    controllers/articles.js:139:23)\n    controllers/articles.js:125:25)",
+   "TypeError: tagList is not iterable\n    controllers/articles.js:139:23)\n    controllers/articles.js:139:23)",
+   "TypeError: tagList is not iterable\n    controllers/articles.js:139:23)"
+  ],
+  "ok": false
+ }
+}

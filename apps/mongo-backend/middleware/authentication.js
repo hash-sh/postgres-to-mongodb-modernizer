@@ -13,15 +13,14 @@ const verifyToken = async (req, res, next) => {
     const userVerified = await jwtVerify(token);
     if (!userVerified) throw new Error("Invalid Token");
 
-    const user = await User.findOne({ email: userVerified.email })
-      .select("-email")
-      .lean();
+    const user = await User.findOne({ email: userVerified.email }).lean();
 
     if (!user) {
       return next(new NotFoundError("User"));
     }
 
-    req.loggedUser = user;
+    const { email, ...rest } = user;
+    req.loggedUser = rest;
     headers.email = userVerified.email;
     req.loggedUser.token = token;
 

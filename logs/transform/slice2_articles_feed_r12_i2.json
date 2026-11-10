@@ -1,0 +1,142 @@
+{
+ "round": 12,
+ "iteration": 2,
+ "time": "19:23:13",
+ "char": "93/104",
+ "official_mismatch": 1,
+ "llm_tokens_total": 336643,
+ "result": {
+  "slice": 2,
+  "char_passed": 93,
+  "char_total": 104,
+  "char_failures": [
+   {
+    "scenario": "article_crud",
+    "step": "frank creates 'How to train your dragon'",
+    "request": "POST /api/articles",
+    "diffs": [
+     "$body.article.tagList: expected list of 3 got 2",
+     "$body.article.tagList[1]: expected 'ok' got 'training'"
+    ]
+   },
+   {
+    "scenario": "article_crud",
+    "step": "frank deletes",
+    "request": "DELETE /api/articles/dragons--the-sequel-",
+    "diffs": [
+     "status: expected 200 got 500",
+     "$body.errors: unexpected key (got {'body': ['<internal error>']})",
+     "$body.message: missing (expected {'body': ['Article deleted successfully']})"
+    ]
+   },
+   {
+    "scenario": "article_crud",
+    "step": "deleted article is gone",
+    "request": "GET /api/articles/dragons--the-sequel-",
+    "diffs": [
+     "status: expected 404 got 200",
+     "$body.article: unexpected key (got {'slug': 'dragons--the-sequel-', 'title': 'Dragons: The Sequel!', 'description': 'New description', 'body': 'New body', ...)",
+     "$body.errors: missing (expected {'body': ['Article not found ']})"
+    ]
+   },
+   {
+    "scenario": "article_crud",
+    "step": "delete unknown",
+    "request": "DELETE /api/articles/dragons--the-sequel-",
+    "diffs": [
+     "status: expected 404 got 500",
+     "$body.errors.body[0]: expected 'Article not found ' got '<internal error>'"
+    ]
+   },
+   {
+    "scenario": "article_listing_filters_pagination",
+    "step": "ivy creates 'Delta'",
+    "request": "POST /api/articles",
+    "diffs": [
+     "$body.article.tagList: expected list of 3 got 2"
+    ]
+   },
+   {
+    "scenario": "feed",
+    "step": "kim creates 'Kim one'",
+    "request": "POST /api/articles",
+    "diffs": [
+     "$body.article.tagList: expected list of 2 got 1",
+     "$body.article.tagList[0]: expected 'a1' got 'b22'"
+    ]
+   },
+   {
+    "scenario": "feed",
+    "step": "feed following nobody",
+    "request": "GET /api/articles/feed",
+    "diffs": [
+     "status: expected 200 got 500",
+     "$body.articles: missing (expected [])",
+     "$body.articlesCount: missing (expected 0)",
+     "$body.errors: unexpected key (got {'body': ['<internal error>']})"
+    ]
+   },
+   {
+    "scenario": "feed",
+    "step": "feed with kim",
+    "request": "GET /api/articles/feed",
+    "diffs": [
+     "status: expected 200 got 500",
+     "$body.articles: missing (expected [{'author': {'bio': None, 'followersCount': 1, 'following': True, 'image': None, 'username': 'kim'}, 'body': 'Body of Ki...)",
+     "$body.articlesCount: missing (expected 2)",
+     "$body.errors: unexpected key (got {'body': ['<internal error>']})"
+    ]
+   },
+   {
+    "scenario": "feed",
+    "step": "feed with kim+leo",
+    "request": "GET /api/articles/feed?limit=10",
+    "diffs": [
+     "status: expected 200 got 500",
+     "$body.articles: missing (expected [{'author': {'bio': None, 'followersCount': 1, 'following': True, 'image': None, 'username': 'kim'}, 'body': 'Body of Ki...)",
+     "$body.articlesCount: missing (expected 3)",
+     "$body.errors: unexpected key (got {'body': ['<internal error>']})"
+    ]
+   },
+   {
+    "scenario": "feed",
+    "step": "feed limit 1 offset 1",
+    "request": "GET /api/articles/feed?limit=1&offset=1",
+    "diffs": [
+     "status: expected 200 got 500",
+     "$body.articles: missing (expected [{'author': {'bio': None, 'followersCount': 1, 'following': True, 'image': None, 'username': 'leo'}, 'body': 'Body of Le...)",
+     "$body.articlesCount: missing (expected 3)",
+     "$body.errors: unexpected key (got {'body': ['<internal error>']})"
+    ]
+   },
+   {
+    "scenario": "feed",
+    "step": "feed after unfollow",
+    "request": "GET /api/articles/feed?limit=10",
+    "diffs": [
+     "status: expected 200 got 500",
+     "$body.articles: missing (expected [{'author': {'bio': None, 'followersCount': 1, 'following': True, 'image': None, 'username': 'leo'}, 'body': 'Body of Le...)",
+     "$body.articlesCount: missing (expected 1)",
+     "$body.errors: unexpected key (got {'body': ['<internal error>']})"
+    ]
+   }
+  ],
+  "official_passed": 38,
+  "official_total": 112,
+  "official_mismatch": [
+   "feed.hurl:28"
+  ],
+  "official_baseline_passed": 39,
+  "server_errors": [
+   "UnauthorizedError: You need to login first!\n    controllers/profiles.js:38:28)\n    middleware/authentication.js:8:40)",
+   "NotFoundError: User profile not found\n    controllers/profiles.js:46:25)\n    controllers/profiles.js:46:25)",
+   "NotFoundError: User profile not found\n    controllers/profiles.js:46:25)\n    controllers/articles.js:171:8)",
+   "TypeError: Article.find(...).sort(...).skip(...).take is not a function\n    controllers/articles.js:171:8)\n    controllers/articles.js:139:23)",
+   "TypeError: tagList is not iterable\n    controllers/articles.js:139:23)\n    controllers/articles.js:139:23)",
+   "TypeError: tagList is not iterable\n    controllers/articles.js:139:23)\n    controllers/articles.js:171:8)",
+   "TypeError: Article.find(...).sort(...).skip(...).take is not a function\n    controllers/articles.js:171:8)\n    controllers/articles.js:171:8)",
+   "TypeError: tagList is not iterable\n    controllers/articles.js:139:23)"
+  ],
+  "ok": false
+ }
+}

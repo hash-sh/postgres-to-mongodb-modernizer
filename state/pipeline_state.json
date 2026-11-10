@@ -1,5 +1,36 @@
 {
+  "accepted_deviations": {
+    "feed.hurl:110": "GET /api/articles/feed?limit=1&offset=1: the original inflates articlesCount by joined tag rows (findAndCountAll + belongsToMany include); the MongoDB articlesFeed returns the plain article count. 3 agent attempts at the inflated count crashed (MongoServerError: unknown group operator '$size') and were reverted by keep-best. Accepted after round 15 to stay inside the token budget (420k/550k); all 104 characterization steps pass."
+  },
   "chunks": {
+    "optimization_pass": {
+      "files": [
+        "controllers/articles.js",
+        "helper/helpers.js",
+        "controllers/comments.js",
+        "controllers/favorites.js"
+      ],
+      "iterations": [
+        {
+          "char": "155/155",
+          "iteration": 0,
+          "official_mismatch": 1
+        }
+      ],
+      "optimized": [
+        "controllers/articles.js#allArticles",
+        "controllers/articles.js#createArticle",
+        "controllers/articles.js#articlesFeed",
+        "controllers/articles.js#singleArticle",
+        "controllers/articles.js#updateArticle",
+        "controllers/articles.js#deleteArticle",
+        "helper/helpers.js",
+        "controllers/comments.js",
+        "controllers/favorites.js"
+      ],
+      "reverted": false,
+      "status": "done"
+    },
     "slice1_users_profiles": {
       "diagnoses": [
         {
@@ -140,20 +171,411 @@
           ],
           "fix": "function-level chunking for files > 4000 chars: analyzer/split.js (Babel) splits header/functions/exports; generation in groups of <=2600 chars, repair targets the failing handler function only; deterministic reassembly",
           "root_cause": "bad chunking"
+        },
+        {
+          "after_round": 3,
+          "findings": [
+            "the model read rule 2 ('preserve bugs') as 'keep Sequelize calls': articlesFeed kept loggedUser.getFollowing() with the comment 'Preserve original bug' through 3 repairs -> TypeError 500 on every feed request"
+          ],
+          "fix": "rule 2 clarified (observable HTTP behaviour only, never Sequelize APIs) + rule 10: deterministic Sequelize-mixin -> MongoDB translation table for every association method the analyzer found",
+          "root_cause": "agent prompt issue"
+        },
+        {
+          "after_round": 4,
+          "findings": [
+            "repairs of articlesFeed reproduced the previous broken version verbatim (including its own comment 'Preserve original bug: loggedUser may not have getFollowing') although rule 10 was in the prompt -> the CURRENT code in the prompt anchors the model; stuck at 78/104 for 3 iterations"
+          ],
+          "fix": "anti-anchoring: a function repaired without progress is regenerated FRESH from the original Sequelize code + failure report, without the broken attempt",
+          "root_cause": "agent prompt issue (anchoring)"
+        },
+        {
+          "after_round": 7,
+          "findings": [
+            "each handler hand-built article JSON and each leaked different internal fields (_id, authorId, author.createdAt)"
+          ],
+          "fix": "one agent-written shared serializer articleResponse() in helper/helpers.js + rule 11; all article handlers regenerated against it (83 -> 91/104)",
+          "root_cause": "missing shared abstraction (chunking)"
+        },
+        {
+          "after_round": 10,
+          "findings": [
+            "a slice-2 repair of middleware/authentication.js broke slice-1 GET /api/user; the loop kept the worse version"
+          ],
+          "fix": "restored the auth middleware from the last committed passing state (agent-generated); keep-best guard reverts any iteration that scores lower (91 -> 103/104)",
+          "root_cause": "regression in a shared file + harness (no keep-best)"
+        },
+        {
+          "after_round": 13,
+          "findings": [
+            "ReferenceError: Comment is not defined in deleteArticle was hidden behind NotFound/Validation errors"
+          ],
+          "fix": "report only real crashes; deterministic import-fixer codemod adds used-but-unimported model/helper names (-> 104/104)",
+          "root_cause": "harness: crash list drowned in control-flow errors; missing import never surfaced"
+        },
+        {
+          "after_round": 14,
+          "findings": [
+            "remaining official mismatch feed.hurl:110: articlesFeed count not inflated like allArticles; half of the repairs went to createArticle because its INTENDED 500 (tagList undefined) was scored as a crash"
+          ],
+          "fix": "function-level note for articlesFeed; crashes ignored for targeting once all characterization steps pass",
+          "root_cause": "repair targeting + missing function-level note"
         }
       ],
       "files": [
-        "controllers/articles.js"
+        "controllers/articles.js",
+        "helper/helpers.js",
+        "middleware/authentication.js"
       ],
-      "iterations": [],
-      "round": 2,
-      "status": "running"
+      "generated": true,
+      "iterations": [
+        {
+          "char": "68/104",
+          "iteration": 0,
+          "llm_tokens_total": 109224,
+          "official_mismatch": 8,
+          "repaired": "controllers/articles.js#createArticle",
+          "round": 2,
+          "time": "18:29:14"
+        },
+        {
+          "char": "73/104",
+          "iteration": 0,
+          "llm_tokens_total": 113646,
+          "official_mismatch": 12,
+          "repaired": "controllers/articles.js#deleteArticle,controllers/articles.js#articlesFeed,controllers/articles.js#createArticle",
+          "round": 3,
+          "time": "18:31:10"
+        },
+        {
+          "char": "77/104",
+          "iteration": 1,
+          "llm_tokens_total": 125769,
+          "official_mismatch": 2,
+          "repaired": "controllers/articles.js#articlesFeed,controllers/articles.js#allArticles,controllers/articles.js#createArticle",
+          "round": 3,
+          "time": "18:33:34"
+        },
+        {
+          "char": "78/104",
+          "iteration": 0,
+          "llm_tokens_total": 139153,
+          "official_mismatch": 1,
+          "repaired": "controllers/articles.js#articlesFeed,controllers/articles.js#allArticles,controllers/articles.js#createArticle",
+          "round": 4,
+          "time": "18:37:30"
+        },
+        {
+          "char": "78/104",
+          "iteration": 1,
+          "llm_tokens_total": 153960,
+          "official_mismatch": 1,
+          "repaired": "controllers/articles.js#articlesFeed,controllers/articles.js#allArticles,controllers/articles.js#createArticle",
+          "round": 4,
+          "time": "18:39:48"
+        },
+        {
+          "char": "78/104",
+          "iteration": 0,
+          "llm_tokens_total": 173892,
+          "official_mismatch": 1,
+          "repaired": "controllers/articles.js#articlesFeed,controllers/articles.js#allArticles,controllers/articles.js#createArticle",
+          "round": 6,
+          "time": "18:45:10"
+        },
+        {
+          "char": "78/104",
+          "iteration": 1,
+          "llm_tokens_total": 188543,
+          "official_mismatch": 1,
+          "repaired": "middleware/authentication.js",
+          "round": 6,
+          "time": "18:47:29"
+        },
+        {
+          "char": "79/104",
+          "iteration": 0,
+          "llm_tokens_total": 196543,
+          "official_mismatch": 0,
+          "repaired": "controllers/articles.js#allArticles,controllers/articles.js#createArticle,controllers/articles.js#singleArticle",
+          "round": 7,
+          "time": "18:49:42"
+        },
+        {
+          "char": "83/104",
+          "iteration": 1,
+          "llm_tokens_total": 210345,
+          "official_mismatch": 0,
+          "repaired": "controllers/articles.js#allArticles,controllers/articles.js#createArticle,controllers/articles.js#articlesFeed",
+          "round": 7,
+          "time": "18:52:43"
+        },
+        {
+          "char": "83/104",
+          "iteration": 2,
+          "llm_tokens_total": 225243,
+          "official_mismatch": 0,
+          "repaired": "helper/helpers.js",
+          "round": 7,
+          "time": "18:55:48"
+        },
+        {
+          "char": "83/104",
+          "iteration": 3,
+          "llm_tokens_total": 229648,
+          "official_mismatch": 0,
+          "repaired": "middleware/authentication.js",
+          "round": 7,
+          "time": "18:56:50"
+        },
+        {
+          "char": "91/104",
+          "iteration": 0,
+          "llm_tokens_total": 273794,
+          "official_mismatch": 6,
+          "repaired": "controllers/articles.js#createArticle,controllers/articles.js#allArticles,controllers/articles.js#deleteArticle",
+          "round": 10,
+          "time": "19:08:08"
+        },
+        {
+          "char": "93/104",
+          "iteration": 0,
+          "llm_tokens_total": 287106,
+          "official_mismatch": 1,
+          "repaired": "controllers/articles.js#createArticle,controllers/articles.js#allArticles,controllers/articles.js#deleteArticle",
+          "round": 11,
+          "time": "19:12:05"
+        },
+        {
+          "char": "103/104",
+          "iteration": 1,
+          "llm_tokens_total": 300770,
+          "official_mismatch": 1,
+          "repaired": "controllers/articles.js#createArticle,controllers/articles.js#deleteArticle",
+          "round": 11,
+          "time": "19:14:24"
+        },
+        {
+          "char": "103/104",
+          "iteration": 0,
+          "llm_tokens_total": 312824,
+          "official_mismatch": 1,
+          "repaired": "controllers/articles.js#createArticle,controllers/articles.js#deleteArticle,controllers/articles.js#articlesFeed",
+          "round": 12,
+          "time": "19:17:51"
+        },
+        {
+          "char": "103/104",
+          "iteration": 1,
+          "llm_tokens_total": 325117,
+          "official_mismatch": 1,
+          "repaired": "controllers/articles.js#createArticle,controllers/articles.js#deleteArticle,controllers/articles.js#articlesFeed",
+          "round": 12,
+          "time": "19:20:12"
+        },
+        {
+          "char": "103/104",
+          "iteration": 0,
+          "llm_tokens_total": 336643,
+          "official_mismatch": 1,
+          "repaired": "controllers/articles.js#createArticle,controllers/articles.js#deleteArticle,controllers/articles.js#articlesFeed",
+          "round": 13,
+          "time": "19:24:17"
+        },
+        {
+          "char": "103/104",
+          "iteration": 1,
+          "llm_tokens_total": 348806,
+          "official_mismatch": 1,
+          "repaired": "controllers/articles.js#createArticle,controllers/articles.js#deleteArticle,controllers/articles.js#articlesFeed",
+          "round": 13,
+          "time": "19:29:39"
+        },
+        {
+          "char": "104/104",
+          "iteration": 0,
+          "llm_tokens_total": 368146,
+          "official_mismatch": 1,
+          "repaired": "controllers/articles.js#createArticle,controllers/articles.js#articlesFeed",
+          "round": 14,
+          "time": "19:35:18"
+        },
+        {
+          "char": "104/104",
+          "iteration": 1,
+          "llm_tokens_total": 376548,
+          "official_mismatch": 1,
+          "repaired": "controllers/articles.js#createArticle,controllers/articles.js#articlesFeed",
+          "round": 14,
+          "time": "19:36:34"
+        },
+        {
+          "char": "101/104",
+          "iteration": 2,
+          "llm_tokens_total": 387956,
+          "official_mismatch": 1,
+          "repaired": "controllers/articles.js#createArticle,controllers/articles.js#articlesFeed",
+          "reverted_to_best": 103,
+          "round": 14,
+          "time": "19:39:37"
+        },
+        {
+          "char": "104/104",
+          "iteration": 3,
+          "llm_tokens_total": 396634,
+          "official_mismatch": 1,
+          "repaired": "controllers/articles.js#createArticle,controllers/articles.js#articlesFeed",
+          "round": 14,
+          "time": "19:41:42"
+        },
+        {
+          "char": "101/104",
+          "iteration": 4,
+          "llm_tokens_total": 396634,
+          "official_mismatch": 1,
+          "repaired": "controllers/articles.js#createArticle,controllers/articles.js#articlesFeed",
+          "reverted_to_best": 103,
+          "round": 14,
+          "time": "19:41:57"
+        },
+        {
+          "char": "104/104",
+          "iteration": 5,
+          "llm_tokens_total": 396634,
+          "official_mismatch": 1,
+          "repaired": null,
+          "round": 14,
+          "time": "19:42:11"
+        },
+        {
+          "char": "104/104",
+          "iteration": 0,
+          "llm_tokens_total": 396634,
+          "official_mismatch": 1,
+          "repaired": "controllers/articles.js#articlesFeed",
+          "round": 15,
+          "time": "19:43:03"
+        },
+        {
+          "char": "99/104",
+          "iteration": 1,
+          "llm_tokens_total": 400860,
+          "official_mismatch": 1,
+          "repaired": "helper/helpers.js",
+          "reverted_to_best": 103,
+          "round": 15,
+          "time": "19:43:18"
+        },
+        {
+          "char": "104/104",
+          "iteration": 2,
+          "llm_tokens_total": 405250,
+          "official_mismatch": 1,
+          "repaired": "controllers/articles.js#articlesFeed",
+          "round": 15,
+          "time": "19:44:20"
+        },
+        {
+          "char": "99/104",
+          "iteration": 3,
+          "llm_tokens_total": 412934,
+          "official_mismatch": 1,
+          "repaired": "middleware/authentication.js",
+          "reverted_to_best": 103,
+          "round": 15,
+          "time": "19:46:21"
+        },
+        {
+          "char": "104/104",
+          "iteration": 4,
+          "llm_tokens_total": 415987,
+          "official_mismatch": 1,
+          "repaired": "controllers/articles.js#articlesFeed",
+          "round": 15,
+          "time": "19:47:23"
+        },
+        {
+          "char": "99/104",
+          "iteration": 5,
+          "llm_tokens_total": 420181,
+          "official_mismatch": 1,
+          "repaired": null,
+          "reverted_to_best": 103,
+          "round": 15,
+          "time": "19:48:25"
+        },
+        {
+          "char": "104/104",
+          "iteration": 0,
+          "llm_tokens_total": 420181,
+          "official_mismatch": 1,
+          "repaired": null,
+          "round": 16,
+          "time": "19:49:10"
+        }
+      ],
+      "residue_regenerations": [
+        "controllers/articles.js#articlesFeed",
+        "controllers/articles.js#articlesFeed",
+        "controllers/articles.js#articlesFeed",
+        "controllers/articles.js#articlesFeed",
+        "controllers/articles.js#articlesFeed"
+      ],
+      "result": {
+        "char_passed": 104,
+        "char_total": 104,
+        "official_passed": 40,
+        "official_total": 112
+      },
+      "round": 16,
+      "serializer": true,
+      "status": "done"
+    },
+    "slice3_comments_favorites_tags": {
+      "files": [
+        "controllers/comments.js",
+        "controllers/favorites.js",
+        "routes/tags.js",
+        "helper/helpers.js",
+        "middleware/authentication.js"
+      ],
+      "generated": true,
+      "iterations": [
+        {
+          "char": "152/155",
+          "iteration": 0,
+          "llm_tokens_total": 430513,
+          "official_mismatch": 1,
+          "repaired": "controllers/favorites.js",
+          "round": 1,
+          "time": "19:51:28"
+        },
+        {
+          "char": "155/155",
+          "iteration": 1,
+          "llm_tokens_total": 434816,
+          "official_mismatch": 1,
+          "repaired": null,
+          "round": 1,
+          "time": "19:52:30"
+        }
+      ],
+      "result": {
+        "char_passed": 155,
+        "char_total": 155,
+        "official_passed": 73,
+        "official_total": 157
+      },
+      "round": 1,
+      "status": "done"
     }
   },
   "llm": {
-    "calls": 32,
-    "daily_exhausted": {},
-    "tokens": 101275
+    "calls": 120,
+    "daily_exhausted": {
+      "openai/gpt-oss-120b": "2026-11-10",
+      "qwen/qwen3.8-27b": "2026-11-10"
+    },
+    "tokens": 467026
   },
   "stages": {
     "analysis": {
@@ -196,8 +618,11 @@
       "updated": "2026-11-10T14:55:52"
     },
     "transform": {
-      "status": "running",
-      "updated": "2026-11-10T18:26:57"
+      "final_char": "155/155",
+      "final_official_mismatch": 1,
+      "seconds": 27.2,
+      "status": "done",
+      "updated": "2026-11-10T20:01:18"
     }
   }
 }

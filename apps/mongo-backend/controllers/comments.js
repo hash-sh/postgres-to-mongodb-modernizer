@@ -5,7 +5,7 @@ const {
   ForbiddenError,
 } = require("../helper/customErrors");
 const { appendFollowers } = require("../helper/helpers");
-const { Article, Comment, User } = require("../models");
+const { Article, Comment, User, nextId } = require("../models");
 
 //? All Comments for Article
 const allComments = async (req, res, next) => {
@@ -13,20 +13,37 @@ const allComments = async (req, res, next) => {
     const { loggedUser } = req;
     const { slug } = req.params;
 
-    const article = await Article.findOne({ where: { slug: slug } });
+    const article = await Article.findOne({ slug: slug }).lean();
     if (!article) throw new NotFoundError("Article");
 
-    const comments = await article.getComments({
-      include: [
-        { model: User, as: "author", attributes: { exclude: ["email"] } },
-      ],
-    });
+    const comments = await Comment.find({ articleId: article._id }).sort({ _id: 1 }).lean();
 
+    const result = [];
     for (const comment of comments) {
-      await appendFollowers(loggedUser, comment);
+      const author = await User.findById(comment.authorId).lean();
+      const internal = {
+        _id: author._id,
+        username: author.username,
+        bio: author.bio,
+        image: author.image,
+      };
+      await appendFollowers(loggedUser, internal);
+      result.push({
+        id: comment._id,
+        body: comment.body,
+        createdAt: comment.createdAt,
+        updatedAt: comment.updatedAt,
+        author: {
+          username: internal.username,
+          bio: internal.bio,
+          image: internal.image,
+          following: internal.following,
+          followersCount: internal.followersCount,
+        },
+      });
     }
 
-    res.json({ comments });
+    res.json({ comments: result });
   } catch (error) {
     next(error);
   }
@@ -42,20 +59,40 @@ const createComment = async (req, res, next) => {
     if (!body) throw new FieldRequiredError("Comment body");
 
     const { slug } = req.params;
-    const article = await Article.findOne({ where: { slug: slug } });
+    const article = await Article.findOne({ slug: slug }).lean();
     if (!article) throw new NotFoundError("Article");
 
+    const commentId = await nextId("comments");
     const comment = await Comment.create({
+      _id: commentId,
       body: body,
-      articleId: article.id,
-      userId: loggedUser.id,
+      articleId: article._id,
+      authorId: loggedUser._id,
     });
 
-    delete loggedUser.dataValues.token;
-    comment.dataValues.author = loggedUser;
-    await appendFollowers(loggedUser, loggedUser);
+    const internal = {
+      _id: loggedUser._id,
+      username: loggedUser.username,
+      bio: loggedUser.bio,
+      image: loggedUser.image,
+    };
+    await appendFollowers(loggedUser, internal);
 
-    res.status(201).json({ comment });
+    res.status(201).json({
+      comment: {
+        id: comment._id,
+        body: comment.body,
+        createdAt: comment.createdAt,
+        updatedAt: comment.updatedAt,
+        author: {
+          username: internal.username,
+          bio: internal.bio,
+          image: internal.image,
+          following: internal.following,
+          followersCount: internal.followersCount,
+        },
+      },
+    });
   } catch (error) {
     next(error);
   }
@@ -69,14 +106,14 @@ const deleteComment = async (req, res, next) => {
 
     const { slug, commentId } = req.params;
 
-    const comment = await Comment.findByPk(commentId);
+    const comment = await Comment.findById(commentId).lean();
     if (!comment) throw new NotFoundError("Comment");
 
-    if (loggedUser.id !== comment.userId) {
+    if (loggedUser._id !== comment.authorId) {
       throw new ForbiddenError("comment");
     }
 
-    await comment.destroy();
+    await Comment.deleteOne({ _id: comment._id });
 
     res.json({ message: { body: ["Comment deleted successfully"] } });
   } catch (error) {

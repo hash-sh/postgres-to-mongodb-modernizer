@@ -1,0 +1,171 @@
+{
+ "round": 13,
+ "iteration": 2,
+ "time": "19:33:44",
+ "char": "88/104",
+ "official_mismatch": 1,
+ "llm_tokens_total": 363712,
+ "result": {
+  "slice": 2,
+  "char_passed": 88,
+  "char_total": 104,
+  "char_failures": [
+   {
+    "scenario": "article_crud",
+    "step": "get article anonymous",
+    "request": "GET /api/articles/how-to-train-your-dragon",
+    "diffs": [
+     "$body.article.tagList: expected list of 2 got 3",
+     "$body.article.tagList[1]: expected 'training' got 'ok'"
+    ]
+   },
+   {
+    "scenario": "article_crud",
+    "step": "get article as gina",
+    "request": "GET /api/articles/how-to-train-your-dragon",
+    "diffs": [
+     "$body.article.tagList: expected list of 2 got 3",
+     "$body.article.tagList[1]: expected 'training' got 'ok'"
+    ]
+   },
+   {
+    "scenario": "article_crud",
+    "step": "frank updates body",
+    "request": "PUT /api/articles/how-to-train-your-dragon",
+    "diffs": [
+     "$body.article.tagList: expected list of 2 got 3",
+     "$body.article.tagList[1]: expected 'training' got 'ok'"
+    ]
+   },
+   {
+    "scenario": "article_crud",
+    "step": "frank updates title (slug changes)",
+    "request": "PUT /api/articles/how-to-train-your-dragon",
+    "diffs": [
+     "$body.article.tagList: expected list of 2 got 3",
+     "$body.article.tagList[1]: expected 'training' got 'ok'"
+    ]
+   },
+   {
+    "scenario": "article_crud",
+    "step": "new slug works",
+    "request": "GET /api/articles/dragons--the-sequel-",
+    "diffs": [
+     "$body.article.tagList: expected list of 2 got 3",
+     "$body.article.tagList[1]: expected 'training' got 'ok'"
+    ]
+   },
+   {
+    "scenario": "article_crud",
+    "step": "frank deletes",
+    "request": "DELETE /api/articles/dragons--the-sequel-",
+    "diffs": [
+     "status: expected 200 got 500",
+     "$body.errors: unexpected key (got {'body': ['<internal error>']})",
+     "$body.message: missing (expected {'body': ['Article deleted successfully']})"
+    ]
+   },
+   {
+    "scenario": "article_listing_filters_pagination",
+    "step": "list default (limit 3)",
+    "request": "GET /api/articles",
+    "diffs": [
+     "$body.articles[1].tagList: expected list of 2 got 3",
+     "$body.articlesCount: expected 7 got 8"
+    ]
+   },
+   {
+    "scenario": "article_listing_filters_pagination",
+    "step": "list as ivy",
+    "request": "GET /api/articles",
+    "diffs": [
+     "$body.articles[1].tagList: expected list of 2 got 3",
+     "$body.articlesCount: expected 7 got 8"
+    ]
+   },
+   {
+    "scenario": "article_listing_filters_pagination",
+    "step": "list limit 2 offset 0",
+    "request": "GET /api/articles?limit=2&offset=0",
+    "diffs": [
+     "$body.articles[1].tagList: expected list of 2 got 3",
+     "$body.articlesCount: expected 7 got 8"
+    ]
+   },
+   {
+    "scenario": "article_listing_filters_pagination",
+    "step": "list limit 2 offset 1 (offset is a page index)",
+    "request": "GET /api/articles?limit=2&offset=1",
+    "diffs": [
+     "$body.articlesCount: expected 7 got 8"
+    ]
+   },
+   {
+    "scenario": "article_listing_filters_pagination",
+    "step": "list limit 2 offset 2",
+    "request": "GET /api/articles?limit=2&offset=2",
+    "diffs": [
+     "$body.articlesCount: expected 7 got 8"
+    ]
+   },
+   {
+    "scenario": "article_listing_filters_pagination",
+    "step": "list limit 10",
+    "request": "GET /api/articles?limit=10",
+    "diffs": [
+     "$body.articles[1].tagList: expected list of 2 got 3",
+     "$body.articlesCount: expected 7 got 8"
+    ]
+   },
+   {
+    "scenario": "article_listing_filters_pagination",
+    "step": "filter by author ivy",
+    "request": "GET /api/articles?author=ivy&limit=10",
+    "diffs": [
+     "$body.articles[0].tagList: expected list of 2 got 3",
+     "$body.articlesCount: expected 3 got 4"
+    ]
+   },
+   {
+    "scenario": "feed",
+    "step": "feed with kim",
+    "request": "GET /api/articles/feed",
+    "diffs": [
+     "$body.articles[1].tagList: expected list of 1 got 2",
+     "$body.articles[1].tagList[0]: expected 'b22' got 'a1'"
+    ]
+   },
+   {
+    "scenario": "feed",
+    "step": "feed with kim+leo",
+    "request": "GET /api/articles/feed?limit=10",
+    "diffs": [
+     "$body.articles[2].tagList: expected list of 1 got 2",
+     "$body.articles[2].tagList[0]: expected 'b22' got 'a1'"
+    ]
+   },
+   {
+    "scenario": "feed",
+    "step": "article shows following=true for jack",
+    "request": "GET /api/articles/kim-one",
+    "diffs": [
+     "$body.article.tagList: expected list of 1 got 2",
+     "$body.article.tagList[0]: expected 'b22' got 'a1'"
+    ]
+   }
+  ],
+  "official_passed": 40,
+  "official_total": 112,
+  "official_mismatch": [
+   "feed.hurl:110"
+  ],
+  "official_baseline_passed": 39,
+  "server_errors": [
+   "Error: data and salt arguments required\n    helper/bcrypt.js:4:17)\n    controllers/user.js:60:33",
+   "TypeError: tagList is not iterable\n    controllers/articles.js:139:23)\n    controllers/articles.js:125:25)",
+   "TypeError: tagList is not iterable\n    controllers/articles.js:139:23)\n    controllers/articles.js:139:23)",
+   "TypeError: tagList is not iterable\n    controllers/articles.js:139:23)"
+  ],
+  "ok": false
+ }
+}

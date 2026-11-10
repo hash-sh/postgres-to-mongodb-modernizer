@@ -1,0 +1,28 @@
+
+=== Stage: transform ===
+  slice1_users_profiles: already done
+    added shared articleResponse() to helper/helpers.js
+    regenerating controllers/articles.js#allArticles against articleResponse()
+    [rate limiter] 3460+6567 tokens > 7360/min, sleeping 58s
+    regenerating controllers/articles.js#createArticle against articleResponse()
+    [rate limiter] 4735+6290 tokens > 7360/min, sleeping 56s
+    [llm] openai/gpt-oss-120b hit its daily limit; falling back ({"error":{"message":"Rate limit reached for model `openai/gpt-oss-120b` in organization `org_<redacted>` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 196864, Re)
+    regenerating controllers/articles.js#articlesFeed against articleResponse()
+    [rate limiter] 3745+6378 tokens > 7360/min, sleeping 59s
+    regenerating controllers/articles.js#singleArticle against articleResponse()
+    [rate limiter] 3626+5943 tokens > 7360/min, sleeping 59s
+    regenerating controllers/articles.js#updateArticle against articleResponse()
+    [rate limiter] 3112+6063 tokens > 7360/min, sleeping 59s
+    regenerating controllers/articles.js#deleteArticle against articleResponse()
+    [rate limiter] 3396+5975 tokens > 7360/min, sleeping 60s
+  slice2_articles_feed round 10 iter 0: char 91/104 official-mismatch 6
+    repairing controllers/articles.js#createArticle
+    [rate limiter] 3203+6583 tokens > 7360/min, sleeping 38s
+    repairing controllers/articles.js#allArticles
+    [rate limiter] 4365+7019 tokens > 7360/min, sleeping 59s
+    repairing controllers/articles.js#deleteArticle
+    [rate limiter] 4867+6873 tokens > 7360/min, sleeping 59s
+  slice2_articles_feed round 10 iter 1: char 89/104 official-mismatch 6
+    repairing controllers/articles.js#createArticle (fresh regeneration)
+    [rate limiter] 4080+6976 tokens > 7360/min, sleeping 38s
+EXIT 143

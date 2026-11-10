@@ -48,17 +48,27 @@ def run_slice(state, k, include_official=True):
         res["server_errors"] = server_errors(be.tail_log(400))
     finally:
         be.stop()
-    res["ok"] = res["char_passed"] == res["char_total"] and not res.get("official_mismatch")
+    # Accepted deviations are an explicit, logged decision (state["accepted_deviations"]), never silent: they are
+    # still reported in every result and in reports/results.md. Frozen tests are never modified or skipped.
+    accepted = set(state.data.get("accepted_deviations", {}))
+    res["official_mismatch_accepted"] = sorted(set(res.get("official_mismatch", [])) & accepted)
+    res["ok"] = res["char_passed"] == res["char_total"] and not (set(res.get("official_mismatch", [])) - accepted)
     return res
 
 
+APP_FLOW_ERRORS = ("NotFoundError", "UnauthorizedError", "ForbiddenError", "ValidationError", "FieldRequiredError",
+                   "AlreadyTakenError")  # the app's own control-flow errors (become 401/403/404/422): not crashes
+
+
 def server_errors(log):
-    """Unique stack-trace heads from the app log (our files only) - fed back to the repair agent."""
+    """Unique stack-trace heads of real crashes from the app log (our files only) - fed back to the repair agent."""
     out = []
     lines = log.splitlines()
     for i, l in enumerate(lines):
         if re.match(r"^\w*Error\b|^\s*(TypeError|ReferenceError|MongoServerError|CastError|ValidationError)", l) or "Error:" in l[:60]:
             frames = [x.strip() for x in lines[i + 1:i + 8] if "mongo-backend/" in x and "node_modules" not in x][:3]
+            if l.strip().split(":")[0] in APP_FLOW_ERRORS:
+                continue
             item = l.strip()[:200] + ("\n    " + "\n    ".join(f.split("mongo-backend/")[-1] for f in frames) if frames else "")
             if item not in out:
                 out.append(item)

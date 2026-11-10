@@ -1,0 +1,432 @@
+{
+ "round": 2,
+ "iteration": 0,
+ "time": "18:29:14",
+ "char": "68/104",
+ "official_mismatch": 8,
+ "llm_tokens_total": 109224,
+ "result": {
+  "slice": 2,
+  "char_passed": 68,
+  "char_total": 104,
+  "char_failures": [
+   {
+    "scenario": "article_crud",
+    "step": "frank creates 'How to train your dragon'",
+    "request": "POST /api/articles",
+    "diffs": [
+     "status: expected 201 got 500",
+     "$body.article: missing (expected {'author': {'bio': None, 'followersCount': 0, 'following': False, 'image': None, 'username': 'frank'}, 'body': 'Body of ...)",
+     "$body.errors: unexpected key (got {'body': ['<internal error>']})"
+    ]
+   },
+   {
+    "scenario": "article_crud",
+    "step": "get article anonymous",
+    "request": "GET /api/articles/how-to-train-your-dragon",
+    "diffs": [
+     "$body.article._id: unexpected key (got 1)",
+     "$body.article.author._id: unexpected key (got 1)",
+     "$body.article.author.createdAt: unexpected key (got '<ts>')",
+     "$body.article.author.email: unexpected key (got 'frank@example.com')",
+     "$body.article.author.password: unexpected key (got '$2b$10$PWpSVFPOKbWOkpVGz8CZv.lkXRyI9JOZkJs/xQqzAh3yiL0w8CW9G')",
+     "$body.article.author.updatedAt: unexpected key (got '<ts>')"
+    ]
+   },
+   {
+    "scenario": "article_crud",
+    "step": "get article as gina",
+    "request": "GET /api/articles/how-to-train-your-dragon",
+    "diffs": [
+     "$body.article._id: unexpected key (got 1)",
+     "$body.article.author._id: unexpected key (got 1)",
+     "$body.article.author.createdAt: unexpected key (got '<ts>')",
+     "$body.article.author.email: unexpected key (got 'frank@example.com')",
+     "$body.article.author.password: unexpected key (got '$2b$10$PWpSVFPOKbWOkpVGz8CZv.lkXRyI9JOZkJs/xQqzAh3yiL0w8CW9G')",
+     "$body.article.author.updatedAt: unexpected key (got '<ts>')"
+    ]
+   },
+   {
+    "scenario": "article_crud",
+    "step": "frank updates body",
+    "request": "PUT /api/articles/how-to-train-your-dragon",
+    "diffs": [
+     "$body.article._id: unexpected key (got 1)",
+     "$body.article.author._id: unexpected key (got 1)",
+     "$body.article.author.createdAt: unexpected key (got '<ts>')",
+     "$body.article.author.email: unexpected key (got 'frank@example.com')",
+     "$body.article.author.password: unexpected key (got '$2b$10$PWpSVFPOKbWOkpVGz8CZv.lkXRyI9JOZkJs/xQqzAh3yiL0w8CW9G')",
+     "$body.article.author.updatedAt: unexpected key (got '<ts>')"
+    ]
+   },
+   {
+    "scenario": "article_crud",
+    "step": "frank updates title (slug changes)",
+    "request": "PUT /api/articles/how-to-train-your-dragon",
+    "diffs": [
+     "$body.article._id: unexpected key (got 1)",
+     "$body.article.author._id: unexpected key (got 1)",
+     "$body.article.author.createdAt: unexpected key (got '<ts>')",
+     "$body.article.author.email: unexpected key (got 'frank@example.com')",
+     "$body.article.author.password: unexpected key (got '$2b$10$PWpSVFPOKbWOkpVGz8CZv.lkXRyI9JOZkJs/xQqzAh3yiL0w8CW9G')",
+     "$body.article.author.updatedAt: unexpected key (got '<ts>')"
+    ]
+   },
+   {
+    "scenario": "article_crud",
+    "step": "new slug works",
+    "request": "GET /api/articles/dragons--the-sequel-",
+    "diffs": [
+     "$body.article._id: unexpected key (got 1)",
+     "$body.article.author._id: unexpected key (got 1)",
+     "$body.article.author.createdAt: unexpected key (got '<ts>')",
+     "$body.article.author.email: unexpected key (got 'frank@example.com')",
+     "$body.article.author.password: unexpected key (got '$2b$10$PWpSVFPOKbWOkpVGz8CZv.lkXRyI9JOZkJs/xQqzAh3yiL0w8CW9G')",
+     "$body.article.author.updatedAt: unexpected key (got '<ts>')"
+    ]
+   },
+   {
+    "scenario": "article_crud",
+    "step": "frank deletes",
+    "request": "DELETE /api/articles/dragons--the-sequel-",
+    "diffs": [
+     "status: expected 200 got 500",
+     "$body.errors: unexpected key (got {'body': ['<internal error>']})",
+     "$body.message: missing (expected {'body': ['Article deleted successfully']})"
+    ]
+   },
+   {
+    "scenario": "article_crud",
+    "step": "deleted article is gone",
+    "request": "GET /api/articles/dragons--the-sequel-",
+    "diffs": [
+     "status: expected 404 got 200",
+     "$body.article: unexpected key (got {'_id': 1, 'slug': 'dragons--the-sequel-', 'title': 'Dragons: The Sequel!', 'description': 'New description', 'body': 'N...)",
+     "$body.errors: missing (expected {'body': ['Article not found ']})"
+    ]
+   },
+   {
+    "scenario": "article_crud",
+    "step": "delete unknown",
+    "request": "DELETE /api/articles/dragons--the-sequel-",
+    "diffs": [
+     "status: expected 404 got 500",
+     "$body.errors.body[0]: expected 'Article not found ' got '<internal error>'"
+    ]
+   },
+   {
+    "scenario": "article_listing_filters_pagination",
+    "step": "hank creates 'Alpha'",
+    "request": "POST /api/articles",
+    "diffs": [
+     "status: expected 201 got 500",
+     "$body.article: missing (expected {'author': {'bio': None, 'followersCount': 0, 'following': False, 'image': None, 'username': 'hank'}, 'body': 'Body of A...)",
+     "$body.errors: unexpected key (got {'body': ['<internal error>']})"
+    ]
+   },
+   {
+    "scenario": "article_listing_filters_pagination",
+    "step": "hank creates 'Beta'",
+    "request": "POST /api/articles",
+    "diffs": [
+     "status: expected 201 got 500",
+     "$body.article: missing (expected {'author': {'bio': None, 'followersCount': 0, 'following': False, 'image': None, 'username': 'hank'}, 'body': 'Body of B...)",
+     "$body.errors: unexpected key (got {'body': ['<internal error>']})"
+    ]
+   },
+   {
+    "scenario": "article_listing_filters_pagination",
+    "step": "ivy creates 'Gamma'",
+    "request": "POST /api/articles",
+    "diffs": [
+     "status: expected 201 got 500",
+     "$body.article: missing (expected {'author': {'bio': None, 'followersCount': 0, 'following': False, 'image': None, 'username': 'ivy'}, 'body': 'Body of Ga...)",
+     "$body.errors: unexpected key (got {'body': ['<internal error>']})"
+    ]
+   },
+   {
+    "scenario": "article_listing_filters_pagination",
+    "step": "ivy creates 'Delta'",
+    "request": "POST /api/articles",
+    "diffs": [
+     "status: expected 201 got 500",
+     "$body.article: missing (expected {'author': {'bio': None, 'followersCount': 0, 'following': False, 'image': None, 'username': 'ivy'}, 'body': 'Body of De...)",
+     "$body.errors: unexpected key (got {'body': ['<internal error>']})"
+    ]
+   },
+   {
+    "scenario": "article_listing_filters_pagination",
+    "step": "hank creates 'Epsilon'",
+    "request": "POST /api/articles",
+    "diffs": [
+     "status: expected 201 got 500",
+     "$body.article: missing (expected {'author': {'bio': None, 'followersCount': 0, 'following': False, 'image': None, 'username': 'hank'}, 'body': 'Body of E...)",
+     "$body.errors: unexpected key (got {'body': ['<internal error>']})"
+    ]
+   },
+   {
+    "scenario": "article_listing_filters_pagination",
+    "step": "list default (limit 3)",
+    "request": "GET /api/articles",
+    "diffs": [
+     "status: expected 200 got 500",
+     "$body.articles: missing (expected [{'author': {'bio': None, 'followersCount': 0, 'following': False, 'image': None, 'username': 'hank'}, 'body': 'Body of ...)",
+     "$body.articlesCount: missing (expected 7)",
+     "$body.errors: unexpected key (got {'body': ['<internal error>']})"
+    ]
+   },
+   {
+    "scenario": "article_listing_filters_pagination",
+    "step": "list as ivy",
+    "request": "GET /api/articles",
+    "diffs": [
+     "status: expected 200 got 500",
+     "$body.articles: missing (expected [{'author': {'bio': None, 'followersCount': 0, 'following': False, 'image': None, 'username': 'hank'}, 'body': 'Body of ...)",
+     "$body.articlesCount: missing (expected 7)",
+     "$body.errors: unexpected key (got {'body': ['<internal error>']})"
+    ]
+   },
+   {
+    "scenario": "article_listing_filters_pagination",
+    "step": "list limit 2 offset 0",
+    "request": "GET /api/articles?limit=2&offset=0",
+    "diffs": [
+     "status: expected 200 got 500",
+     "$body.articles: missing (expected [{'author': {'bio': None, 'followersCount': 0, 'following': False, 'image': None, 'username': 'hank'}, 'body': 'Body of ...)",
+     "$body.articlesCount: missing (expected 7)",
+     "$body.errors: unexpected key (got {'body': ['<internal error>']})"
+    ]
+   },
+   {
+    "scenario": "article_listing_filters_pagination",
+    "step": "list limit 2 offset 1 (offset is a page index)",
+    "request": "GET /api/articles?limit=2&offset=1",
+    "diffs": [
+     "status: expected 200 got 500",
+     "$body.articles: missing (expected [{'author': {'bio': None, 'followersCount': 0, 'following': False, 'image': None, 'username': 'ivy'}, 'body': 'Body of G...)",
+     "$body.articlesCount: missing (expected 7)",
+     "$body.errors: unexpected key (got {'body': ['<internal error>']})"
+    ]
+   },
+   {
+    "scenario": "article_listing_filters_pagination",
+    "step": "list limit 2 offset 2",
+    "request": "GET /api/articles?limit=2&offset=2",
+    "diffs": [
+     "status: expected 200 got 500",
+     "$body.articles: missing (expected [{'author': {'bio': None, 'followersCount': 0, 'following': False, 'image': None, 'username': 'hank'}, 'body': 'Body of ...)",
+     "$body.articlesCount: missing (expected 7)",
+     "$body.errors: unexpected key (got {'body': ['<internal error>']})"
+    ]
+   },
+   {
+    "scenario": "article_listing_filters_pagination",
+    "step": "list limit 10",
+    "request": "GET /api/articles?limit=10",
+    "diffs": [
+     "status: expected 200 got 500",
+     "$body.articles: missing (expected [{'author': {'bio': None, 'followersCount': 0, 'following': False, 'image': None, 'username': 'hank'}, 'body': 'Body of ...)",
+     "$body.articlesCount: missing (expected 7)",
+     "$body.errors: unexpected key (got {'body': ['<internal error>']})"
+    ]
+   },
+   {
+    "scenario": "article_listing_filters_pagination",
+    "step": "filter by author hank",
+    "request": "GET /api/articles?author=hank&limit=10",
+    "diffs": [
+     "status: expected 200 got 500",
+     "$body.articles: missing (expected [{'author': {'bio': None, 'followersCount': 0, 'following': False, 'image': None, 'username': 'hank'}, 'body': 'Body of ...)",
+     "$body.articlesCount: missing (expected 4)",
+     "$body.errors: unexpected key (got {'body': ['<internal error>']})"
+    ]
+   },
+   {
+    "scenario": "article_listing_filters_pagination",
+    "step": "filter by author ivy",
+    "request": "GET /api/articles?author=ivy&limit=10",
+    "diffs": [
+     "status: expected 200 got 500",
+     "$body.articles: missing (expected [{'author': {'bio': None, 'followersCount': 0, 'following': False, 'image': None, 'username': 'ivy'}, 'body': 'Body of D...)",
+     "$body.articlesCount: missing (expected 3)",
+     "$body.errors: unexpected key (got {'body': ['<internal error>']})"
+    ]
+   },
+   {
+    "scenario": "article_listing_filters_pagination",
+    "step": "filter by unknown author",
+    "request": "GET /api/articles?author=nobody",
+    "diffs": [
+     "status: expected 200 got 500",
+     "$body.articles: missing (expected [])",
+     "$body.articlesCount: missing (expected 0)",
+     "$body.errors: unexpected key (got {'body': ['<internal error>']})"
+    ]
+   },
+   {
+    "scenario": "article_listing_filters_pagination",
+    "step": "filter by tag dragons",
+    "request": "GET /api/articles?tag=dragons&limit=10",
+    "diffs": [
+     "status: expected 200 got 500",
+     "$body.articles: missing (expected [{'author': {'bio': None, 'followersCount': 0, 'following': False, 'image': None, 'username': 'hank'}, 'body': 'Body of ...)",
+     "$body.articlesCount: missing (expected 2)",
+     "$body.errors: unexpected key (got {'body': ['<internal error>']})"
+    ]
+   },
+   {
+    "scenario": "article_listing_filters_pagination",
+    "step": "filter by tag cooking limit 1",
+    "request": "GET /api/articles?tag=cooking&limit=1",
+    "diffs": [
+     "status: expected 200 got 500",
+     "$body.articles: missing (expected [{'author': {'bio': None, 'followersCount': 0, 'following': False, 'image': None, 'username': 'hank'}, 'body': 'Body of ...)",
+     "$body.articlesCount: missing (expected 2)",
+     "$body.errors: unexpected key (got {'body': ['<internal error>']})"
+    ]
+   },
+   {
+    "scenario": "article_listing_filters_pagination",
+    "step": "filter by author+tag",
+    "request": "GET /api/articles?author=hank&tag=cooking&limit=10",
+    "diffs": [
+     "status: expected 200 got 500",
+     "$body.articles: missing (expected [{'author': {'bio': None, 'followersCount': 0, 'following': False, 'image': None, 'username': 'hank'}, 'body': 'Body of ...)",
+     "$body.articlesCount: missing (expected 1)",
+     "$body.errors: unexpected key (got {'body': ['<internal error>']})"
+    ]
+   },
+   {
+    "scenario": "article_listing_filters_pagination",
+    "step": "filter favorited by unknown user (original: 500)",
+    "request": "GET /api/articles?favorited=nobody",
+    "diffs": [
+     "status: expected 500 got 404",
+     "$body.errors.body[0]: expected '<internal error>' got 'User not found not found '"
+    ]
+   },
+   {
+    "scenario": "feed",
+    "step": "kim creates 'Kim one'",
+    "request": "POST /api/articles",
+    "diffs": [
+     "status: expected 201 got 500",
+     "$body.article: missing (expected {'author': {'bio': None, 'followersCount': 0, 'following': False, 'image': None, 'username': 'kim'}, 'body': 'Body of Ki...)",
+     "$body.errors: unexpected key (got {'body': ['<internal error>']})"
+    ]
+   },
+   {
+    "scenario": "feed",
+    "step": "leo creates 'Leo one'",
+    "request": "POST /api/articles",
+    "diffs": [
+     "status: expected 201 got 500",
+     "$body.article: missing (expected {'author': {'bio': None, 'followersCount': 0, 'following': False, 'image': None, 'username': 'leo'}, 'body': 'Body of Le...)",
+     "$body.errors: unexpected key (got {'body': ['<internal error>']})"
+    ]
+   },
+   {
+    "scenario": "feed",
+    "step": "kim creates 'Kim two'",
+    "request": "POST /api/articles",
+    "diffs": [
+     "status: expected 201 got 500",
+     "$body.article: missing (expected {'author': {'bio': None, 'followersCount': 0, 'following': False, 'image': None, 'username': 'kim'}, 'body': 'Body of Ki...)",
+     "$body.errors: unexpected key (got {'body': ['<internal error>']})"
+    ]
+   },
+   {
+    "scenario": "feed",
+    "step": "feed following nobody",
+    "request": "GET /api/articles/feed",
+    "diffs": [
+     "status: expected 200 got 500",
+     "$body.articles: missing (expected [])",
+     "$body.articlesCount: missing (expected 0)",
+     "$body.errors: unexpected key (got {'body': ['<internal error>']})"
+    ]
+   },
+   {
+    "scenario": "feed",
+    "step": "feed with kim",
+    "request": "GET /api/articles/feed",
+    "diffs": [
+     "status: expected 200 got 500",
+     "$body.articles: missing (expected [{'author': {'bio': None, 'followersCount': 1, 'following': True, 'image': None, 'username': 'kim'}, 'body': 'Body of Ki...)",
+     "$body.articlesCount: missing (expected 2)",
+     "$body.errors: unexpected key (got {'body': ['<internal error>']})"
+    ]
+   },
+   {
+    "scenario": "feed",
+    "step": "feed with kim+leo",
+    "request": "GET /api/articles/feed?limit=10",
+    "diffs": [
+     "status: expected 200 got 500",
+     "$body.articles: missing (expected [{'author': {'bio': None, 'followersCount': 1, 'following': True, 'image': None, 'username': 'kim'}, 'body': 'Body of Ki...)",
+     "$body.articlesCount: missing (expected 3)",
+     "$body.errors: unexpected key (got {'body': ['<internal error>']})"
+    ]
+   },
+   {
+    "scenario": "feed",
+    "step": "feed limit 1 offset 1",
+    "request": "GET /api/articles/feed?limit=1&offset=1",
+    "diffs": [
+     "status: expected 200 got 500",
+     "$body.articles: missing (expected [{'author': {'bio': None, 'followersCount': 1, 'following': True, 'image': None, 'username': 'leo'}, 'body': 'Body of Le...)",
+     "$body.articlesCount: missing (expected 3)",
+     "$body.errors: unexpected key (got {'body': ['<internal error>']})"
+    ]
+   },
+   {
+    "scenario": "feed",
+    "step": "article shows following=true for jack",
+    "request": "GET /api/articles/kim-one",
+    "diffs": [
+     "$body.article._id: unexpected key (got 1)",
+     "$body.article.author._id: unexpected key (got 2)",
+     "$body.article.author.createdAt: unexpected key (got '<ts>')",
+     "$body.article.author.email: unexpected key (got 'kim@example.com')",
+     "$body.article.author.password: unexpected key (got '$2b$10$wCRY1K5wh2HAhUqDbk.vue9xCCGkB1vx3O.VEU/G4xYYBwJ3ILbqm')",
+     "$body.article.author.updatedAt: unexpected key (got '<ts>')"
+    ]
+   },
+   {
+    "scenario": "feed",
+    "step": "feed after unfollow",
+    "request": "GET /api/articles/feed?limit=10",
+    "diffs": [
+     "status: expected 200 got 500",
+     "$body.articles: missing (expected [{'author': {'bio': None, 'followersCount': 1, 'following': True, 'image': None, 'username': 'leo'}, 'body': 'Body of Le...)",
+     "$body.articlesCount: missing (expected 1)",
+     "$body.errors: unexpected key (got {'body': ['<internal error>']})"
+    ]
+   }
+  ],
+  "official_passed": 41,
+  "official_total": 112,
+  "official_mismatch": [
+   "articles.hurl:139",
+   "articles.hurl:15",
+   "articles.hurl:218",
+   "articles.hurl:231",
+   "articles.hurl:238",
+   "articles.hurl:248",
+   "articles.hurl:253",
+   "feed.hurl:28"
+  ],
+  "official_baseline_passed": 39,
+  "server_errors": [
+   "UnauthorizedError: You need to login first!\n    controllers/profiles.js:38:28)\n    middleware/authentication.js:8:40)",
+   "NotFoundError: User profile not found\n    controllers/profiles.js:46:25)\n    controllers/profiles.js:46:25)",
+   "NotFoundError: User profile not found\n    controllers/profiles.js:46:25)\n    controllers/articles.js:189:38)",
+   "TypeError: loggedUser.getFollowing is not a function\n    controllers/articles.js:189:38)\n    middleware/authentication.js:28:5)",
+   "TypeError: Cannot read properties of null (reading '_id')\n    helper/helpers.js:41:30)\n    controllers/articles.js:172:5)\n    helper/helpers.js:41:30)",
+   "TypeError: Cannot read properties of null (reading '_id')\n    helper/helpers.js:41:30)\n    controllers/articles.js:172:5)\n    controllers/articles.js:189:38)",
+   "TypeError: Cannot read properties of null (reading '_id')\n    helper/helpers.js:41:30)\n    controllers/articles.js:172:5)",
+   "StrictPopulateError: Cannot populate path `author` because it is not in your schema. Set the `strictPopulate` option to false to override."
+  ],
+  "ok": false
+ }
+}

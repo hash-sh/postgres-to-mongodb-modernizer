@@ -1,0 +1,42 @@
+{
+ "round": 12,
+ "iteration": 1,
+ "time": "19:20:12",
+ "char": "103/104",
+ "official_mismatch": 1,
+ "llm_tokens_total": 325117,
+ "result": {
+  "slice": 2,
+  "char_passed": 103,
+  "char_total": 104,
+  "char_failures": [
+   {
+    "scenario": "article_crud",
+    "step": "frank deletes",
+    "request": "DELETE /api/articles/dragons--the-sequel-",
+    "diffs": [
+     "status: expected 200 got 500",
+     "$body.errors: unexpected key (got {'body': ['<internal error>']})",
+     "$body.message: missing (expected {'body': ['Article deleted successfully']})"
+    ]
+   }
+  ],
+  "official_passed": 40,
+  "official_total": 112,
+  "official_mismatch": [
+   "feed.hurl:110"
+  ],
+  "official_baseline_passed": 39,
+  "server_errors": [
+   "UnauthorizedError: You need to login first!\n    controllers/user.js:23:28)\n    middleware/authentication.js:8:40)",
+   "UnauthorizedError: You need to login first!\n    controllers/user.js:39:28)\n    middleware/authentication.js:8:40)",
+   "NotFoundError: User profile not found\n    controllers/profiles.js:24:25)\n    controllers/profiles.js:38:28)",
+   "UnauthorizedError: You need to login first!\n    controllers/profiles.js:38:28)\n    middleware/authentication.js:8:40)",
+   "NotFoundError: User profile not found\n    controllers/profiles.js:46:25)\n    controllers/profiles.js:46:25)",
+   "NotFoundError: User profile not found\n    controllers/profiles.js:46:25)\n    controllers/articles.js:139:23)",
+   "TypeError: tagList is not iterable\n    controllers/articles.js:139:23)\n    controllers/articles.js:139:23)",
+   "TypeError: tagList is not iterable\n    controllers/articles.js:139:23)"
+  ],
+  "ok": false
+ }
+}

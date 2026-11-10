@@ -1,0 +1,57 @@
+{
+ "round": 1,
+ "iteration": 0,
+ "time": "19:51:28",
+ "char": "152/155",
+ "official_mismatch": 1,
+ "llm_tokens_total": 430513,
+ "result": {
+  "slice": 3,
+  "char_passed": 152,
+  "char_total": 155,
+  "char_failures": [
+   {
+    "scenario": "favorites",
+    "step": "pete favorites",
+    "request": "POST /api/articles/fav-me/favorite",
+    "diffs": [
+     "$body.article.favoritesCount: expected 1 got 0"
+    ]
+   },
+   {
+    "scenario": "favorites",
+    "step": "quinn favorites",
+    "request": "POST /api/articles/fav-me/favorite",
+    "diffs": [
+     "$body.article.favoritesCount: expected 2 got 1"
+    ]
+   },
+   {
+    "scenario": "favorites",
+    "step": "pete unfavorites",
+    "request": "DELETE /api/articles/fav-me/favorite",
+    "diffs": [
+     "$body.article.favoritesCount: expected 1 got 2"
+    ]
+   }
+  ],
+  "official_passed": 73,
+  "official_total": 157,
+  "official_mismatch": [
+   "feed.hurl:110"
+  ],
+  "official_baseline_passed": 72,
+  "server_errors": [
+   "TypeError: tagList is not iterable\n    controllers/articles.js:139:23)\n    controllers/articles.js:125:25)",
+   "Error: data and salt arguments required\n    helper/bcrypt.js:4:17)\n    controllers/user.js:60:33",
+   "TypeError: tagList is not iterable\n    controllers/articles.js:139:23)\n    controllers/comments.js:56:28)",
+   "TypeError: tagList is not iterable\n    controllers/articles.js:139:23)\n    controllers/comments.js:63:25)",
+   "TypeError: tagList is not iterable\n    controllers/articles.js:139:23)\n    controllers/articles.js:139:23)",
+   "TypeError: tagList is not iterable\n    controllers/articles.js:139:23)"
+  ],
+  "official_mismatch_accepted": [
+   "feed.hurl:110"
+  ],
+  "ok": false
+ }
+}

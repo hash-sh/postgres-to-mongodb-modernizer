@@ -1,0 +1,16 @@
+
+=== Stage: transform ===
+  slice1_users_profiles: already done
+  slice2_articles_feed round 6 iter 0: char 78/104 official-mismatch 1
+    repairing controllers/articles.js#articlesFeed
+    repairing controllers/articles.js#allArticles
+    [rate limiter] 4977+6637 tokens > 7360/min, sleeping 58s
+    repairing controllers/articles.js#createArticle
+    [rate limiter] 4888+7053 tokens > 7360/min, sleeping 56s
+  slice2_articles_feed round 6 iter 1: char 78/104 official-mismatch 1
+    repairing middleware/authentication.js
+    [rate limiter] 4786+6503 tokens > 7360/min, sleeping 48s
+  slice2_articles_feed round 6 iter 2: char 78/104 official-mismatch 1
+    repairing helper/helpers.js
+    [rate limiter] 4098+6909 tokens > 7360/min, sleeping 47s
+EXIT 143

@@ -1,14 +1,13 @@
 const express = require("express");
 const router = express.Router();
 const { Tag } = require("../models");
-const { appendTagList } = require("../helper/helpers");
 
 // All Tags
 router.get("/", async (req, res, next) => {
   try {
-    const tagList = await Tag.findAll();
+    const tagList = await Tag.find().lean();
 
-    const tags = appendTagList(tagList);
+    const tags = tagList.map((tag) => tag._id);
 
     res.json({ tags });
   } catch (error) {

@@ -1,10 +1,6 @@
 const { UnauthorizedError, NotFoundError } = require("../helper/customErrors");
-const {
-  appendFollowers,
-  appendFavorites,
-  appendTagList,
-} = require("../helper/helpers");
-const { Article, Tag, User } = require("../models");
+const { articleResponse } = require("../helper/helpers");
+const { Article, Favorite, mongoose } = require("../models");
 
 //*  Favorite/Unfavorite Article
 const favoriteToggler = async (req, res, next) => {
@@ -14,31 +10,42 @@ const favoriteToggler = async (req, res, next) => {
 
     const { slug } = req.params;
 
-    const article = await Article.findOne({
-      where: { slug: slug },
-      include: [
-        {
-          model: Tag,
-          as: "tagList",
-          attributes: ["name"],
-        },
-        {
-          model: User,
-          as: "author",
-          attributes: ["username", "bio", "image" /* "following" */],
-        },
-      ],
-    });
+    const article = await Article.findOne({ slug: slug }).lean();
     if (!article) throw new NotFoundError("Article");
 
-    if (req.method === "POST") await article.addUser(loggedUser);
-    if (req.method === "DELETE") await article.removeUser(loggedUser);
+    const s = await mongoose.startSession();
+    await s.withTransaction(async () => {
+      if (req.method === "POST") {
+        const key = { articleId: article._id, userId: loggedUser._id };
+        const result = await Favorite.updateOne(
+          { _id: key },
+          { $setOnInsert: { _id: key } },
+          { upsert: true, session: s }
+        );
+        if (result.upsertedCount === 1) {
+          await Article.updateOne(
+            { _id: article._id },
+            { $inc: { favoritesCount: 1 } },
+            { session: s }
+          );
+        }
+      } else if (req.method === "DELETE") {
+        const key = { articleId: article._id, userId: loggedUser._id };
+        const result = await Favorite.deleteOne({ _id: key }, { session: s });
+        if (result.deletedCount === 1) {
+          await Article.updateOne(
+            { _id: article._id },
+            { $inc: { favoritesCount: -1 } },
+            { session: s }
+          );
+        }
+      }
+    });
+    await s.endSession();
 
-    appendTagList(article.tagList, article);
-    await appendFollowers(loggedUser, article);
-    await appendFavorites(loggedUser, article);
-
-    res.json({ article });
+    const freshArticle = await Article.findById(article._id).lean();
+    const response = await articleResponse(freshArticle, loggedUser);
+    res.json({ article: response });
   } catch (error) {
     next(error);
   }

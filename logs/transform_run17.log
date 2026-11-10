@@ -1,0 +1,31 @@
+
+=== Stage: transform ===
+  slice1_users_profiles: already done
+  slice2_articles_feed round 13 iter 0: char 103/104 official-mismatch 1
+    repairing controllers/articles.js#createArticle
+    [llm] 429 rate limited, waiting 20s
+    [rate limiter] 7004+7004 tokens > 7360/min, sleeping 40s
+    [llm] 429 rate limited, waiting 20s
+    [rate limiter] 7004+7004 tokens > 7360/min, sleeping 40s
+    repairing controllers/articles.js#deleteArticle
+    [rate limiter] 4430+6430 tokens > 7360/min, sleeping 59s
+    repairing controllers/articles.js#articlesFeed
+    [rate limiter] 3623+6894 tokens > 7360/min, sleeping 60s
+    [llm] 429 rate limited, waiting 20s
+    [rate limiter] 6894+6894 tokens > 7360/min, sleeping 40s
+  slice2_articles_feed round 13 iter 1: char 103/104 official-mismatch 1
+    repairing controllers/articles.js#createArticle (fresh regeneration)
+    [rate limiter] 4110+6533 tokens > 7360/min, sleeping 47s
+    repairing controllers/articles.js#deleteArticle (fresh regeneration)
+    [rate limiter] 3955+6219 tokens > 7360/min, sleeping 59s
+    repairing controllers/articles.js#articlesFeed (fresh regeneration)
+    [rate limiter] 3425+6621 tokens > 7360/min, sleeping 60s
+    residue lint: controllers/articles.js#articlesFeed still calls Sequelize APIs -> fresh regeneration
+    [rate limiter] 3947+6382 tokens > 7360/min, sleeping 58s
+  slice2_articles_feed round 13 iter 2: char 88/104 official-mismatch 1
+    keep-best: score 87 < best 102, reverted to the best version
+    repairing controllers/articles.js#createArticle
+    [rate limiter] 3579+6605 tokens > 7360/min, sleeping 48s
+    repairing controllers/articles.js#allArticles
+    [rate limiter] 4434+7322 tokens > 7360/min, sleeping 59s
+EXIT 143

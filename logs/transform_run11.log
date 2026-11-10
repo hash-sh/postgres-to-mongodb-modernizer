@@ -1,0 +1,25 @@
+
+=== Stage: transform ===
+  slice1_users_profiles: already done
+    residue lint: controllers/articles.js#articlesFeed still calls Sequelize APIs -> fresh regeneration
+  slice2_articles_feed round 7 iter 0: char 79/104 official-mismatch 0
+    repairing controllers/articles.js#allArticles
+    [rate limiter] 3902+6776 tokens > 7360/min, sleeping 44s
+    repairing controllers/articles.js#createArticle
+    [rate limiter] 5006+7098 tokens > 7360/min, sleeping 57s
+    repairing controllers/articles.js#singleArticle
+    [rate limiter] 4907+6364 tokens > 7360/min, sleeping 58s
+  slice2_articles_feed round 7 iter 1: char 83/104 official-mismatch 0
+    repairing controllers/articles.js#allArticles
+    [rate limiter] 3889+6807 tokens > 7360/min, sleeping 47s
+    repairing controllers/articles.js#createArticle
+    [rate limiter] 5287+7098 tokens > 7360/min, sleeping 56s
+    repairing controllers/articles.js#articlesFeed
+    [rate limiter] 4809+6951 tokens > 7360/min, sleeping 58s
+  slice2_articles_feed round 7 iter 2: char 83/104 official-mismatch 0
+    repairing helper/helpers.js
+    [rate limiter] 4802+6960 tokens > 7360/min, sleeping 48s
+  slice2_articles_feed round 7 iter 3: char 83/104 official-mismatch 0
+    repairing middleware/authentication.js
+    [rate limiter] 4405+6554 tokens > 7360/min, sleeping 48s
+EXIT 143

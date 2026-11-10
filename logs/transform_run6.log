@@ -3,3 +3,11 @@
   slice1_users_profiles: already done
   slice2_articles_feed: generating controllers/articles.js (function by function)
     [rate limiter] 3437+6169 tokens > 7360/min, sleeping 58s
+    [rate limiter] 4456+5940 tokens > 7360/min, sleeping 56s
+  slice2_articles_feed round 2 iter 0: char 68/104 official-mismatch 8
+    repairing controllers/articles.js#createArticle
+    [rate limiter] 3493+6352 tokens > 7360/min, sleeping 47s
+  slice2_articles_feed round 2 iter 1: char 73/104 official-mismatch 12
+    repairing controllers/articles.js#deleteArticle
+    [rate limiter] 4422+5626 tokens > 7360/min, sleeping 45s
+EXIT 143

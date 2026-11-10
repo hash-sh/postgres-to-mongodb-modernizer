@@ -1,0 +1,151 @@
+{
+ "round": 10,
+ "iteration": 0,
+ "time": "19:08:08",
+ "char": "91/104",
+ "official_mismatch": 6,
+ "llm_tokens_total": 273794,
+ "result": {
+  "slice": 2,
+  "char_passed": 91,
+  "char_total": 104,
+  "char_failures": [
+   {
+    "scenario": "auth_happy_path",
+    "step": "current user",
+    "request": "GET /api/user",
+    "diffs": [
+     "$body.user.bio: missing (expected None)",
+     "$body.user.image: missing (expected None)",
+     "$body.user.username: missing (expected 'alice')"
+    ]
+   },
+   {
+    "scenario": "auth_happy_path",
+    "step": "current user with login token",
+    "request": "GET /api/user",
+    "diffs": [
+     "$body.user.bio: missing (expected None)",
+     "$body.user.image: missing (expected None)",
+     "$body.user.username: missing (expected 'alice')"
+    ]
+   },
+   {
+    "scenario": "auth_happy_path",
+    "step": "current user after update",
+    "request": "GET /api/user",
+    "diffs": [
+     "$body.user.bio: missing (expected 'I like dragons')",
+     "$body.user.image: missing (expected 'https://i.example.com/a.png')",
+     "$body.user.username: missing (expected 'alice')"
+    ]
+   },
+   {
+    "scenario": "auth_errors",
+    "step": "bio unchanged after failed update",
+    "request": "GET /api/user",
+    "diffs": [
+     "$body.user.bio: missing (expected None)",
+     "$body.user.image: missing (expected None)",
+     "$body.user.username: missing (expected 'bob')"
+    ]
+   },
+   {
+    "scenario": "article_crud",
+    "step": "frank deletes",
+    "request": "DELETE /api/articles/dragons--the-sequel-",
+    "diffs": [
+     "status: expected 200 got 500",
+     "$body.errors: unexpected key (got {'body': ['<internal error>']})",
+     "$body.message: missing (expected {'body': ['Article deleted successfully']})"
+    ]
+   },
+   {
+    "scenario": "article_listing_filters_pagination",
+    "step": "list default (limit 3)",
+    "request": "GET /api/articles",
+    "diffs": [
+     "$body.articlesCount: expected 7 got 5"
+    ]
+   },
+   {
+    "scenario": "article_listing_filters_pagination",
+    "step": "list as ivy",
+    "request": "GET /api/articles",
+    "diffs": [
+     "$body.articlesCount: expected 7 got 5"
+    ]
+   },
+   {
+    "scenario": "article_listing_filters_pagination",
+    "step": "list limit 2 offset 0",
+    "request": "GET /api/articles?limit=2&offset=0",
+    "diffs": [
+     "$body.articlesCount: expected 7 got 5"
+    ]
+   },
+   {
+    "scenario": "article_listing_filters_pagination",
+    "step": "list limit 2 offset 1 (offset is a page index)",
+    "request": "GET /api/articles?limit=2&offset=1",
+    "diffs": [
+     "$body.articlesCount: expected 7 got 5"
+    ]
+   },
+   {
+    "scenario": "article_listing_filters_pagination",
+    "step": "list limit 2 offset 2",
+    "request": "GET /api/articles?limit=2&offset=2",
+    "diffs": [
+     "$body.articlesCount: expected 7 got 5"
+    ]
+   },
+   {
+    "scenario": "article_listing_filters_pagination",
+    "step": "list limit 10",
+    "request": "GET /api/articles?limit=10",
+    "diffs": [
+     "$body.articlesCount: expected 7 got 5"
+    ]
+   },
+   {
+    "scenario": "article_listing_filters_pagination",
+    "step": "filter by author hank",
+    "request": "GET /api/articles?author=hank&limit=10",
+    "diffs": [
+     "$body.articlesCount: expected 4 got 3"
+    ]
+   },
+   {
+    "scenario": "article_listing_filters_pagination",
+    "step": "filter by author ivy",
+    "request": "GET /api/articles?author=ivy&limit=10",
+    "diffs": [
+     "$body.articlesCount: expected 3 got 2"
+    ]
+   }
+  ],
+  "official_passed": 35,
+  "official_total": 112,
+  "official_mismatch": [
+   "auth.hurl:125",
+   "auth.hurl:180",
+   "auth.hurl:210",
+   "auth.hurl:41",
+   "auth.hurl:94",
+   "feed.hurl:110"
+  ],
+  "official_baseline_passed": 39,
+  "server_errors": [
+   "UnauthorizedError: You need to login first!\n    controllers/user.js:23:28)\n    middleware/authentication.js:8:40)",
+   "UnauthorizedError: You need to login first!\n    controllers/user.js:39:28)\n    middleware/authentication.js:8:40)",
+   "NotFoundError: User profile not found\n    controllers/profiles.js:24:25)\n    controllers/profiles.js:38:28)",
+   "UnauthorizedError: You need to login first!\n    controllers/profiles.js:38:28)\n    middleware/authentication.js:8:40)",
+   "NotFoundError: User profile not found\n    controllers/profiles.js:46:25)\n    controllers/profiles.js:46:25)",
+   "NotFoundError: User profile not found\n    controllers/profiles.js:46:25)\n    controllers/articles.js:117:23)",
+   "TypeError: tagList is not iterable\n    controllers/articles.js:117:23)\n    controllers/articles.js:117:23)",
+   "TypeError: tagList is not iterable\n    controllers/articles.js:117:23)"
+  ],
+  "ok": false
+ }
+}

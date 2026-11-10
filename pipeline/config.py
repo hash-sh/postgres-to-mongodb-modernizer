@@ -37,7 +37,7 @@ class Settings:
     # used only when a model hits its Groq DAILY limit (each model has its own free quota)
     llm_fallback_models: str = _env("LLM_FALLBACK_MODELS", "qwen/qwen3.8-27b,openai/gpt-oss-20b")
     llm_tpm_limit: int = _env("LLM_TPM_LIMIT", 8000)
-    llm_max_tokens_per_run: int = _env("LLM_MAX_TOKENS_PER_RUN", 250000)  # hard cap, all calls summed
+    llm_max_tokens_per_run: int = _env("LLM_MAX_TOKENS_PER_RUN", 550000)  # hard cap, all calls summed
     llm_max_spend_usd: float = _env("LLM_MAX_SPEND_USD", 0.0)  # Groq free tier => $0; cap kept for paid providers
     llm_max_repair_iters: int = _env("LLM_MAX_REPAIR_ITERS", 5)
     groq_api_key: str = field(default_factory=lambda: os.environ.get("GROQ_API_KEY", ""), repr=False)

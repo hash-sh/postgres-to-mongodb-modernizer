@@ -1,0 +1,32 @@
+
+=== Stage: transform ===
+  slice1_users_profiles: already done
+  slice2_articles_feed round 14 iter 0: char 104/104 official-mismatch 1
+    repairing controllers/articles.js#createArticle
+    repairing controllers/articles.js#articlesFeed
+    [rate limiter] 4361+6823 tokens > 7360/min, sleeping 59s
+  slice2_articles_feed round 14 iter 1: char 104/104 official-mismatch 1
+    repairing controllers/articles.js#createArticle (fresh regeneration)
+    [rate limiter] 4041+6462 tokens > 7360/min, sleeping 47s
+    repairing controllers/articles.js#articlesFeed (fresh regeneration)
+    [rate limiter] 3895+6550 tokens > 7360/min, sleeping 59s
+    residue lint: controllers/articles.js#articlesFeed still calls Sequelize APIs -> fresh regeneration
+    [rate limiter] 3920+6384 tokens > 7360/min, sleeping 58s
+  slice2_articles_feed round 14 iter 2: char 101/104 official-mismatch 1
+    keep-best: score 100 < best 103, reverted to the best version
+    repairing controllers/articles.js#createArticle
+    [rate limiter] 3593+7070 tokens > 7360/min, sleeping 48s
+    repairing controllers/articles.js#articlesFeed
+    [rate limiter] 4499+6960 tokens > 7360/min, sleeping 59s
+  slice2_articles_feed round 14 iter 3: char 104/104 official-mismatch 1
+    repairing controllers/articles.js#createArticle (fresh regeneration)
+    repairing controllers/articles.js#articlesFeed (fresh regeneration)
+    residue lint: controllers/articles.js#articlesFeed still calls Sequelize APIs -> fresh regeneration
+  slice2_articles_feed round 14 iter 4: char 101/104 official-mismatch 1
+    keep-best: score 100 < best 103, reverted to the best version
+    repairing controllers/articles.js#createArticle
+    repairing controllers/articles.js#articlesFeed
+  slice2_articles_feed round 14 iter 5: char 104/104 official-mismatch 1
+  STOP: slice2_articles_feed hit the repair cap; diagnose the root cause, fix it, re-run `python -m pipeline transform`
+=== transform: needs_diagnosis (425.0s)
+EXIT 0
