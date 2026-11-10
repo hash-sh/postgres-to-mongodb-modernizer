@@ -25,6 +25,10 @@ from pipeline.config import settings
 
 FROZEN_DIRS = ["tests/official", "tests/characterization"]
 MANIFEST = settings.root / "tests/MANIFEST.sha256"
+# Tests added AFTER Stage 1 (e.g. to cover a gap found in review) are recorded against the ORIGINAL app and frozen
+# in their OWN manifest, so the Stage-1 manifest is never rewritten.
+ADDENDUM_DIRS = ["tests/characterization_addendum"]
+ADDENDUM_MANIFEST = settings.root / "tests/MANIFEST_addendum.sha256"
 
 # The ONLY files the transformation agent may write (relative to apps/mongo-backend).
 # These are exactly the files the analyzer found data-access call sites in, plus the
@@ -46,9 +50,9 @@ class GuardError(RuntimeError):
     pass
 
 
-def _files():
+def _files(dirs=None):
     out = []
-    for d in FROZEN_DIRS:
+    for d in (dirs or FROZEN_DIRS):
         for p in sorted((settings.root / d).rglob("*")):
             if p.is_file() and "__pycache__" not in p.parts:
                 out.append(p)
@@ -59,25 +63,27 @@ def _sha(p: Path) -> str:
     return hashlib.sha256(p.read_bytes()).hexdigest()
 
 
-def manifest_text() -> str:
-    return "".join(f"{_sha(p)}  {p.relative_to(settings.root)}\n" for p in _files())
+def manifest_text(dirs=None) -> str:
+    return "".join(f"{_sha(p)}  {p.relative_to(settings.root)}\n" for p in _files(dirs))
 
 
-def freeze() -> str:
+def freeze(dirs=None, manifest=None) -> str:
     """Write the manifest; return its hash (store it in pipeline state)."""
-    text = manifest_text()
-    MANIFEST.write_text(text)
+    manifest = manifest or MANIFEST
+    text = manifest_text(dirs)
+    manifest.write_text(text)
     return hashlib.sha256(text.encode()).hexdigest()
 
 
-def verify_tests(expected_manifest_hash: str):
-    """Fail loudly if any frozen test file changed since Stage 1."""
+def verify_tests(expected_manifest_hash: str, dirs=None, manifest=None):
+    """Fail loudly if any frozen test file changed since it was frozen."""
+    MANIFEST = manifest or globals()["MANIFEST"]
     if not MANIFEST.exists():
         raise GuardError("tests/MANIFEST.sha256 missing - Stage 1 (baseline) must freeze the test suite first")
     stored = MANIFEST.read_text()
     if hashlib.sha256(stored.encode()).hexdigest() != expected_manifest_hash:
         raise GuardError("TEST MANIFEST WAS MODIFIED after it was frozen (hash differs from pipeline state)")
-    current = manifest_text()
+    current = manifest_text(dirs)
     if current != stored:
         a, b = set(stored.splitlines()), set(current.splitlines())
         raise GuardError("FROZEN TEST SUITE CHANGED:\n  removed/changed: " + "\n    ".join(sorted(a - b))

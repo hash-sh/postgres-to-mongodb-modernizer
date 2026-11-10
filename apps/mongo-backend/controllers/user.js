@@ -22,10 +22,14 @@ const currentUser = async (req, res, next) => {
     const { loggedUser } = req;
     if (!loggedUser) throw new UnauthorizedError();
 
-    const email = req.headers.email;
-    delete req.headers.email;
+    // Fetch the latest user data (including email) from the DB
+    const freshUser = await User.findOne({ _id: loggedUser._id }).lean();
+    if (!freshUser) throw new UnauthorizedError();
 
-    const userForResp = buildPublicUser({ ...loggedUser, email }, PUBLIC_USER_FIELDS);
+    const userForResp = buildPublicUser(
+      { ...freshUser, token: loggedUser.token },
+      PUBLIC_USER_FIELDS
+    );
     res.json({ user: userForResp });
   } catch (error) {
     next(error);
@@ -48,14 +52,14 @@ const updateUser = async (req, res, next) => {
       const dbUser = await User.findOne({ _id: loggedUser._id }).session(session);
       if (!dbUser) throw new UnauthorizedError();
 
-      // Apply updates, ignoring password and email (email updates are not allowed here)
+      // Apply updates, including email
       Object.entries(user).forEach(([key, value]) => {
-        if (value !== undefined && key !== "password" && key !== "email") {
+        if (value !== undefined && key !== "password") {
           dbUser[key] = value;
         }
       });
 
-      // Preserve original buggy condition (always true)
+      // Original bug: condition always true
       if (password !== undefined || password !== "") {
         dbUser.password = await bcryptHash(password);
       }
@@ -66,10 +70,10 @@ const updateUser = async (req, res, next) => {
 
     // Fetch fresh data for response (lean to avoid Mongoose magic)
     const freshUser = await User.findOne({ _id: loggedUser._id }).lean();
-    const userForResp = buildPublicUser(
-      { ...freshUser, token: loggedUser.token },
-      UPDATE_PUBLIC_FIELDS
-    );
+    // MANUAL FIX (engineer, not LLM - see DECISIONS D42): the original responds with loggedUser, which was loaded
+    // WITHOUT email, after copying the request's fields onto it - so `email` is echoed only when the request sent one.
+    const fields = user.email !== undefined ? [...UPDATE_PUBLIC_FIELDS, "email"] : UPDATE_PUBLIC_FIELDS;
+    const userForResp = buildPublicUser({ ...freshUser, token: loggedUser.token }, fields);
     res.json({ user: userForResp });
   } catch (error) {
     next(error);

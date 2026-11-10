@@ -7,22 +7,22 @@
   "Favorites": 841,
   "Followers": 654,
   "Comments": 2038,
-  "seconds": 0.37
+  "seconds": 0.39
  },
  "migration": {
   "db": "conduit",
   "collections": {
-   "comments": 2038,
    "tags": 20,
+   "comments": 2038,
    "users": 200,
    "followers": 654,
    "favorites": 841,
    "articles": 1000
   },
   "rows_written": 4753,
-  "load_seconds": 0.38,
-  "total_seconds": 1.0,
-  "rows_per_second": 12529.5,
+  "load_seconds": 0.36,
+  "total_seconds": 0.98,
+  "rows_per_second": 13059.3,
   "batches": 7,
   "batches_skipped": 0
  },
@@ -31,7 +31,7 @@
   "collections": {},
   "rows_written": 0,
   "load_seconds": 0.03,
-  "total_seconds": 0.06,
+  "total_seconds": 0.05,
   "rows_per_second": null,
   "batches": 7,
   "batches_skipped": 7
@@ -40,26 +40,24 @@
   "db": "conduit",
   "collections": {
    "tags": 20,
-   "users": 200,
    "comments": 2038,
-   "favorites": 841,
    "followers": 654,
+   "favorites": 841,
+   "users": 200,
    "articles": 1000
   },
   "rows_written": 4753,
-  "load_seconds": 0.25,
-  "total_seconds": 0.27,
-  "rows_per_second": 19056.5,
+  "load_seconds": 0.24,
+  "total_seconds": 0.26,
+  "rows_per_second": 20191.4,
   "batches": 7,
   "batches_skipped": 0
  },
  "idempotent": true,
  "checks_ok": true,
- "characterization": "155/155",
- "official_mongo": "73/157",
- "official_mismatch_vs_original": [
-  "feed.hurl:110"
- ],
+ "characterization": "162/162",
+ "official_mongo": "72/157",
+ "official_mismatch_vs_original": [],
  "characterization_failures": [],
  "seed2": {
   "Users": 200,

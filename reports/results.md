@@ -10,7 +10,7 @@ Every number in this file is read from an artifact written by an actual run (pat
 | 2. Analysis inventory | DONE | analysis/inventory.json |
 | 3. Schema designed, linted, self-reviewed | DONE | design/schema.md, design/self_review.md |
 | 4. Slice 1 (users/auth + profiles/follows) converted, migrated, validated | DONE | {'char_passed': 42, 'char_total': 42, 'official_passed': 19, 'official_total': 56} |
-| 5. All slices converted, full suite passing on MongoDB | DONE except 1 accepted deviation (feed.hurl:110) | transform stage: 155/155 characterization steps |
+| 5. All slices converted, full suite passing on MongoDB | DONE | final run: 162/162 characterization steps, official suite 0 entries different from the original |
 | 6. Benchmark, report, docs | DONE | reports/raw/benchmark.json |
 
 ## Tests
@@ -18,8 +18,8 @@ Every number in this file is read from an artifact written by an actual run (pat
 Source: `reports/raw/official_original.json`, `reports/raw/migrate_stage.json`, `logs/transform/final.json`.
 
 - **Official RealWorld suite (Hurl, gothinkster/realworld @2558884), original app on Postgres:** 72/157 request entries pass (1/13 files fully). Flaky entries across two runs: 0. The app predates this spec version (e.g. it returns 422 where the spec wants 401/409, and `offset` is a page index), so a low baseline is expected.
-- **Official suite on the MongoDB app:** 73/157 entries. Entries whose pass/fail differs from the original: **1** (feed.hurl:110).
-- **Frozen characterization tests (155 steps recorded from the original):** 155/155 pass on MongoDB.
+- **Official suite on the MongoDB app:** 72/157 entries. Entries whose pass/fail differs from the original: **0** (behaviourally identical).
+- **Frozen characterization tests** (155 steps recorded from the original at Stage 1, plus a 7-step frozen addendum for email changes recorded from the original after review): **162/162** pass on MongoDB.
 - **Differential test (same 94 requests replayed on both backends over identical migrated data):** 94/94 responses identical after normalization (strict, match rate 100.00%); 94/94 when comment lists, which the original returns with NO `ORDER BY` (order unspecified), are compared as sets.
 
 ## Transformation: repair iterations per chunk
@@ -29,6 +29,7 @@ Source: `state/pipeline_state.json` (chunks), per-iteration logs in `logs/transf
 | Chunk | Status | Rounds | Test runs | Repairs (file per iteration) | Result |
 |---|---|---|---|---|---|
 | differential_fix | done | 1 | 0 | 0: - | - |
+| email_fix | done | 1 | 4 | 0: - | 159/162 |
 | optimization_pass | done | 1 | 1 | 0: - | 155/155 |
 | slice1_users_profiles | done | 5 | 11 | 10: index.js, controllers/profiles.js, controllers/profiles.js, controllers/users.js, controllers/users.js, controllers/profiles.js, controllers/user.js, controllers/profiles.js, controllers/user.js, controllers/user.js | 42/42 |
 | slice2_articles_feed | done | 16 | 31 | 28: controllers/articles.js#createArticle, controllers/articles.js#deleteArticle,controllers/articles.js#articlesFeed,controllers/articles.js#createArticle, controllers/articles.js#articlesFeed,controllers/articles.js#allArticles,controllers/articles.js#createArticle, controllers/articles.js#articlesFeed,controllers/articles.js#allArticles,controllers/articles.js#createArticle, controllers/articles.js#articlesFeed,controllers/articles.js#allArticles,controllers/articles.js#createArticle, controllers/articles.js#articlesFeed,controllers/articles.js#allArticles,controllers/articles.js#createArticle, middleware/authentication.js, controllers/articles.js#allArticles,controllers/articles.js#createArticle,controllers/articles.js#singleArticle, controllers/articles.js#allArticles,controllers/articles.js#createArticle,controllers/articles.js#articlesFeed, helper/helpers.js, middleware/authentication.js, controllers/articles.js#createArticle,controllers/articles.js#allArticles,controllers/articles.js#deleteArticle, controllers/articles.js#createArticle,controllers/articles.js#allArticles,controllers/articles.js#deleteArticle, controllers/articles.js#createArticle,controllers/articles.js#deleteArticle, controllers/articles.js#createArticle,controllers/articles.js#deleteArticle,controllers/articles.js#articlesFeed, controllers/articles.js#createArticle,controllers/articles.js#deleteArticle,controllers/articles.js#articlesFeed, controllers/articles.js#createArticle,controllers/articles.js#deleteArticle,controllers/articles.js#articlesFeed, controllers/articles.js#createArticle,controllers/articles.js#deleteArticle,controllers/articles.js#articlesFeed, controllers/articles.js#createArticle,controllers/articles.js#articlesFeed, controllers/articles.js#createArticle,controllers/articles.js#articlesFeed, controllers/articles.js#createArticle,controllers/articles.js#articlesFeed, controllers/articles.js#createArticle,controllers/articles.js#articlesFeed, controllers/articles.js#createArticle,controllers/articles.js#articlesFeed, controllers/articles.js#articlesFeed, helper/helpers.js, controllers/articles.js#articlesFeed, middleware/authentication.js, controllers/articles.js#articlesFeed | 104/104 |
@@ -45,9 +46,9 @@ Source: `logs/llm_calls.jsonl` (every call), transcripts in `logs/llm_transcript
 | schema | openai/gpt-oss-120b | 11 | 36 | 18019 | 11834 |
 | schema | qwen/qwen3.8-27b | 4 | 3 | 7623 | 5765 |
 | transform | openai/gpt-oss-120b | 52 | 0 | 163646 | 49825 |
-| transform | openai/gpt-oss-20b | 4 | 1 | 13712 | 2366 |
+| transform | openai/gpt-oss-20b | 9 | 3 | 29062 | 6427 |
 | transform | qwen/qwen3.8-27b | 51 | 5 | 183864 | 19009 |
-| **total** | | | | **386864** | **88799** |
+| **total** | | | | **402214** | **92860** |
 
 Daily free-tier limits reached during the run (each model: 200,000 tokens/day): `openai/gpt-oss-120b` on 2026-11-10, `qwen/qwen3.8-27b` on 2026-11-10. The client then fell back automatically to the next model, so later slice-2 rounds, slice 3 and the end of the optimization pass were written by `qwen/qwen3.8-27b` and then `openai/gpt-oss-20b` (see the per-model rows above).
 
@@ -55,7 +56,7 @@ Cost: **$0.00**. All calls went to Groq's free tier (rate limit observed: 8,000 
 
 ## Data migration and the three checks
 
-- Validation dataset ({'Users': 200, 'Tags': 20, 'Articles': 1000, 'TagList': 1957, 'Favorites': 841, 'Followers': 654, 'Comments': 2038, 'seconds': 0.37}): 4753 documents in 0.38s (**12529.5 rows/s**, 7 batches, 8 workers). Resume run skipped 7/7 batches; a fresh re-run produced byte-identical collections: **True**.
+- Validation dataset ({'Users': 200, 'Tags': 20, 'Articles': 1000, 'TagList': 1957, 'Favorites': 841, 'Followers': 654, 'Comments': 2038, 'seconds': 0.39}): 4753 documents in 0.36s (**13059.3 rows/s**, 7 batches, 8 workers). Resume run skipped 7/7 batches; a fresh re-run produced byte-identical collections: **True**.
 - Benchmark dataset → `conduit_bench`: 476137 documents in 31.25s (**15235.4 rows/s**).
 - Benchmark dataset → `conduit_naive`: 675748 documents in 41.18s (**16411.5 rows/s**).
 - Check 1: SQL vs MQL per collection: **6/6 OK**
@@ -101,14 +102,17 @@ Source: `reports/raw/benchmark.json`. Dataset: {'Users': 20000, 'Tags': 40, 'Art
 
 Values are p50 / p95 in ms. `n` is lower than 200 where a variant hit its 45 s time budget.
 
+## Manual (non-LLM) edits to generated code
+
+Made by the engineer when the LLM quota ran out (DECISIONS D42), marked `MANUAL FIX` in the code, and graded by the same frozen tests:
+
+- controllers/user.js updateUser: echo `email` in the PUT /api/user response only when the request sent one (original semantics)
+- controllers/articles.js createArticle: insert with authorId null, set author after the tag loop (original order); tag length test on the untrimmed tag
+
 ## What failed or is not done
 
-- official entries behaving differently from the original: ['feed.hurl:110']
-- **Accepted deviation** `feed.hurl:110`: GET /api/articles/feed?limit=1&offset=1: the original inflates articlesCount by joined tag rows (findAndCountAll + belongsToMany include); the MongoDB articlesFeed returns the plain article count. 3 agent attempts at the inflated count crashed (MongoServerError: unknown group operator '$size') and were reverted by keep-best. Accepted after round 15 to stay inside the token budget (420k/550k); all 104 characterization steps pass.
 - Optimization pass is partial: the 6 article handlers and controllers/favorites.js were rewritten; helper/helpers.js (the model reply had no code block) and controllers/comments.js (the prompt exceeded the free-tier per-request limit) were left as first translated. Behaviour is unchanged (155/155).
 - The default article list over HTTP is no faster on MongoDB (p50 262 vs 258 ms). Likely cause (NOT profiled): to reproduce the original's inflated articlesCount, allArticles aggregates over every article on each request. A maintained or cached count is the next step.
-- Behaviour the frozen tests do not cover, found in review: the converted updateUser ignores an `email` field in the request body, while the original would set it. No test or differential step exercises an email change, so it is not verified either way.
-- The original returns comments without ORDER BY. One differential run saw a different order from Postgres (93/94 strict); the final run was 94/94.
 
 ## Reproduce
 

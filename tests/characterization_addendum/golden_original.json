@@ -1,0 +1,100 @@
+{
+ "email_change": [
+  {
+   "body": {
+    "user": {
+     "bio": null,
+     "email": "sam@example.com",
+     "image": null,
+     "token": "<token>",
+     "username": "sam"
+    }
+   },
+   "request": "POST /api/users",
+   "status": 201,
+   "step": "register sam"
+  },
+  {
+   "body": {
+    "user": {
+     "bio": "moved",
+     "email": "sam.new@example.com",
+     "image": null,
+     "token": "<token>",
+     "username": "sam"
+    }
+   },
+   "request": "PUT /api/user",
+   "status": 200,
+   "step": "change email (and bio)"
+  },
+  {
+   "body": {
+    "user": {
+     "bio": "moved",
+     "email": "sam.new@example.com",
+     "image": null,
+     "token": "<token>",
+     "username": "sam"
+    }
+   },
+   "request": "POST /api/users/login",
+   "status": 200,
+   "step": "login with NEW email"
+  },
+  {
+   "body": {
+    "user": {
+     "bio": "moved",
+     "email": "sam.new@example.com",
+     "image": null,
+     "token": "<token>",
+     "username": "sam"
+    }
+   },
+   "request": "GET /api/user",
+   "status": 200,
+   "step": "current user via new-email token"
+  },
+  {
+   "body": {
+    "errors": {
+     "body": [
+      "Email not found sign in first"
+     ]
+    }
+   },
+   "request": "POST /api/users/login",
+   "status": 404,
+   "step": "login with OLD email"
+  },
+  {
+   "body": {
+    "profile": {
+     "bio": "moved",
+     "followersCount": 0,
+     "following": false,
+     "image": null,
+     "username": "sam"
+    }
+   },
+   "request": "GET /api/profiles/sam",
+   "status": 200,
+   "step": "profile after email change"
+  },
+  {
+   "body": {
+    "user": {
+     "bio": null,
+     "email": "sam@example.com",
+     "image": null,
+     "token": "<token>",
+     "username": "sam_again"
+    }
+   },
+   "request": "POST /api/users",
+   "status": 201,
+   "step": "register again with the old email"
+  }
+ ]
+}

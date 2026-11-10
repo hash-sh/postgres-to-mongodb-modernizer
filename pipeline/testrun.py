@@ -27,6 +27,9 @@ def reset_test_db():
 
 def run_slice(state, k, include_official=True):
     guard.verify_tests(state.stage("baseline")["manifest_hash"])
+    add_hash = state.stage("baseline").get("addendum_manifest_hash")
+    if add_hash:
+        guard.verify_tests(add_hash, guard.ADDENDUM_DIRS, guard.ADDENDUM_MANIFEST)
     guard.verify_api_contract()
     golden = json.loads(GOLDEN.read_text())
     scen = [s for s in SCENARIOS if s["slice"] <= k]
@@ -36,7 +39,14 @@ def run_slice(state, k, include_official=True):
         reset_test_db()
         be.start()
         results = httpcheck.run_all(be.url, scen, reset=reset_test_db)
-        p, t, fails = httpcheck.compare({s["name"]: golden[s["name"]] for s in scen}, results)
+        exp = {s["name"]: golden[s["name"]] for s in scen}
+        if add_hash:  # frozen addendum scenarios, graded by their own golden master recorded from the original
+            from tests.characterization_addendum.scenarios import SCENARIOS as ADD
+            add = [s for s in ADD if s["slice"] <= k]
+            results.update(httpcheck.run_all(be.url, add, reset=reset_test_db))
+            exp.update(json.loads((settings.root / "tests/characterization_addendum/golden_original.json").read_text()))
+            exp = {n: exp[n] for n in results}
+        p, t, fails = httpcheck.compare(exp, results)
         res.update(char_passed=p, char_total=t, char_failures=fails)
         if include_official:
             reset_test_db()

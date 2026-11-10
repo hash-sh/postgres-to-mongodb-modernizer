@@ -267,6 +267,10 @@ def run(state):
     for label, fn in cases:
         res["data_access"][label][pgi.name] = timeit(lambda: fn(pgi), n=200, warmup=3, budget_s=45)
         print(f"  [data access] {label}: postgres_indexed p50={res['data_access'][label][pgi.name]['p50_ms']}ms")
+    # Remove the fairness indexes again: TRUNCATE keeps indexes, and leaving them would silently change the ORIGINAL
+    # app's query plans (and e.g. its unspecified comment order) for every later validation run.
+    with psycopg.connect(settings.pg_dsn, autocommit=True) as c:
+        c.execute("DROP INDEX IF EXISTS b1, b2, b3, b4, b5, b6, b7, b8")
     for label, row in res["http"].items():
         print(f"  [http] {label}: " + ", ".join(f"{k} p50={v['p50_ms']}ms p95={v['p95_ms']}ms" for k, v in row.items()))
     (OUT / "benchmark.json").write_text(json.dumps(res, indent=1, default=str))

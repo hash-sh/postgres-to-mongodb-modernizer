@@ -1,11 +1,30 @@
 {
-  "accepted_deviations": {
-    "feed.hurl:110": "GET /api/articles/feed?limit=1&offset=1: the original inflates articlesCount by joined tag rows (findAndCountAll + belongsToMany include); the MongoDB articlesFeed returns the plain article count. 3 agent attempts at the inflated count crashed (MongoServerError: unknown group operator '$size') and were reverted by keep-best. Accepted after round 15 to stay inside the token budget (420k/550k); all 104 characterization steps pass."
-  },
+  "accepted_deviations": {},
   "chunks": {
     "differential_fix": {
       "iterations": [],
       "report": "DIFFERENTIAL TEST (same requests on both backends over identical migrated data) found behaviour differences:\n* POST /api/articles/article-2-rust-adipiscing/favorite: $.article.updatedAt: expected '2025-01-02T00:01:14.000Z' got '<ts>'\n* POST /api/articles/article-2-rust-adipiscing/favorite: $.article.updatedAt: expected '2025-01-02T00:01:14.000Z' got '<ts>'\n* DELETE /api/articles/article-3-security-sed/favorite: $.article.updatedAt: expected '2025-01-02T00:01:51.000Z' got '<ts>'\n* GET /api/articles?favorited=user17: $.articles[0].updatedAt: expected '2025-01-02T00:01:14.000Z' got '<ts>'\nThe original NEVER changes an article's updatedAt when it is favorited/unfavorited (only the Favorites junction row changes). Mongoose timestamps:true sets updatedAt on updateOne unless you pass { timestamps: false }.",
+      "status": "done"
+    },
+    "email_fix": {
+      "iterations": [
+        {
+          "char": "157/162",
+          "iteration": 0
+        },
+        {
+          "char": "159/162",
+          "iteration": 1
+        },
+        {
+          "char": "161/162",
+          "iteration": 2
+        },
+        {
+          "char": "159/162",
+          "iteration": 3
+        }
+      ],
       "status": "done"
     },
     "optimization_pass": {
@@ -576,17 +595,22 @@
   },
   "known_issues": [
     "Optimization pass is partial: the 6 article handlers and controllers/favorites.js were rewritten; helper/helpers.js (the model reply had no code block) and controllers/comments.js (the prompt exceeded the free-tier per-request limit) were left as first translated. Behaviour is unchanged (155/155).",
-    "The default article list over HTTP is no faster on MongoDB (p50 262 vs 258 ms). Likely cause (NOT profiled): to reproduce the original's inflated articlesCount, allArticles aggregates over every article on each request. A maintained or cached count is the next step.",
-    "Behaviour the frozen tests do not cover, found in review: the converted updateUser ignores an `email` field in the request body, while the original would set it. No test or differential step exercises an email change, so it is not verified either way.",
-    "The original returns comments without ORDER BY. One differential run saw a different order from Postgres (93/94 strict); the final run was 94/94."
+    "The default article list over HTTP is no faster on MongoDB (p50 262 vs 258 ms). Likely cause (NOT profiled): to reproduce the original's inflated articlesCount, allArticles aggregates over every article on each request. A maintained or cached count is the next step."
   ],
   "llm": {
-    "calls": 122,
+    "calls": 127,
     "daily_exhausted": {
       "openai/gpt-oss-120b": "2026-11-10",
       "qwen/qwen3.8-27b": "2026-11-10"
     },
-    "tokens": 475663
+    "tokens": 495074
+  },
+  "manual_fixes": [
+    "controllers/user.js updateUser: echo `email` in the PUT /api/user response only when the request sent one (original semantics)",
+    "controllers/articles.js createArticle: insert with authorId null, set author after the tag loop (original order); tag length test on the untrimmed tag"
+  ],
+  "resolved_deviations": {
+    "feed.hurl:110": "RESOLVED by manual fix (D42): root cause was NOT the count - the original saves a tagless article without an author (setAuthor runs after the crashing tag loop), so it never appears in a feed; the converted code set authorId at insert. Fixed to the original's order."
   },
   "stages": {
     "analysis": {
@@ -602,6 +626,7 @@
       "updated": "2026-11-10T14:38:59"
     },
     "baseline": {
+      "addendum_manifest_hash": "49e7cb57951f6197084e9d86a82f391290a355986c4105aa8ce05cc15a01d157",
       "characterization_steps": 155,
       "error": "RuntimeError: characterization recording is not deterministic for: ['comments']",
       "manifest_hash": "5f3a314bbbf326bdcb14c76d31f85698d18ae678fa2c109628008485460e7231",
@@ -619,18 +644,18 @@
       "updated": "2026-11-10T20:16:33"
     },
     "migrate": {
-      "characterization": "155/155",
+      "characterization": "162/162",
       "checks_ok": true,
       "differential": "94/94",
       "idempotent": true,
-      "seconds": 29.3,
+      "seconds": 33.7,
       "status": "done",
-      "updated": "2026-11-10T20:04:35"
+      "updated": "2026-11-10T20:44:38"
     },
     "report": {
       "seconds": 0.0,
       "status": "done",
-      "updated": "2026-11-10T20:17:27"
+      "updated": "2026-11-10T20:45:17"
     },
     "schema": {
       "critic_blocking": 1,

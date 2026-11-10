@@ -53,7 +53,8 @@ def run(state):
          str(ch.get("slice1_users_profiles", {}).get("result", ""))),
         ("5. All slices converted, full suite passing on MongoDB",
          chunk_ok("slice2_articles_feed") and chunk_ok("slice3_comments_favorites_tags") and st["stages"]["transform"]["status"] == "done",
-         f"transform stage: {st['stages']['transform'].get('final_char', '?')} characterization steps"),
+         f"final run: {mig['characterization'] if mig else '?'} characterization steps, official suite "
+         f"{len(mig['official_mismatch_vs_original']) if mig else '?'} entries different from the original"),
         ("6. Benchmark, report, docs", bool(bench), "reports/raw/benchmark.json"),
     ]
     L += ["## Milestone status", "", "| Milestone | Status | Evidence |", "|---|---|---|"]
@@ -77,7 +78,8 @@ def run(state):
         L.append(f"- **Official suite on the MongoDB app:** {mig['official_mongo']} entries. Entries whose pass/fail differs "
                  f"from the original: **{len(mig['official_mismatch_vs_original'])}** "
                  + (f"({', '.join(mig['official_mismatch_vs_original'][:10])})" if mig['official_mismatch_vs_original'] else "(behaviourally identical)") + ".")
-        L.append(f"- **Frozen characterization tests (155 steps recorded from the original):** {mig['characterization']} pass on MongoDB.")
+        L.append(f"- **Frozen characterization tests** (155 steps recorded from the original at Stage 1, plus a 7-step frozen "
+                 f"addendum for email changes recorded from the original after review): **{mig['characterization']}** pass on MongoDB.")
         d = mig["differential"]
         L.append(f"- **Differential test (same {d['requests']} requests replayed on both backends over identical migrated data):** "
                  f"{d['matched']}/{d['requests']} responses identical after normalization (strict, match rate {d['match_rate']:.2%}); "
@@ -160,6 +162,10 @@ def run(state):
             L.append(f"| {ep} | {cell('postgres')} | {cell('postgres_indexed')} | {cell('mongo_naive')} | {cell('mongo_designed')} |")
         L += ["", "Values are p50 / p95 in ms. `n` is lower than 200 where a variant hit its 45 s time budget."]
 
+    if st.get("manual_fixes"):
+        L += ["", "## Manual (non-LLM) edits to generated code", "",
+              "Made by the engineer when the LLM quota ran out (DECISIONS D42), marked `MANUAL FIX` in the code, and "
+              "graded by the same frozen tests:", ""] + [f"- {m}" for m in st["manual_fixes"]]
     # failures
     L += ["", "## What failed or is not done", ""]
     probs = []

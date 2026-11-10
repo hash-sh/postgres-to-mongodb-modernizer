@@ -251,3 +251,28 @@ tests, and then re-ran. Every diagnosis is also stored in `state/pipeline_state.
   `_id` order (93/94); in the next run Postgres happened to return id order (94/94). The report gives the **strict**
   number and, as a secondary number, the one where order-unspecified comment lists are compared as sets. The frozen
   characterization comparison stays strict.
+
+## After review: fixing, not just documenting
+
+### D42. Two last behaviour differences fixed by hand (the only manual edits to generated code)
+- On that day both strong models had used their Groq free quota and the fallback (`gpt-oss-20b`) failed. Rather than
+  leave known differences, I (the engineer, not the LLM) made two small edits. They are marked `MANUAL FIX` in the
+  code, listed in `state.manual_fixes`, and graded by the same frozen tests.
+  1. **Email change** (a gap found in review; a new frozen addendum `tests/characterization_addendum/` was recorded
+     against the ORIGINAL and hashed into its own manifest *before* the fix). The agent's version already saved the
+     new email; the manual edit makes `PUT /api/user` echo `email` only when the request sent one, as the original does.
+  2. **`feed.hurl:110`, previously "accepted"**. The real root cause was **not** the count. The original runs
+     `Article.create()`, then the tag loop (which crashes with 500 when `tagList` is missing), and only then
+     `article.setAuthor()`. So a tagless article is saved **without an author** and never appears in a feed. The
+     converted code set `authorId` at insert time. Fixed to the original's order, plus the untrimmed-length tag
+     check (`tag.length > 2` on the raw tag).
+- Result: **162/162** characterization, official suite **identical to the original (0 entries differ)**, and the
+  accepted deviation removed.
+- Lesson: my earlier diagnosis ("count inflation") was wrong. The frozen feed scenarios and the analyzer's count note
+  both pointed there. Checking what the test *requests* actually do found the real cause.
+
+### D43. Benchmark indexes leaked into the original's database
+- The benchmark adds secondary indexes to Postgres for its fairness variant. `TRUNCATE` keeps indexes, so later
+  validation runs used different query plans for the original app. Since `getComments()` has no ORDER BY, that changed
+  its comment order (strict differential 87/94, though all 94 matched as sets). After dropping the indexes the
+  original returns id order and the strict differential is **94/94**. The benchmark now drops its indexes when done.

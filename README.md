@@ -79,9 +79,9 @@ curl -s 'localhost:3002/api/articles?limit=1' | head -c 400; echo
 
 | What | Result |
 |---|---|
-| Frozen characterization tests (155 steps recorded from the original) | **155/155 pass on MongoDB** |
-| Official RealWorld Hurl suite | original **72/157** entries → MongoDB **73/157**; **1** entry behaves differently (`feed.hurl:110`, an explicitly accepted deviation: the original's inflated `articlesCount`) |
-| Differential replay (94 requests, both backends, identical migrated data) | **94/94 identical** (an earlier run found a real bug, a Mongoose timestamp side effect, which was fixed by the agent) |
+| Frozen characterization tests (155 steps from Stage 1 + 7-step email addendum, all recorded from the original) | **162/162 pass on MongoDB** |
+| Official RealWorld Hurl suite | original **72/157** entries → MongoDB **72/157**, **0 entries behave differently** (bug-for-bug identical) |
+| Differential replay (94 requests, both backends, identical migrated data) | **94/94 identical (strict)**; earlier runs found 2 real issues, both fixed |
 | Three post-migration checks | **6/6** collections, **8/8** references, **7/7** tables (counts + per-column checksums) |
 | Migration throughput | 12.5k rows/s (validation set); **15.2k rows/s** on 476k documents (benchmark set); idempotent re-run byte-identical |
 | Repair effort | slice 1: 5 rounds; slice 2: 16 rounds (12 root causes fixed in the harness, see DECISIONS D25–D36); slice 3: 2 iterations |
@@ -90,8 +90,16 @@ curl -s 'localhost:3002/api/articles?limit=1' | head -c 400; echo
 | HTTP end-to-end (p50) | `?tag=` 563 → **17 ms**, `?author=` 259 → **31 ms**, feed 209 → **78 ms**, comments 73 → **32 ms**; default list ≈ equal (262 vs 258 ms) |
 
 Honest caveats: Postgres **with the same indexes** beats the designed MongoDB schema on single article + comments
-and on profile. The optimization pass was partial, and one deviation was accepted. All of it is listed under
-"What failed or is not done" in the results file.
+and on profile. Two small behaviour fixes were made by hand after the free LLM quota ran out (marked `MANUAL FIX`,
+DECISIONS D42). Two performance items are open: the optimization pass skipped 2 files, and the default list isn't
+faster yet. Everything is listed in the results file.
+
+### Run the demo (the real Conduit website, on both backends)
+```bash
+./demo/run_demo.sh
+#   MongoDB version  -> http://localhost:3100      original (Postgres) -> http://localhost:3000
+#   pipeline dashboard (Streamlit) -> http://localhost:8501      login: user1@example.com / password123
+```
 
 ## Repository map
 | Path | What |

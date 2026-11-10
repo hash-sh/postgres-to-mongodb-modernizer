@@ -175,7 +175,10 @@ const createArticle = async (req, res, next) => {
       title: title,
       description: description,
       body: body,
-      authorId: loggedUser._id,
+      // MANUAL FIX (engineer, not LLM - DECISIONS D42): like the original, the article is saved WITHOUT an author
+      // and the author is set only after the tag loop. If the loop throws (no tagList => 500 in the original), the
+      // article stays orphaned and never appears in anyone's feed - exactly as on Postgres.
+      authorId: null,
       tagList: [],
       favoritesCount: 0
     });
@@ -186,11 +189,13 @@ const createArticle = async (req, res, next) => {
 
       if (tagInDB) {
         await Article.updateOne({ _id: article._id }, { $addToSet: { tagList: trimmedTag } });
-      } else if (trimmedTag.length > 2) {
+      } else if (tag.length > 2) { // MANUAL FIX: the original tests the UNtrimmed length
         await Tag.create({ _id: trimmedTag });
         await Article.updateOne({ _id: article._id }, { $addToSet: { tagList: trimmedTag } });
       }
     }
+
+    await Article.updateOne({ _id: article._id }, { $set: { authorId: loggedUser._id } }); // = article.setAuthor()
 
     const freshArticle = await Article.findById(article._id).lean();
     const articleJSON = await articleResponse(freshArticle, loggedUser);

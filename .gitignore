@@ -9,3 +9,4 @@ logs/*_backend.log
 state/*.tmp
 reports/raw/probe*
 apps/mongo-backend/node_modules/
+logs/demo/
