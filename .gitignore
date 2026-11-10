@@ -10,3 +10,4 @@ state/*.tmp
 reports/raw/probe*
 apps/mongo-backend/node_modules/
 logs/demo/
+claude_code_prompt_mongodb_modernizer.md
