@@ -26,7 +26,7 @@ const favoriteToggler = async (req, res, next) => {
           await Article.updateOne(
             { _id: article._id },
             { $inc: { favoritesCount: 1 } },
-            { session: s }
+            { session: s, timestamps: false }
           );
         }
       } else if (req.method === "DELETE") {
@@ -36,7 +36,7 @@ const favoriteToggler = async (req, res, next) => {
           await Article.updateOne(
             { _id: article._id },
             { $inc: { favoritesCount: -1 } },
-            { session: s }
+            { session: s, timestamps: false }
           );
         }
       }

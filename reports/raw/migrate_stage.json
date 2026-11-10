@@ -1,0 +1,80 @@
+{
+ "seed": {
+  "Users": 200,
+  "Tags": 20,
+  "Articles": 1000,
+  "TagList": 1957,
+  "Favorites": 841,
+  "Followers": 654,
+  "Comments": 2038,
+  "seconds": 0.37
+ },
+ "migration": {
+  "db": "conduit",
+  "collections": {
+   "comments": 2038,
+   "tags": 20,
+   "users": 200,
+   "followers": 654,
+   "favorites": 841,
+   "articles": 1000
+  },
+  "rows_written": 4753,
+  "load_seconds": 0.38,
+  "total_seconds": 1.0,
+  "rows_per_second": 12529.5,
+  "batches": 7,
+  "batches_skipped": 0
+ },
+ "migration_resume": {
+  "db": "conduit",
+  "collections": {},
+  "rows_written": 0,
+  "load_seconds": 0.03,
+  "total_seconds": 0.06,
+  "rows_per_second": null,
+  "batches": 7,
+  "batches_skipped": 7
+ },
+ "migration_rerun": {
+  "db": "conduit",
+  "collections": {
+   "tags": 20,
+   "users": 200,
+   "comments": 2038,
+   "favorites": 841,
+   "followers": 654,
+   "articles": 1000
+  },
+  "rows_written": 4753,
+  "load_seconds": 0.25,
+  "total_seconds": 0.27,
+  "rows_per_second": 19056.5,
+  "batches": 7,
+  "batches_skipped": 0
+ },
+ "idempotent": true,
+ "checks_ok": true,
+ "characterization": "155/155",
+ "official_mongo": "73/157",
+ "official_mismatch_vs_original": [
+  "feed.hurl:110"
+ ],
+ "characterization_failures": [],
+ "seed2": {
+  "Users": 200,
+  "Tags": 20,
+  "Articles": 1000,
+  "TagList": 1957,
+  "Favorites": 841,
+  "Followers": 654,
+  "Comments": 2038,
+  "seconds": 0.36
+ },
+ "differential": {
+  "requests": 94,
+  "matched": 94,
+  "match_rate": 1.0,
+  "matched_ignoring_unspecified_order": 94
+ }
+}

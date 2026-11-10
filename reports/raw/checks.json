@@ -1,0 +1,241 @@
+{
+ "check1_collections": [
+  {
+   "collection": "articles",
+   "source": "Articles",
+   "rows": 1000,
+   "mismatched": 0,
+   "extra_documents": 0,
+   "examples": [],
+   "ok": true
+  },
+  {
+   "collection": "comments",
+   "source": "Comments",
+   "rows": 2038,
+   "mismatched": 0,
+   "extra_documents": 0,
+   "examples": [],
+   "ok": true
+  },
+  {
+   "collection": "tags",
+   "source": "Tags",
+   "rows": 20,
+   "mismatched": 0,
+   "extra_documents": 0,
+   "examples": [],
+   "ok": true
+  },
+  {
+   "collection": "users",
+   "source": "Users",
+   "rows": 200,
+   "mismatched": 0,
+   "extra_documents": 0,
+   "examples": [],
+   "ok": true
+  },
+  {
+   "collection": "favorites",
+   "source": "Favorites",
+   "rows": 841,
+   "mismatched": 0,
+   "extra_documents": 0,
+   "examples": [],
+   "ok": true
+  },
+  {
+   "collection": "followers",
+   "source": "Followers",
+   "rows": 654,
+   "mismatched": 0,
+   "extra_documents": 0,
+   "examples": [],
+   "ok": true
+  }
+ ],
+ "check2_references": [
+  {
+   "from": "articles",
+   "path": "authorId",
+   "to": "users",
+   "array": false,
+   "distinct_referenced": 180,
+   "dangling": 0,
+   "ok": true
+  },
+  {
+   "from": "articles",
+   "path": "tagList",
+   "to": "tags",
+   "array": true,
+   "distinct_referenced": 20,
+   "dangling": 0,
+   "ok": true
+  },
+  {
+   "from": "comments",
+   "path": "authorId",
+   "to": "users",
+   "array": false,
+   "distinct_referenced": 200,
+   "dangling": 0,
+   "ok": true
+  },
+  {
+   "from": "comments",
+   "path": "articleId",
+   "to": "articles",
+   "array": false,
+   "distinct_referenced": 679,
+   "dangling": 0,
+   "ok": true
+  },
+  {
+   "from": "favorites",
+   "path": "_id.articleId",
+   "to": "articles",
+   "array": false,
+   "distinct_referenced": 496,
+   "dangling": 0,
+   "ok": true
+  },
+  {
+   "from": "favorites",
+   "path": "_id.userId",
+   "to": "users",
+   "array": false,
+   "distinct_referenced": 147,
+   "dangling": 0,
+   "ok": true
+  },
+  {
+   "from": "followers",
+   "path": "_id.followerId",
+   "to": "users",
+   "array": false,
+   "distinct_referenced": 162,
+   "dangling": 0,
+   "ok": true
+  },
+  {
+   "from": "followers",
+   "path": "_id.userId",
+   "to": "users",
+   "array": false,
+   "distinct_referenced": 166,
+   "dangling": 0,
+   "ok": true
+  }
+ ],
+ "check3_left_behind": [
+  {
+   "table": "Articles",
+   "stored_as": "collection:articles",
+   "pg_rows": 1000,
+   "mongo_rows": 1000,
+   "columns_checked": 8,
+   "columns_mismatched": [],
+   "checksums": {
+    "id": "74cef2b8cceb08b7ea5c4053",
+    "slug": "511133298971a71f139d4cf7",
+    "title": "41e9ac8cf1c87f3e7ba35952",
+    "description": "dd3fc00fbf70a8ffa3b17dc1",
+    "body": "4d313e0592eca2e467a40b68",
+    "createdAt": "e8defbcc2051e073de0827c6",
+    "updatedAt": "74ccd792f3c1f8f9478945e7",
+    "userId": "7d0cb0ecc9c19897b25f95ad"
+   },
+   "ok": true
+  },
+  {
+   "table": "Comments",
+   "stored_as": "collection:comments",
+   "pg_rows": 2038,
+   "mongo_rows": 2038,
+   "columns_checked": 6,
+   "columns_mismatched": [],
+   "checksums": {
+    "id": "0e4af73673cd30772483a153",
+    "body": "5bf385839d82e8713b5eb3b3",
+    "createdAt": "a0fc4d4ca25ed692fc295165",
+    "updatedAt": "18a21d2207edd161ccbddea4",
+    "articleId": "31f50c04a5d33d2edadb7827",
+    "userId": "a8781a4aa6f6e8d17f146ebc"
+   },
+   "ok": true
+  },
+  {
+   "table": "Favorites",
+   "stored_as": "collection:favorites",
+   "pg_rows": 841,
+   "mongo_rows": 841,
+   "columns_checked": 2,
+   "columns_mismatched": [],
+   "checksums": {
+    "articleId": "cb25de61440323adacc6f4f3",
+    "userId": "fb4aefc8dd43bbba360b66b8"
+   },
+   "ok": true
+  },
+  {
+   "table": "Followers",
+   "stored_as": "collection:followers",
+   "pg_rows": 654,
+   "mongo_rows": 654,
+   "columns_checked": 2,
+   "columns_mismatched": [],
+   "checksums": {
+    "userId": "e630af333b94229d18967a57",
+    "followerId": "dde92826454a4667d78e2cd5"
+   },
+   "ok": true
+  },
+  {
+   "table": "TagList",
+   "stored_as": "embedded:articles",
+   "pg_rows": 1957,
+   "mongo_rows": 1957,
+   "columns_checked": 2,
+   "columns_mismatched": [],
+   "checksums": {
+    "articleId": "719894278edfda4171fbacd7",
+    "tagName": "85441d22fc9610f47db0419a"
+   },
+   "ok": true
+  },
+  {
+   "table": "Tags",
+   "stored_as": "collection:tags",
+   "pg_rows": 20,
+   "mongo_rows": 20,
+   "columns_checked": 1,
+   "columns_mismatched": [],
+   "checksums": {
+    "name": "a6ae8aaab6a3857778828d13"
+   },
+   "ok": true
+  },
+  {
+   "table": "Users",
+   "stored_as": "collection:users",
+   "pg_rows": 200,
+   "mongo_rows": 200,
+   "columns_checked": 8,
+   "columns_mismatched": [],
+   "checksums": {
+    "id": "28e01c23d191d0812cd29719",
+    "email": "ae23db2e8874a720fa1ad928",
+    "username": "483e7af3ed7ed0b687d10c92",
+    "bio": "f936b10b8fdf0a28e8bca692",
+    "image": "4d6a7022d96af5fb24f128a7",
+    "password": "c8b6957774b5bffc6974cb16",
+    "createdAt": "e93d7d10f9189077e6a4745f",
+    "updatedAt": "45eaf452de5ac2daad155952"
+   },
+   "ok": true
+  }
+ ],
+ "ok": true
+}

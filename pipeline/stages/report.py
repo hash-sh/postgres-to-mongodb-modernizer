@@ -73,7 +73,9 @@ def run(state):
         L.append(f"- **Frozen characterization tests (155 steps recorded from the original):** {mig['characterization']} pass on MongoDB.")
         d = mig["differential"]
         L.append(f"- **Differential test (same {d['requests']} requests replayed on both backends over identical migrated data):** "
-                 f"{d['matched']}/{d['requests']} responses identical after normalization (match rate {d['match_rate']:.2%}).")
+                 f"{d['matched']}/{d['requests']} responses identical after normalization (strict, match rate {d['match_rate']:.2%}); "
+                 f"{d.get('matched_ignoring_unspecified_order', '?')}/{d['requests']} when comment lists, which the original returns "
+                 f"with NO `ORDER BY` (order unspecified), are compared as sets.")
         diff = _load("differential.json")
         if diff and diff["mismatches"]:
             L.append("  Mismatches:")

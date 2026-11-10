@@ -53,13 +53,13 @@ const followToggler = async (req, res, next) => {
           const result = await Follower.updateOne(
             { _id: key },
             { $setOnInsert: { _id: key } },
-            { upsert: true, session }
+            { upsert: true, session, timestamps: false }
           );
           if (result.upsertedCount === 1) {
             await User.updateOne(
               { _id: profile._id },
               { $inc: { followersCount: 1 } },
-              { session }
+              { session, timestamps: false }
             );
           }
         } else if (req.method === "DELETE") {
@@ -68,7 +68,7 @@ const followToggler = async (req, res, next) => {
             await User.updateOne(
               { _id: profile._id },
               { $inc: { followersCount: -1 } },
-              { session }
+              { session, timestamps: false }
             );
           }
         }

@@ -1,0 +1,15 @@
+
+=== Stage: migrate ===
+  seeded Postgres: {'Users': 200, 'Tags': 20, 'Articles': 1000, 'TagList': 1957, 'Favorites': 841, 'Followers': 654, 'Comments': 2038, 'seconds': 0.43}
+  migrating into 'conduit': 7 batches (0 already checkpointed), 8 workers
+  migrating into 'conduit': 7 batches (7 already checkpointed), 8 workers
+  migrating into 'conduit': 7 batches (0 already checkpointed), 8 workers
+  migrated 4753 docs (10261.6 rows/s); resume skipped 7/7 batches; re-run identical: True
+  check1_collections: 6/6 OK
+  check2_references: 8/8 OK
+  check3_left_behind: 7/7 OK
+  characterization 155/155, official 73/157 (entries behaving differently from original: 1)
+  differential: 93/94 responses identical
+    MISMATCH GET /api/articles/article-1-caching-sit/comments: ["$.comments[1].author.bio: expected None got 'I am user 161. dolore sit café tempor café ut'", '$.comments[1].author.followersCount: expected 6 got 2']
+=== migrate: done (29.4s)
+EXIT 0

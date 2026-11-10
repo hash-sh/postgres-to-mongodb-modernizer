@@ -1,0 +1,710 @@
+{
+ "sequence": {
+  "name": "differential",
+  "steps": [
+   {
+    "name": "login user116",
+    "method": "POST",
+    "path": "/api/users/login",
+    "save_token": "user116",
+    "body": {
+     "user": {
+      "email": "user116@example.com",
+      "password": "password123"
+     }
+    }
+   },
+   {
+    "name": "login user135",
+    "method": "POST",
+    "path": "/api/users/login",
+    "save_token": "user135",
+    "body": {
+     "user": {
+      "email": "user135@example.com",
+      "password": "password123"
+     }
+    }
+   },
+   {
+    "name": "login user102",
+    "method": "POST",
+    "path": "/api/users/login",
+    "save_token": "user102",
+    "body": {
+     "user": {
+      "email": "user102@example.com",
+      "password": "password123"
+     }
+    }
+   },
+   {
+    "name": "login user17",
+    "method": "POST",
+    "path": "/api/users/login",
+    "save_token": "user17",
+    "body": {
+     "user": {
+      "email": "user17@example.com",
+      "password": "password123"
+     }
+    }
+   },
+   {
+    "name": "list default [anon]",
+    "method": "GET",
+    "path": "/api/articles"
+   },
+   {
+    "name": "list limit 20 page 0 [anon]",
+    "method": "GET",
+    "path": "/api/articles?limit=20&offset=0"
+   },
+   {
+    "name": "list limit 20 page 1 [anon]",
+    "method": "GET",
+    "path": "/api/articles?limit=20&offset=1"
+   },
+   {
+    "name": "list limit 20 page 2 [anon]",
+    "method": "GET",
+    "path": "/api/articles?limit=20&offset=2"
+   },
+   {
+    "name": "list limit 20 page 3 [anon]",
+    "method": "GET",
+    "path": "/api/articles?limit=20&offset=3"
+   },
+   {
+    "name": "list default [user116]",
+    "method": "GET",
+    "path": "/api/articles",
+    "as": "user116"
+   },
+   {
+    "name": "list limit 20 page 0 [user116]",
+    "method": "GET",
+    "path": "/api/articles?limit=20&offset=0",
+    "as": "user116"
+   },
+   {
+    "name": "list limit 20 page 1 [user116]",
+    "method": "GET",
+    "path": "/api/articles?limit=20&offset=1",
+    "as": "user116"
+   },
+   {
+    "name": "list limit 20 page 2 [user116]",
+    "method": "GET",
+    "path": "/api/articles?limit=20&offset=2",
+    "as": "user116"
+   },
+   {
+    "name": "list limit 20 page 3 [user116]",
+    "method": "GET",
+    "path": "/api/articles?limit=20&offset=3",
+    "as": "user116"
+   },
+   {
+    "name": "list default [user17]",
+    "method": "GET",
+    "path": "/api/articles",
+    "as": "user17"
+   },
+   {
+    "name": "list limit 20 page 0 [user17]",
+    "method": "GET",
+    "path": "/api/articles?limit=20&offset=0",
+    "as": "user17"
+   },
+   {
+    "name": "list limit 20 page 1 [user17]",
+    "method": "GET",
+    "path": "/api/articles?limit=20&offset=1",
+    "as": "user17"
+   },
+   {
+    "name": "list limit 20 page 2 [user17]",
+    "method": "GET",
+    "path": "/api/articles?limit=20&offset=2",
+    "as": "user17"
+   },
+   {
+    "name": "list limit 20 page 3 [user17]",
+    "method": "GET",
+    "path": "/api/articles?limit=20&offset=3",
+    "as": "user17"
+   },
+   {
+    "name": "list deep page",
+    "method": "GET",
+    "path": "/api/articles?limit=10&offset=40"
+   },
+   {
+    "name": "tag security",
+    "method": "GET",
+    "path": "/api/articles?tag=security&limit=10",
+    "as": "user116"
+   },
+   {
+    "name": "tag security page 1",
+    "method": "GET",
+    "path": "/api/articles?tag=security&limit=5&offset=1"
+   },
+   {
+    "name": "tag indexing",
+    "method": "GET",
+    "path": "/api/articles?tag=indexing&limit=10",
+    "as": "user116"
+   },
+   {
+    "name": "tag indexing page 1",
+    "method": "GET",
+    "path": "/api/articles?tag=indexing&limit=5&offset=1"
+   },
+   {
+    "name": "tag nodejs",
+    "method": "GET",
+    "path": "/api/articles?tag=nodejs&limit=10",
+    "as": "user116"
+   },
+   {
+    "name": "tag nodejs page 1",
+    "method": "GET",
+    "path": "/api/articles?tag=nodejs&limit=5&offset=1"
+   },
+   {
+    "name": "tag devops",
+    "method": "GET",
+    "path": "/api/articles?tag=devops&limit=10",
+    "as": "user116"
+   },
+   {
+    "name": "tag devops page 1",
+    "method": "GET",
+    "path": "/api/articles?tag=devops&limit=5&offset=1"
+   },
+   {
+    "name": "author user1",
+    "method": "GET",
+    "path": "/api/articles?author=user1&limit=10",
+    "as": "user135"
+   },
+   {
+    "name": "author user2",
+    "method": "GET",
+    "path": "/api/articles?author=user2&limit=10",
+    "as": "user135"
+   },
+   {
+    "name": "author user5",
+    "method": "GET",
+    "path": "/api/articles?author=user5&limit=10",
+    "as": "user135"
+   },
+   {
+    "name": "author+tag",
+    "method": "GET",
+    "path": "/api/articles?author=user1&tag=security&limit=10"
+   },
+   {
+    "name": "favorited user102",
+    "method": "GET",
+    "path": "/api/articles?favorited=user102&limit=10",
+    "as": "user116"
+   },
+   {
+    "name": "favorited user104",
+    "method": "GET",
+    "path": "/api/articles?favorited=user104&limit=10",
+    "as": "user116"
+   },
+   {
+    "name": "favorited user116",
+    "method": "GET",
+    "path": "/api/articles?favorited=user116&limit=10",
+    "as": "user116"
+   },
+   {
+    "name": "favorited user17 (none)",
+    "method": "GET",
+    "path": "/api/articles?favorited=user17"
+   },
+   {
+    "name": "feed user116",
+    "method": "GET",
+    "path": "/api/articles/feed?limit=10",
+    "as": "user116"
+   },
+   {
+    "name": "feed user116 page 1",
+    "method": "GET",
+    "path": "/api/articles/feed?limit=5&offset=1",
+    "as": "user116"
+   },
+   {
+    "name": "current user user116",
+    "method": "GET",
+    "path": "/api/user",
+    "as": "user116"
+   },
+   {
+    "name": "feed user135",
+    "method": "GET",
+    "path": "/api/articles/feed?limit=10",
+    "as": "user135"
+   },
+   {
+    "name": "feed user135 page 1",
+    "method": "GET",
+    "path": "/api/articles/feed?limit=5&offset=1",
+    "as": "user135"
+   },
+   {
+    "name": "current user user135",
+    "method": "GET",
+    "path": "/api/user",
+    "as": "user135"
+   },
+   {
+    "name": "feed user102",
+    "method": "GET",
+    "path": "/api/articles/feed?limit=10",
+    "as": "user102"
+   },
+   {
+    "name": "feed user102 page 1",
+    "method": "GET",
+    "path": "/api/articles/feed?limit=5&offset=1",
+    "as": "user102"
+   },
+   {
+    "name": "current user user102",
+    "method": "GET",
+    "path": "/api/user",
+    "as": "user102"
+   },
+   {
+    "name": "feed user17",
+    "method": "GET",
+    "path": "/api/articles/feed?limit=10",
+    "as": "user17"
+   },
+   {
+    "name": "feed user17 page 1",
+    "method": "GET",
+    "path": "/api/articles/feed?limit=5&offset=1",
+    "as": "user17"
+   },
+   {
+    "name": "current user user17",
+    "method": "GET",
+    "path": "/api/user",
+    "as": "user17"
+   },
+   {
+    "name": "profile user1 anon",
+    "method": "GET",
+    "path": "/api/profiles/user1"
+   },
+   {
+    "name": "profile user1 as user116",
+    "method": "GET",
+    "path": "/api/profiles/user1",
+    "as": "user116"
+   },
+   {
+    "name": "profile user2 anon",
+    "method": "GET",
+    "path": "/api/profiles/user2"
+   },
+   {
+    "name": "profile user2 as user116",
+    "method": "GET",
+    "path": "/api/profiles/user2",
+    "as": "user116"
+   },
+   {
+    "name": "profile user5 anon",
+    "method": "GET",
+    "path": "/api/profiles/user5"
+   },
+   {
+    "name": "profile user5 as user116",
+    "method": "GET",
+    "path": "/api/profiles/user5",
+    "as": "user116"
+   },
+   {
+    "name": "profile user116 anon",
+    "method": "GET",
+    "path": "/api/profiles/user116"
+   },
+   {
+    "name": "profile user116 as user116",
+    "method": "GET",
+    "path": "/api/profiles/user116",
+    "as": "user116"
+   },
+   {
+    "name": "profile user17 anon",
+    "method": "GET",
+    "path": "/api/profiles/user17"
+   },
+   {
+    "name": "profile user17 as user116",
+    "method": "GET",
+    "path": "/api/profiles/user17",
+    "as": "user116"
+   },
+   {
+    "name": "article article-2-rust-adipiscing",
+    "method": "GET",
+    "path": "/api/articles/article-2-rust-adipiscing",
+    "as": "user116"
+   },
+   {
+    "name": "comments article-2-rust-adipiscing",
+    "method": "GET",
+    "path": "/api/articles/article-2-rust-adipiscing/comments",
+    "as": "user135"
+   },
+   {
+    "name": "article article-3-security-sed",
+    "method": "GET",
+    "path": "/api/articles/article-3-security-sed",
+    "as": "user116"
+   },
+   {
+    "name": "comments article-3-security-sed",
+    "method": "GET",
+    "path": "/api/articles/article-3-security-sed/comments",
+    "as": "user135"
+   },
+   {
+    "name": "article article-13-queues-ut",
+    "method": "GET",
+    "path": "/api/articles/article-13-queues-ut",
+    "as": "user116"
+   },
+   {
+    "name": "comments article-13-queues-ut",
+    "method": "GET",
+    "path": "/api/articles/article-13-queues-ut/comments",
+    "as": "user135"
+   },
+   {
+    "name": "article article-14-frontend-do",
+    "method": "GET",
+    "path": "/api/articles/article-14-frontend-do",
+    "as": "user116"
+   },
+   {
+    "name": "comments article-14-frontend-do",
+    "method": "GET",
+    "path": "/api/articles/article-14-frontend-do/comments",
+    "as": "user135"
+   },
+   {
+    "name": "article article-1-caching-sit",
+    "method": "GET",
+    "path": "/api/articles/article-1-caching-sit",
+    "as": "user116"
+   },
+   {
+    "name": "comments article-1-caching-sit",
+    "method": "GET",
+    "path": "/api/articles/article-1-caching-sit/comments",
+    "as": "user135"
+   },
+   {
+    "name": "article article-2-rust-adipiscing",
+    "method": "GET",
+    "path": "/api/articles/article-2-rust-adipiscing",
+    "as": "user116"
+   },
+   {
+    "name": "comments article-2-rust-adipiscing",
+    "method": "GET",
+    "path": "/api/articles/article-2-rust-adipiscing/comments",
+    "as": "user135"
+   },
+   {
+    "name": "tags",
+    "method": "GET",
+    "path": "/api/tags"
+   },
+   {
+    "name": "follow",
+    "method": "POST",
+    "path": "/api/profiles/user3/follow",
+    "as": "user116"
+   },
+   {
+    "name": "feed after follow",
+    "method": "GET",
+    "path": "/api/articles/feed?limit=10",
+    "as": "user116"
+   },
+   {
+    "name": "unfollow",
+    "method": "DELETE",
+    "path": "/api/profiles/user1/follow",
+    "as": "user116"
+   },
+   {
+    "name": "profile after unfollow",
+    "method": "GET",
+    "path": "/api/profiles/user1",
+    "as": "user116"
+   },
+   {
+    "name": "favorite",
+    "method": "POST",
+    "path": "/api/articles/article-2-rust-adipiscing/favorite",
+    "as": "user17"
+   },
+   {
+    "name": "favorite again",
+    "method": "POST",
+    "path": "/api/articles/article-2-rust-adipiscing/favorite",
+    "as": "user17"
+   },
+   {
+    "name": "unfavorite other",
+    "method": "DELETE",
+    "path": "/api/articles/article-3-security-sed/favorite",
+    "as": "user102"
+   },
+   {
+    "name": "favorited after",
+    "method": "GET",
+    "path": "/api/articles?favorited=user17",
+    "as": "user17"
+   },
+   {
+    "name": "comment",
+    "method": "POST",
+    "path": "/api/articles/article-2-rust-adipiscing/comments",
+    "as": "user17",
+    "body": {
+     "comment": {
+      "body": "differential comment"
+     }
+    },
+    "capture": {
+     "cid": "comment.id"
+    }
+   },
+   {
+    "name": "comments after create",
+    "method": "GET",
+    "path": "/api/articles/article-2-rust-adipiscing/comments",
+    "as": "user17"
+   },
+   {
+    "name": "delete comment",
+    "method": "DELETE",
+    "path": "/api/articles/article-2-rust-adipiscing/comments/{cid}",
+    "as": "user17"
+   },
+   {
+    "name": "create article",
+    "method": "POST",
+    "path": "/api/articles",
+    "as": "user17",
+    "body": {
+     "article": {
+      "title": "Differential Article",
+      "description": "d",
+      "body": "b",
+      "tagList": [
+       "security",
+       "newtag",
+       "xy"
+      ]
+     }
+    }
+   },
+   {
+    "name": "list after create",
+    "method": "GET",
+    "path": "/api/articles?limit=3"
+   },
+   {
+    "name": "tags after create",
+    "method": "GET",
+    "path": "/api/tags"
+   },
+   {
+    "name": "update article",
+    "method": "PUT",
+    "path": "/api/articles/differential-article",
+    "as": "user17",
+    "body": {
+     "article": {
+      "title": "Differential Article v2",
+      "body": "b2"
+     }
+    }
+   },
+   {
+    "name": "foreign update forbidden",
+    "method": "PUT",
+    "path": "/api/articles/article-559-golang-lorem",
+    "as": "user17",
+    "body": {
+     "article": {
+      "body": "x"
+     }
+    }
+   },
+   {
+    "name": "author deletes own seeded article",
+    "method": "DELETE",
+    "path": "/api/articles/article-559-golang-lorem",
+    "as": "user116"
+   },
+   {
+    "name": "deleted article gone",
+    "method": "GET",
+    "path": "/api/articles/article-559-golang-lorem"
+   },
+   {
+    "name": "its comments gone",
+    "method": "GET",
+    "path": "/api/articles/article-559-golang-lorem/comments"
+   },
+   {
+    "name": "update user",
+    "method": "PUT",
+    "path": "/api/user",
+    "as": "user17",
+    "body": {
+     "user": {
+      "bio": "new bio",
+      "password": "newpass1"
+     }
+    }
+   },
+   {
+    "name": "profile after update",
+    "method": "GET",
+    "path": "/api/profiles/user17"
+   },
+   {
+    "name": "final list",
+    "method": "GET",
+    "path": "/api/articles?limit=20",
+    "as": "user116"
+   },
+   {
+    "name": "final feed",
+    "method": "GET",
+    "path": "/api/articles/feed?limit=20",
+    "as": "user116"
+   }
+  ]
+ },
+ "requests": 94,
+ "matched": 94,
+ "match_rate": 1.0,
+ "matched_ignoring_unspecified_order": 94,
+ "mismatches": [],
+ "original_statuses": [
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  200,
+  201,
+  200,
+  200,
+  201,
+  200,
+  200,
+  200,
+  403,
+  200,
+  404,
+  404,
+  200,
+  200,
+  200,
+  200
+ ]
+}

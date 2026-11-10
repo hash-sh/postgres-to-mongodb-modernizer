@@ -70,8 +70,9 @@ def run(state):
     with apps.original() as o, apps.mongo(db=settings.mongo_db) as m:
         diff = differential.run(o.url, m.url, seq, cutoff)
     (OUT / "differential.json").write_text(json.dumps({"sequence": seq, **diff}, indent=1, default=str))
-    rep["differential"] = {k: diff[k] for k in ("requests", "matched", "match_rate")}
-    print(f"  differential: {diff['matched']}/{diff['requests']} responses identical")
+    rep["differential"] = {k: diff[k] for k in ("requests", "matched", "match_rate", "matched_ignoring_unspecified_order")}
+    print(f"  differential: {diff['matched']}/{diff['requests']} responses identical (strict); "
+          f"{diff['matched_ignoring_unspecified_order']}/{diff['requests']} when order-unspecified comment lists are compared as sets")
     for mm in diff["mismatches"][:5]:
         print(f"    MISMATCH {mm['request']}: {mm['diffs'][:2]}")
     (OUT / "migrate_stage.json").write_text(json.dumps(rep, indent=1, default=str))

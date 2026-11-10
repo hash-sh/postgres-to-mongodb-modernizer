@@ -3,6 +3,11 @@
     "feed.hurl:110": "GET /api/articles/feed?limit=1&offset=1: the original inflates articlesCount by joined tag rows (findAndCountAll + belongsToMany include); the MongoDB articlesFeed returns the plain article count. 3 agent attempts at the inflated count crashed (MongoServerError: unknown group operator '$size') and were reverted by keep-best. Accepted after round 15 to stay inside the token budget (420k/550k); all 104 characterization steps pass."
   },
   "chunks": {
+    "differential_fix": {
+      "iterations": [],
+      "report": "DIFFERENTIAL TEST (same requests on both backends over identical migrated data) found behaviour differences:\n* POST /api/articles/article-2-rust-adipiscing/favorite: $.article.updatedAt: expected '2025-01-02T00:01:14.000Z' got '<ts>'\n* POST /api/articles/article-2-rust-adipiscing/favorite: $.article.updatedAt: expected '2025-01-02T00:01:14.000Z' got '<ts>'\n* DELETE /api/articles/article-3-security-sed/favorite: $.article.updatedAt: expected '2025-01-02T00:01:51.000Z' got '<ts>'\n* GET /api/articles?favorited=user17: $.articles[0].updatedAt: expected '2025-01-02T00:01:14.000Z' got '<ts>'\nThe original NEVER changes an article's updatedAt when it is favorited/unfavorited (only the Favorites junction row changes). Mongoose timestamps:true sets updatedAt on updateOne unless you pass { timestamps: false }.",
+      "status": "done"
+    },
     "optimization_pass": {
       "files": [
         "controllers/articles.js",
@@ -570,12 +575,12 @@
     }
   },
   "llm": {
-    "calls": 120,
+    "calls": 122,
     "daily_exhausted": {
       "openai/gpt-oss-120b": "2026-11-10",
       "qwen/qwen3.8-27b": "2026-11-10"
     },
-    "tokens": 467026
+    "tokens": 475663
   },
   "stages": {
     "analysis": {
@@ -605,7 +610,13 @@
       "status": "pending"
     },
     "migrate": {
-      "status": "pending"
+      "characterization": "155/155",
+      "checks_ok": true,
+      "differential": "94/94",
+      "idempotent": true,
+      "seconds": 29.3,
+      "status": "done",
+      "updated": "2026-11-10T20:04:35"
     },
     "report": {
       "status": "pending"

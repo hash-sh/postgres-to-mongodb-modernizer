@@ -99,6 +99,15 @@ def build_sequence():
     return {"name": "differential", "steps": steps}
 
 
+def _sort_unordered(body):
+    """Comments come from `article.getComments()` WITHOUT ORDER BY in the original: their order is unspecified by
+    SQL (Postgres may return any order, e.g. by join plan). For the secondary, order-insensitive comparison only,
+    sort them by id. The strict comparison is always reported first."""
+    if isinstance(body, dict) and isinstance(body.get("comments"), list):
+        body = {**body, "comments": sorted(body["comments"], key=lambda c: c.get("id", 0) if isinstance(c, dict) else 0)}
+    return body
+
+
 def run(orig_url, mongo_url, scenario, ts_cutoff):
     a = httpcheck.run_scenario(orig_url, scenario, ts_cutoff)
     b = httpcheck.run_scenario(mongo_url, scenario, ts_cutoff)
@@ -109,5 +118,8 @@ def run(orig_url, mongo_url, scenario, ts_cutoff):
             mismatches.append({"step": x["step"], "request": x["request"], "diffs": d[:8]})
         else:
             matched += 1
+    matched_set = sum(1 for x, y in zip(a, b) if x["status"] == y["status"]
+                      and not httpcheck.diff(_sort_unordered(x["body"]), _sort_unordered(y["body"])))
     return {"requests": len(a), "matched": matched, "match_rate": round(matched / len(a), 4) if a else None,
-            "mismatches": mismatches, "original_statuses": [x["status"] for x in a]}
+            "matched_ignoring_unspecified_order": matched_set, "mismatches": mismatches,
+            "original_statuses": [x["status"] for x in a]}
