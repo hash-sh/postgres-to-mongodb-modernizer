@@ -1,0 +1,3133 @@
+{
+ "article_crud": [
+  {
+   "body": {
+    "user": {
+     "bio": null,
+     "email": "frank@example.com",
+     "image": null,
+     "token": "<token>",
+     "username": "frank"
+    }
+   },
+   "request": "POST /api/users",
+   "status": 201,
+   "step": "register frank"
+  },
+  {
+   "body": {
+    "user": {
+     "bio": null,
+     "email": "gina@example.com",
+     "image": null,
+     "token": "<token>",
+     "username": "gina"
+    }
+   },
+   "request": "POST /api/users",
+   "status": 201,
+   "step": "register gina"
+  },
+  {
+   "body": {
+    "article": {
+     "author": {
+      "bio": null,
+      "followersCount": 0,
+      "following": false,
+      "image": null,
+      "username": "frank"
+     },
+     "body": "Body of How to train your dragon",
+     "createdAt": "<ts>",
+     "description": "About How to train your dragon",
+     "favorited": false,
+     "favoritesCount": 0,
+     "slug": "how-to-train-your-dragon",
+     "tagList": [
+      "dragons",
+      "ok",
+      "training"
+     ],
+     "title": "How to train your dragon",
+     "updatedAt": "<ts>"
+    }
+   },
+   "request": "POST /api/articles",
+   "status": 201,
+   "step": "frank creates 'How to train your dragon'"
+  },
+  {
+   "body": {
+    "article": {
+     "author": {
+      "bio": null,
+      "followersCount": 0,
+      "following": false,
+      "image": null,
+      "username": "frank"
+     },
+     "body": "Body of How to train your dragon",
+     "createdAt": "<ts>",
+     "description": "About How to train your dragon",
+     "favorited": false,
+     "favoritesCount": 0,
+     "slug": "how-to-train-your-dragon",
+     "tagList": [
+      "dragons",
+      "training"
+     ],
+     "title": "How to train your dragon",
+     "updatedAt": "<ts>"
+    }
+   },
+   "request": "GET /api/articles/how-to-train-your-dragon",
+   "status": 200,
+   "step": "get article anonymous"
+  },
+  {
+   "body": {
+    "article": {
+     "author": {
+      "bio": null,
+      "followersCount": 0,
+      "following": false,
+      "image": null,
+      "username": "frank"
+     },
+     "body": "Body of How to train your dragon",
+     "createdAt": "<ts>",
+     "description": "About How to train your dragon",
+     "favorited": false,
+     "favoritesCount": 0,
+     "slug": "how-to-train-your-dragon",
+     "tagList": [
+      "dragons",
+      "training"
+     ],
+     "title": "How to train your dragon",
+     "updatedAt": "<ts>"
+    }
+   },
+   "request": "GET /api/articles/how-to-train-your-dragon",
+   "status": 200,
+   "step": "get article as gina"
+  },
+  {
+   "body": {
+    "errors": {
+     "body": [
+      "Article not found "
+     ]
+    }
+   },
+   "request": "GET /api/articles/does-not-exist",
+   "status": 404,
+   "step": "get unknown article"
+  },
+  {
+   "body": {
+    "errors": {
+     "body": [
+      "Title already exists.. "
+     ]
+    }
+   },
+   "request": "POST /api/articles",
+   "status": 422,
+   "step": "frank creates 'How to train your dragon'"
+  },
+  {
+   "body": {
+    "errors": {
+     "body": [
+      "You need to login first!"
+     ]
+    }
+   },
+   "request": "POST /api/articles",
+   "status": 401,
+   "step": "create without auth"
+  },
+  {
+   "body": {
+    "errors": {
+     "body": [
+      "A title is required"
+     ]
+    }
+   },
+   "request": "POST /api/articles",
+   "status": 422,
+   "step": "create missing title"
+  },
+  {
+   "body": {
+    "errors": {
+     "body": [
+      "A description is required"
+     ]
+    }
+   },
+   "request": "POST /api/articles",
+   "status": 422,
+   "step": "create missing description"
+  },
+  {
+   "body": {
+    "errors": {
+     "body": [
+      "An article body is required"
+     ]
+    }
+   },
+   "request": "POST /api/articles",
+   "status": 422,
+   "step": "create missing body"
+  },
+  {
+   "body": {
+    "errors": {
+     "body": [
+      "<internal error>"
+     ]
+    }
+   },
+   "request": "POST /api/articles",
+   "status": 500,
+   "step": "create without tagList (original bug: iterating undefined)"
+  },
+  {
+   "body": {
+    "errors": {
+     "body": [
+      "You are not the author of this article"
+     ]
+    }
+   },
+   "request": "PUT /api/articles/how-to-train-your-dragon",
+   "status": 403,
+   "step": "gina cannot update frank's article"
+  },
+  {
+   "body": {
+    "errors": {
+     "body": [
+      "You need to login first!"
+     ]
+    }
+   },
+   "request": "PUT /api/articles/how-to-train-your-dragon",
+   "status": 401,
+   "step": "update without auth"
+  },
+  {
+   "body": {
+    "errors": {
+     "body": [
+      "Article not found "
+     ]
+    }
+   },
+   "request": "PUT /api/articles/nope",
+   "status": 404,
+   "step": "update unknown article"
+  },
+  {
+   "body": {
+    "article": {
+     "author": {
+      "bio": null,
+      "followersCount": 0,
+      "following": false,
+      "image": null,
+      "username": "frank"
+     },
+     "body": "New body",
+     "createdAt": "<ts>",
+     "description": "New description",
+     "favorited": false,
+     "favoritesCount": 0,
+     "slug": "how-to-train-your-dragon",
+     "tagList": [
+      "dragons",
+      "training"
+     ],
+     "title": "How to train your dragon",
+     "updatedAt": "<ts>"
+    }
+   },
+   "request": "PUT /api/articles/how-to-train-your-dragon",
+   "status": 200,
+   "step": "frank updates body"
+  },
+  {
+   "body": {
+    "article": {
+     "author": {
+      "bio": null,
+      "followersCount": 0,
+      "following": false,
+      "image": null,
+      "username": "frank"
+     },
+     "body": "New body",
+     "createdAt": "<ts>",
+     "description": "New description",
+     "favorited": false,
+     "favoritesCount": 0,
+     "slug": "dragons--the-sequel-",
+     "tagList": [
+      "dragons",
+      "training"
+     ],
+     "title": "Dragons: The Sequel!",
+     "updatedAt": "<ts>"
+    }
+   },
+   "request": "PUT /api/articles/how-to-train-your-dragon",
+   "status": 200,
+   "step": "frank updates title (slug changes)"
+  },
+  {
+   "body": {
+    "errors": {
+     "body": [
+      "Article not found "
+     ]
+    }
+   },
+   "request": "GET /api/articles/how-to-train-your-dragon",
+   "status": 404,
+   "step": "old slug is gone"
+  },
+  {
+   "body": {
+    "article": {
+     "author": {
+      "bio": null,
+      "followersCount": 0,
+      "following": false,
+      "image": null,
+      "username": "frank"
+     },
+     "body": "New body",
+     "createdAt": "<ts>",
+     "description": "New description",
+     "favorited": false,
+     "favoritesCount": 0,
+     "slug": "dragons--the-sequel-",
+     "tagList": [
+      "dragons",
+      "training"
+     ],
+     "title": "Dragons: The Sequel!",
+     "updatedAt": "<ts>"
+    }
+   },
+   "request": "GET /api/articles/dragons--the-sequel-",
+   "status": 200,
+   "step": "new slug works"
+  },
+  {
+   "body": {
+    "errors": {
+     "body": [
+      "You are not the author of this article"
+     ]
+    }
+   },
+   "request": "DELETE /api/articles/dragons--the-sequel-",
+   "status": 403,
+   "step": "gina cannot delete"
+  },
+  {
+   "body": {
+    "errors": {
+     "body": [
+      "You need to login first!"
+     ]
+    }
+   },
+   "request": "DELETE /api/articles/dragons--the-sequel-",
+   "status": 401,
+   "step": "delete without auth"
+  },
+  {
+   "body": {
+    "message": {
+     "body": [
+      "Article deleted successfully"
+     ]
+    }
+   },
+   "request": "DELETE /api/articles/dragons--the-sequel-",
+   "status": 200,
+   "step": "frank deletes"
+  },
+  {
+   "body": {
+    "errors": {
+     "body": [
+      "Article not found "
+     ]
+    }
+   },
+   "request": "GET /api/articles/dragons--the-sequel-",
+   "status": 404,
+   "step": "deleted article is gone"
+  },
+  {
+   "body": {
+    "errors": {
+     "body": [
+      "Article not found "
+     ]
+    }
+   },
+   "request": "DELETE /api/articles/dragons--the-sequel-",
+   "status": 404,
+   "step": "delete unknown"
+  }
+ ],
+ "article_listing_filters_pagination": [
+  {
+   "body": {
+    "user": {
+     "bio": null,
+     "email": "hank@example.com",
+     "image": null,
+     "token": "<token>",
+     "username": "hank"
+    }
+   },
+   "request": "POST /api/users",
+   "status": 201,
+   "step": "register hank"
+  },
+  {
+   "body": {
+    "user": {
+     "bio": null,
+     "email": "ivy@example.com",
+     "image": null,
+     "token": "<token>",
+     "username": "ivy"
+    }
+   },
+   "request": "POST /api/users",
+   "status": 201,
+   "step": "register ivy"
+  },
+  {
+   "body": {
+    "article": {
+     "author": {
+      "bio": null,
+      "followersCount": 0,
+      "following": false,
+      "image": null,
+      "username": "hank"
+     },
+     "body": "Body of Alpha",
+     "createdAt": "<ts>",
+     "description": "About Alpha",
+     "favorited": false,
+     "favoritesCount": 0,
+     "slug": "alpha",
+     "tagList": [
+      "dragons",
+      "training"
+     ],
+     "title": "Alpha",
+     "updatedAt": "<ts>"
+    }
+   },
+   "request": "POST /api/articles",
+   "status": 201,
+   "step": "hank creates 'Alpha'"
+  },
+  {
+   "body": {
+    "article": {
+     "author": {
+      "bio": null,
+      "followersCount": 0,
+      "following": false,
+      "image": null,
+      "username": "hank"
+     },
+     "body": "Body of Beta",
+     "createdAt": "<ts>",
+     "description": "About Beta",
+     "favorited": false,
+     "favoritesCount": 0,
+     "slug": "beta",
+     "tagList": [
+      "dragons"
+     ],
+     "title": "Beta",
+     "updatedAt": "<ts>"
+    }
+   },
+   "request": "POST /api/articles",
+   "status": 201,
+   "step": "hank creates 'Beta'"
+  },
+  {
+   "body": {
+    "article": {
+     "author": {
+      "bio": null,
+      "followersCount": 0,
+      "following": false,
+      "image": null,
+      "username": "ivy"
+     },
+     "body": "Body of Gamma",
+     "createdAt": "<ts>",
+     "description": "About Gamma",
+     "favorited": false,
+     "favoritesCount": 0,
+     "slug": "gamma",
+     "tagList": [],
+     "title": "Gamma",
+     "updatedAt": "<ts>"
+    }
+   },
+   "request": "POST /api/articles",
+   "status": 201,
+   "step": "ivy creates 'Gamma'"
+  },
+  {
+   "body": {
+    "article": {
+     "author": {
+      "bio": null,
+      "followersCount": 0,
+      "following": false,
+      "image": null,
+      "username": "ivy"
+     },
+     "body": "Body of Delta",
+     "createdAt": "<ts>",
+     "description": "About Delta",
+     "favorited": false,
+     "favoritesCount": 0,
+     "slug": "delta",
+     "tagList": [
+      "cooking",
+      "training",
+      "zz"
+     ],
+     "title": "Delta",
+     "updatedAt": "<ts>"
+    }
+   },
+   "request": "POST /api/articles",
+   "status": 201,
+   "step": "ivy creates 'Delta'"
+  },
+  {
+   "body": {
+    "article": {
+     "author": {
+      "bio": null,
+      "followersCount": 0,
+      "following": false,
+      "image": null,
+      "username": "hank"
+     },
+     "body": "Body of Epsilon",
+     "createdAt": "<ts>",
+     "description": "About Epsilon",
+     "favorited": false,
+     "favoritesCount": 0,
+     "slug": "epsilon",
+     "tagList": [
+      "cooking"
+     ],
+     "title": "Epsilon",
+     "updatedAt": "<ts>"
+    }
+   },
+   "request": "POST /api/articles",
+   "status": 201,
+   "step": "hank creates 'Epsilon'"
+  },
+  {
+   "body": {
+    "articles": [
+     {
+      "author": {
+       "bio": null,
+       "followersCount": 0,
+       "following": false,
+       "image": null,
+       "username": "hank"
+      },
+      "body": "Body of Epsilon",
+      "createdAt": "<ts>",
+      "description": "About Epsilon",
+      "favorited": false,
+      "favoritesCount": 0,
+      "slug": "epsilon",
+      "tagList": [
+       "cooking"
+      ],
+      "title": "Epsilon",
+      "updatedAt": "<ts>"
+     },
+     {
+      "author": {
+       "bio": null,
+       "followersCount": 0,
+       "following": false,
+       "image": null,
+       "username": "ivy"
+      },
+      "body": "Body of Delta",
+      "createdAt": "<ts>",
+      "description": "About Delta",
+      "favorited": false,
+      "favoritesCount": 0,
+      "slug": "delta",
+      "tagList": [
+       "cooking",
+       "training"
+      ],
+      "title": "Delta",
+      "updatedAt": "<ts>"
+     },
+     {
+      "author": {
+       "bio": null,
+       "followersCount": 0,
+       "following": false,
+       "image": null,
+       "username": "ivy"
+      },
+      "body": "Body of Gamma",
+      "createdAt": "<ts>",
+      "description": "About Gamma",
+      "favorited": false,
+      "favoritesCount": 0,
+      "slug": "gamma",
+      "tagList": [],
+      "title": "Gamma",
+      "updatedAt": "<ts>"
+     }
+    ],
+    "articlesCount": 7
+   },
+   "request": "GET /api/articles",
+   "status": 200,
+   "step": "list default (limit 3)"
+  },
+  {
+   "body": {
+    "articles": [
+     {
+      "author": {
+       "bio": null,
+       "followersCount": 0,
+       "following": false,
+       "image": null,
+       "username": "hank"
+      },
+      "body": "Body of Epsilon",
+      "createdAt": "<ts>",
+      "description": "About Epsilon",
+      "favorited": false,
+      "favoritesCount": 0,
+      "slug": "epsilon",
+      "tagList": [
+       "cooking"
+      ],
+      "title": "Epsilon",
+      "updatedAt": "<ts>"
+     },
+     {
+      "author": {
+       "bio": null,
+       "followersCount": 0,
+       "following": false,
+       "image": null,
+       "username": "ivy"
+      },
+      "body": "Body of Delta",
+      "createdAt": "<ts>",
+      "description": "About Delta",
+      "favorited": false,
+      "favoritesCount": 0,
+      "slug": "delta",
+      "tagList": [
+       "cooking",
+       "training"
+      ],
+      "title": "Delta",
+      "updatedAt": "<ts>"
+     },
+     {
+      "author": {
+       "bio": null,
+       "followersCount": 0,
+       "following": false,
+       "image": null,
+       "username": "ivy"
+      },
+      "body": "Body of Gamma",
+      "createdAt": "<ts>",
+      "description": "About Gamma",
+      "favorited": false,
+      "favoritesCount": 0,
+      "slug": "gamma",
+      "tagList": [],
+      "title": "Gamma",
+      "updatedAt": "<ts>"
+     }
+    ],
+    "articlesCount": 7
+   },
+   "request": "GET /api/articles",
+   "status": 200,
+   "step": "list as ivy"
+  },
+  {
+   "body": {
+    "articles": [
+     {
+      "author": {
+       "bio": null,
+       "followersCount": 0,
+       "following": false,
+       "image": null,
+       "username": "hank"
+      },
+      "body": "Body of Epsilon",
+      "createdAt": "<ts>",
+      "description": "About Epsilon",
+      "favorited": false,
+      "favoritesCount": 0,
+      "slug": "epsilon",
+      "tagList": [
+       "cooking"
+      ],
+      "title": "Epsilon",
+      "updatedAt": "<ts>"
+     },
+     {
+      "author": {
+       "bio": null,
+       "followersCount": 0,
+       "following": false,
+       "image": null,
+       "username": "ivy"
+      },
+      "body": "Body of Delta",
+      "createdAt": "<ts>",
+      "description": "About Delta",
+      "favorited": false,
+      "favoritesCount": 0,
+      "slug": "delta",
+      "tagList": [
+       "cooking",
+       "training"
+      ],
+      "title": "Delta",
+      "updatedAt": "<ts>"
+     }
+    ],
+    "articlesCount": 7
+   },
+   "request": "GET /api/articles?limit=2&offset=0",
+   "status": 200,
+   "step": "list limit 2 offset 0"
+  },
+  {
+   "body": {
+    "articles": [
+     {
+      "author": {
+       "bio": null,
+       "followersCount": 0,
+       "following": false,
+       "image": null,
+       "username": "ivy"
+      },
+      "body": "Body of Gamma",
+      "createdAt": "<ts>",
+      "description": "About Gamma",
+      "favorited": false,
+      "favoritesCount": 0,
+      "slug": "gamma",
+      "tagList": [],
+      "title": "Gamma",
+      "updatedAt": "<ts>"
+     },
+     {
+      "author": {
+       "bio": null,
+       "followersCount": 0,
+       "following": false,
+       "image": null,
+       "username": "hank"
+      },
+      "body": "Body of Beta",
+      "createdAt": "<ts>",
+      "description": "About Beta",
+      "favorited": false,
+      "favoritesCount": 0,
+      "slug": "beta",
+      "tagList": [
+       "dragons"
+      ],
+      "title": "Beta",
+      "updatedAt": "<ts>"
+     }
+    ],
+    "articlesCount": 7
+   },
+   "request": "GET /api/articles?limit=2&offset=1",
+   "status": 200,
+   "step": "list limit 2 offset 1 (offset is a page index)"
+  },
+  {
+   "body": {
+    "articles": [
+     {
+      "author": {
+       "bio": null,
+       "followersCount": 0,
+       "following": false,
+       "image": null,
+       "username": "hank"
+      },
+      "body": "Body of Alpha",
+      "createdAt": "<ts>",
+      "description": "About Alpha",
+      "favorited": false,
+      "favoritesCount": 0,
+      "slug": "alpha",
+      "tagList": [
+       "dragons",
+       "training"
+      ],
+      "title": "Alpha",
+      "updatedAt": "<ts>"
+     }
+    ],
+    "articlesCount": 7
+   },
+   "request": "GET /api/articles?limit=2&offset=2",
+   "status": 200,
+   "step": "list limit 2 offset 2"
+  },
+  {
+   "body": {
+    "articles": [
+     {
+      "author": {
+       "bio": null,
+       "followersCount": 0,
+       "following": false,
+       "image": null,
+       "username": "hank"
+      },
+      "body": "Body of Epsilon",
+      "createdAt": "<ts>",
+      "description": "About Epsilon",
+      "favorited": false,
+      "favoritesCount": 0,
+      "slug": "epsilon",
+      "tagList": [
+       "cooking"
+      ],
+      "title": "Epsilon",
+      "updatedAt": "<ts>"
+     },
+     {
+      "author": {
+       "bio": null,
+       "followersCount": 0,
+       "following": false,
+       "image": null,
+       "username": "ivy"
+      },
+      "body": "Body of Delta",
+      "createdAt": "<ts>",
+      "description": "About Delta",
+      "favorited": false,
+      "favoritesCount": 0,
+      "slug": "delta",
+      "tagList": [
+       "cooking",
+       "training"
+      ],
+      "title": "Delta",
+      "updatedAt": "<ts>"
+     },
+     {
+      "author": {
+       "bio": null,
+       "followersCount": 0,
+       "following": false,
+       "image": null,
+       "username": "ivy"
+      },
+      "body": "Body of Gamma",
+      "createdAt": "<ts>",
+      "description": "About Gamma",
+      "favorited": false,
+      "favoritesCount": 0,
+      "slug": "gamma",
+      "tagList": [],
+      "title": "Gamma",
+      "updatedAt": "<ts>"
+     },
+     {
+      "author": {
+       "bio": null,
+       "followersCount": 0,
+       "following": false,
+       "image": null,
+       "username": "hank"
+      },
+      "body": "Body of Beta",
+      "createdAt": "<ts>",
+      "description": "About Beta",
+      "favorited": false,
+      "favoritesCount": 0,
+      "slug": "beta",
+      "tagList": [
+       "dragons"
+      ],
+      "title": "Beta",
+      "updatedAt": "<ts>"
+     },
+     {
+      "author": {
+       "bio": null,
+       "followersCount": 0,
+       "following": false,
+       "image": null,
+       "username": "hank"
+      },
+      "body": "Body of Alpha",
+      "createdAt": "<ts>",
+      "description": "About Alpha",
+      "favorited": false,
+      "favoritesCount": 0,
+      "slug": "alpha",
+      "tagList": [
+       "dragons",
+       "training"
+      ],
+      "title": "Alpha",
+      "updatedAt": "<ts>"
+     }
+    ],
+    "articlesCount": 7
+   },
+   "request": "GET /api/articles?limit=10",
+   "status": 200,
+   "step": "list limit 10"
+  },
+  {
+   "body": {
+    "articles": [
+     {
+      "author": {
+       "bio": null,
+       "followersCount": 0,
+       "following": false,
+       "image": null,
+       "username": "hank"
+      },
+      "body": "Body of Epsilon",
+      "createdAt": "<ts>",
+      "description": "About Epsilon",
+      "favorited": false,
+      "favoritesCount": 0,
+      "slug": "epsilon",
+      "tagList": [
+       "cooking"
+      ],
+      "title": "Epsilon",
+      "updatedAt": "<ts>"
+     },
+     {
+      "author": {
+       "bio": null,
+       "followersCount": 0,
+       "following": false,
+       "image": null,
+       "username": "hank"
+      },
+      "body": "Body of Beta",
+      "createdAt": "<ts>",
+      "description": "About Beta",
+      "favorited": false,
+      "favoritesCount": 0,
+      "slug": "beta",
+      "tagList": [
+       "dragons"
+      ],
+      "title": "Beta",
+      "updatedAt": "<ts>"
+     },
+     {
+      "author": {
+       "bio": null,
+       "followersCount": 0,
+       "following": false,
+       "image": null,
+       "username": "hank"
+      },
+      "body": "Body of Alpha",
+      "createdAt": "<ts>",
+      "description": "About Alpha",
+      "favorited": false,
+      "favoritesCount": 0,
+      "slug": "alpha",
+      "tagList": [
+       "dragons",
+       "training"
+      ],
+      "title": "Alpha",
+      "updatedAt": "<ts>"
+     }
+    ],
+    "articlesCount": 4
+   },
+   "request": "GET /api/articles?author=hank&limit=10",
+   "status": 200,
+   "step": "filter by author hank"
+  },
+  {
+   "body": {
+    "articles": [
+     {
+      "author": {
+       "bio": null,
+       "followersCount": 0,
+       "following": false,
+       "image": null,
+       "username": "ivy"
+      },
+      "body": "Body of Delta",
+      "createdAt": "<ts>",
+      "description": "About Delta",
+      "favorited": false,
+      "favoritesCount": 0,
+      "slug": "delta",
+      "tagList": [
+       "cooking",
+       "training"
+      ],
+      "title": "Delta",
+      "updatedAt": "<ts>"
+     },
+     {
+      "author": {
+       "bio": null,
+       "followersCount": 0,
+       "following": false,
+       "image": null,
+       "username": "ivy"
+      },
+      "body": "Body of Gamma",
+      "createdAt": "<ts>",
+      "description": "About Gamma",
+      "favorited": false,
+      "favoritesCount": 0,
+      "slug": "gamma",
+      "tagList": [],
+      "title": "Gamma",
+      "updatedAt": "<ts>"
+     }
+    ],
+    "articlesCount": 3
+   },
+   "request": "GET /api/articles?author=ivy&limit=10",
+   "status": 200,
+   "step": "filter by author ivy"
+  },
+  {
+   "body": {
+    "articles": [],
+    "articlesCount": 0
+   },
+   "request": "GET /api/articles?author=nobody",
+   "status": 200,
+   "step": "filter by unknown author"
+  },
+  {
+   "body": {
+    "articles": [
+     {
+      "author": {
+       "bio": null,
+       "followersCount": 0,
+       "following": false,
+       "image": null,
+       "username": "hank"
+      },
+      "body": "Body of Beta",
+      "createdAt": "<ts>",
+      "description": "About Beta",
+      "favorited": false,
+      "favoritesCount": 0,
+      "slug": "beta",
+      "tagList": [
+       "dragons"
+      ],
+      "title": "Beta",
+      "updatedAt": "<ts>"
+     },
+     {
+      "author": {
+       "bio": null,
+       "followersCount": 0,
+       "following": false,
+       "image": null,
+       "username": "hank"
+      },
+      "body": "Body of Alpha",
+      "createdAt": "<ts>",
+      "description": "About Alpha",
+      "favorited": false,
+      "favoritesCount": 0,
+      "slug": "alpha",
+      "tagList": [
+       "dragons",
+       "training"
+      ],
+      "title": "Alpha",
+      "updatedAt": "<ts>"
+     }
+    ],
+    "articlesCount": 2
+   },
+   "request": "GET /api/articles?tag=dragons&limit=10",
+   "status": 200,
+   "step": "filter by tag dragons"
+  },
+  {
+   "body": {
+    "articles": [
+     {
+      "author": {
+       "bio": null,
+       "followersCount": 0,
+       "following": false,
+       "image": null,
+       "username": "hank"
+      },
+      "body": "Body of Epsilon",
+      "createdAt": "<ts>",
+      "description": "About Epsilon",
+      "favorited": false,
+      "favoritesCount": 0,
+      "slug": "epsilon",
+      "tagList": [
+       "cooking"
+      ],
+      "title": "Epsilon",
+      "updatedAt": "<ts>"
+     }
+    ],
+    "articlesCount": 2
+   },
+   "request": "GET /api/articles?tag=cooking&limit=1",
+   "status": 200,
+   "step": "filter by tag cooking limit 1"
+  },
+  {
+   "body": {
+    "articles": [],
+    "articlesCount": 0
+   },
+   "request": "GET /api/articles?tag=nope",
+   "status": 200,
+   "step": "filter by unknown tag"
+  },
+  {
+   "body": {
+    "articles": [
+     {
+      "author": {
+       "bio": null,
+       "followersCount": 0,
+       "following": false,
+       "image": null,
+       "username": "hank"
+      },
+      "body": "Body of Epsilon",
+      "createdAt": "<ts>",
+      "description": "About Epsilon",
+      "favorited": false,
+      "favoritesCount": 0,
+      "slug": "epsilon",
+      "tagList": [
+       "cooking"
+      ],
+      "title": "Epsilon",
+      "updatedAt": "<ts>"
+     }
+    ],
+    "articlesCount": 1
+   },
+   "request": "GET /api/articles?author=hank&tag=cooking&limit=10",
+   "status": 200,
+   "step": "filter by author+tag"
+  },
+  {
+   "body": {
+    "articles": [],
+    "articlesCount": 0
+   },
+   "request": "GET /api/articles?favorited=ivy",
+   "status": 200,
+   "step": "filter favorited by ivy (none yet)"
+  },
+  {
+   "body": {
+    "errors": {
+     "body": [
+      "<internal error>"
+     ]
+    }
+   },
+   "request": "GET /api/articles?favorited=nobody",
+   "status": 500,
+   "step": "filter favorited by unknown user (original: 500)"
+  }
+ ],
+ "auth_errors": [
+  {
+   "body": {
+    "user": {
+     "bio": null,
+     "email": "bob@example.com",
+     "image": null,
+     "token": "<token>",
+     "username": "bob"
+    }
+   },
+   "request": "POST /api/users",
+   "status": 201,
+   "step": "register bob"
+  },
+  {
+   "body": {
+    "errors": {
+     "body": [
+      "Email already exists.. try logging in"
+     ]
+    }
+   },
+   "request": "POST /api/users",
+   "status": 422,
+   "step": "register duplicate email"
+  },
+  {
+   "body": {
+    "errors": {
+     "body": [
+      "A username is required"
+     ]
+    }
+   },
+   "request": "POST /api/users",
+   "status": 422,
+   "step": "register missing username"
+  },
+  {
+   "body": {
+    "errors": {
+     "body": [
+      "An email is required"
+     ]
+    }
+   },
+   "request": "POST /api/users",
+   "status": 422,
+   "step": "register missing email"
+  },
+  {
+   "body": {
+    "errors": {
+     "body": [
+      "A password is required"
+     ]
+    }
+   },
+   "request": "POST /api/users",
+   "status": 422,
+   "step": "register missing password"
+  },
+  {
+   "body": {
+    "errors": {
+     "body": [
+      "Email not found sign in first"
+     ]
+    }
+   },
+   "request": "POST /api/users/login",
+   "status": 404,
+   "step": "login unknown email"
+  },
+  {
+   "body": {
+    "errors": {
+     "body": [
+      "Wrong email/password combination"
+     ]
+    }
+   },
+   "request": "POST /api/users/login",
+   "status": 422,
+   "step": "login wrong password"
+  },
+  {
+   "body": {
+    "errors": {
+     "body": [
+      "You need to login first!"
+     ]
+    }
+   },
+   "request": "GET /api/user",
+   "status": 401,
+   "step": "current user without token"
+  },
+  {
+   "body": {
+    "errors": {
+     "body": [
+      "<internal error>"
+     ]
+    }
+   },
+   "request": "GET /api/user",
+   "status": 500,
+   "step": "current user with malformed header"
+  },
+  {
+   "body": {
+    "errors": {
+     "body": [
+      "<internal error>"
+     ]
+    }
+   },
+   "request": "GET /api/user",
+   "status": 500,
+   "step": "current user with garbage token"
+  },
+  {
+   "body": {
+    "errors": {
+     "body": [
+      "<internal error>"
+     ]
+    }
+   },
+   "request": "PUT /api/user",
+   "status": 500,
+   "step": "update user without password (original bug: bcrypt(undefined))"
+  },
+  {
+   "body": {
+    "user": {
+     "bio": null,
+     "email": "bob@example.com",
+     "image": null,
+     "token": "<token>",
+     "username": "bob"
+    }
+   },
+   "request": "GET /api/user",
+   "status": 200,
+   "step": "bio unchanged after failed update"
+  },
+  {
+   "body": {
+    "errors": {
+     "body": [
+      "You need to login first!"
+     ]
+    }
+   },
+   "request": "PUT /api/user",
+   "status": 401,
+   "step": "update user without token"
+  }
+ ],
+ "auth_happy_path": [
+  {
+   "body": {
+    "user": {
+     "bio": null,
+     "email": "alice@example.com",
+     "image": null,
+     "token": "<token>",
+     "username": "alice"
+    }
+   },
+   "request": "POST /api/users",
+   "status": 201,
+   "step": "register alice"
+  },
+  {
+   "body": {
+    "user": {
+     "bio": null,
+     "email": "alice@example.com",
+     "image": null,
+     "token": "<token>",
+     "username": "alice"
+    }
+   },
+   "request": "POST /api/users/login",
+   "status": 200,
+   "step": "login"
+  },
+  {
+   "body": {
+    "user": {
+     "bio": null,
+     "email": "alice@example.com",
+     "image": null,
+     "token": "<token>",
+     "username": "alice"
+    }
+   },
+   "request": "GET /api/user",
+   "status": 200,
+   "step": "current user"
+  },
+  {
+   "body": {
+    "user": {
+     "bio": null,
+     "email": "alice@example.com",
+     "image": null,
+     "token": "<token>",
+     "username": "alice"
+    }
+   },
+   "request": "GET /api/user",
+   "status": 200,
+   "step": "current user with login token"
+  },
+  {
+   "body": {
+    "user": {
+     "bio": "I like dragons",
+     "image": "https://i.example.com/a.png",
+     "token": "<token>",
+     "username": "alice"
+    }
+   },
+   "request": "PUT /api/user",
+   "status": 200,
+   "step": "update bio+image+password"
+  },
+  {
+   "body": {
+    "user": {
+     "bio": "I like dragons",
+     "email": "alice@example.com",
+     "image": "https://i.example.com/a.png",
+     "token": "<token>",
+     "username": "alice"
+    }
+   },
+   "request": "GET /api/user",
+   "status": 200,
+   "step": "current user after update"
+  },
+  {
+   "body": {
+    "user": {
+     "bio": "I like dragons",
+     "email": "alice@example.com",
+     "image": "https://i.example.com/a.png",
+     "token": "<token>",
+     "username": "alice"
+    }
+   },
+   "request": "POST /api/users/login",
+   "status": 200,
+   "step": "login with new password"
+  },
+  {
+   "body": {
+    "errors": {
+     "body": [
+      "Wrong email/password combination"
+     ]
+    }
+   },
+   "request": "POST /api/users/login",
+   "status": 422,
+   "step": "login with old password fails"
+  }
+ ],
+ "comments": [
+  {
+   "body": {
+    "user": {
+     "bio": null,
+     "email": "mia@example.com",
+     "image": null,
+     "token": "<token>",
+     "username": "mia"
+    }
+   },
+   "request": "POST /api/users",
+   "status": 201,
+   "step": "register mia"
+  },
+  {
+   "body": {
+    "user": {
+     "bio": null,
+     "email": "ned@example.com",
+     "image": null,
+     "token": "<token>",
+     "username": "ned"
+    }
+   },
+   "request": "POST /api/users",
+   "status": 201,
+   "step": "register ned"
+  },
+  {
+   "body": {
+    "article": {
+     "author": {
+      "bio": null,
+      "followersCount": 0,
+      "following": false,
+      "image": null,
+      "username": "mia"
+     },
+     "body": "Body of Commented article",
+     "createdAt": "<ts>",
+     "description": "About Commented article",
+     "favorited": false,
+     "favoritesCount": 0,
+     "slug": "commented-article",
+     "tagList": [
+      "talk"
+     ],
+     "title": "Commented article",
+     "updatedAt": "<ts>"
+    }
+   },
+   "request": "POST /api/articles",
+   "status": 201,
+   "step": "mia creates 'Commented article'"
+  },
+  {
+   "body": {
+    "comments": []
+   },
+   "request": "GET /api/articles/commented-article/comments",
+   "status": 200,
+   "step": "no comments yet"
+  },
+  {
+   "body": {
+    "comment": {
+     "author": {
+      "bio": null,
+      "followersCount": 0,
+      "following": false,
+      "image": null,
+      "username": "ned"
+     },
+     "body": "First!",
+     "createdAt": "<ts>",
+     "id": 1,
+     "updatedAt": "<ts>"
+    }
+   },
+   "request": "POST /api/articles/commented-article/comments",
+   "status": 201,
+   "step": "ned comments"
+  },
+  {
+   "body": {
+    "comment": {
+     "author": {
+      "bio": null,
+      "followersCount": 0,
+      "following": false,
+      "image": null,
+      "username": "mia"
+     },
+     "body": "Thanks ned",
+     "createdAt": "<ts>",
+     "id": 2,
+     "updatedAt": "<ts>"
+    }
+   },
+   "request": "POST /api/articles/commented-article/comments",
+   "status": 201,
+   "step": "mia comments"
+  },
+  {
+   "body": {
+    "comments": [
+     {
+      "author": {
+       "bio": null,
+       "followersCount": 0,
+       "following": false,
+       "image": null,
+       "username": "ned"
+      },
+      "body": "First!",
+      "createdAt": "<ts>",
+      "id": 1,
+      "updatedAt": "<ts>"
+     },
+     {
+      "author": {
+       "bio": null,
+       "followersCount": 0,
+       "following": false,
+       "image": null,
+       "username": "mia"
+      },
+      "body": "Thanks ned",
+      "createdAt": "<ts>",
+      "id": 2,
+      "updatedAt": "<ts>"
+     }
+    ]
+   },
+   "request": "GET /api/articles/commented-article/comments",
+   "status": 200,
+   "step": "list comments anonymous"
+  },
+  {
+   "body": {
+    "profile": {
+     "bio": null,
+     "followersCount": 1,
+     "following": true,
+     "image": null,
+     "username": "ned"
+    }
+   },
+   "request": "POST /api/profiles/ned/follow",
+   "status": 200,
+   "step": "mia follows ned"
+  },
+  {
+   "body": {
+    "comments": [
+     {
+      "author": {
+       "bio": null,
+       "followersCount": 1,
+       "following": true,
+       "image": null,
+       "username": "ned"
+      },
+      "body": "First!",
+      "createdAt": "<ts>",
+      "id": 1,
+      "updatedAt": "<ts>"
+     },
+     {
+      "author": {
+       "bio": null,
+       "followersCount": 0,
+       "following": false,
+       "image": null,
+       "username": "mia"
+      },
+      "body": "Thanks ned",
+      "createdAt": "<ts>",
+      "id": 2,
+      "updatedAt": "<ts>"
+     }
+    ]
+   },
+   "request": "GET /api/articles/commented-article/comments",
+   "status": 200,
+   "step": "list comments as mia"
+  },
+  {
+   "body": {
+    "errors": {
+     "body": [
+      "You need to login first!"
+     ]
+    }
+   },
+   "request": "POST /api/articles/commented-article/comments",
+   "status": 401,
+   "step": "comment without auth"
+  },
+  {
+   "body": {
+    "errors": {
+     "body": [
+      "Comment body is required"
+     ]
+    }
+   },
+   "request": "POST /api/articles/commented-article/comments",
+   "status": 422,
+   "step": "comment with empty body"
+  },
+  {
+   "body": {
+    "errors": {
+     "body": [
+      "Article not found "
+     ]
+    }
+   },
+   "request": "POST /api/articles/nope/comments",
+   "status": 404,
+   "step": "comment on unknown article"
+  },
+  {
+   "body": {
+    "errors": {
+     "body": [
+      "Article not found "
+     ]
+    }
+   },
+   "request": "GET /api/articles/nope/comments",
+   "status": 404,
+   "step": "comments of unknown article"
+  },
+  {
+   "body": {
+    "errors": {
+     "body": [
+      "You are not the author of this comment"
+     ]
+    }
+   },
+   "request": "DELETE /api/articles/commented-article/comments/1",
+   "status": 403,
+   "step": "mia cannot delete ned's comment"
+  },
+  {
+   "body": {
+    "errors": {
+     "body": [
+      "You need to login first!"
+     ]
+    }
+   },
+   "request": "DELETE /api/articles/commented-article/comments/1",
+   "status": 401,
+   "step": "delete comment without auth"
+  },
+  {
+   "body": {
+    "message": {
+     "body": [
+      "Comment deleted successfully"
+     ]
+    }
+   },
+   "request": "DELETE /api/articles/commented-article/comments/1",
+   "status": 200,
+   "step": "ned deletes his comment"
+  },
+  {
+   "body": {
+    "errors": {
+     "body": [
+      "Comment not found "
+     ]
+    }
+   },
+   "request": "DELETE /api/articles/commented-article/comments/1",
+   "status": 404,
+   "step": "delete it again"
+  },
+  {
+   "body": {
+    "comments": [
+     {
+      "author": {
+       "bio": null,
+       "followersCount": 0,
+       "following": false,
+       "image": null,
+       "username": "mia"
+      },
+      "body": "Thanks ned",
+      "createdAt": "<ts>",
+      "id": 2,
+      "updatedAt": "<ts>"
+     }
+    ]
+   },
+   "request": "GET /api/articles/commented-article/comments",
+   "status": 200,
+   "step": "one comment left"
+  },
+  {
+   "body": {
+    "message": {
+     "body": [
+      "Article deleted successfully"
+     ]
+    }
+   },
+   "request": "DELETE /api/articles/commented-article",
+   "status": 200,
+   "step": "mia deletes the article (cascade)"
+  },
+  {
+   "body": {
+    "errors": {
+     "body": [
+      "Article not found "
+     ]
+    }
+   },
+   "request": "GET /api/articles/commented-article/comments",
+   "status": 404,
+   "step": "comments after article deleted"
+  },
+  {
+   "body": {
+    "errors": {
+     "body": [
+      "Comment not found "
+     ]
+    }
+   },
+   "request": "DELETE /api/articles/commented-article/comments/2",
+   "status": 404,
+   "step": "mia's comment id after cascade"
+  }
+ ],
+ "favorites": [
+  {
+   "body": {
+    "user": {
+     "bio": null,
+     "email": "olga@example.com",
+     "image": null,
+     "token": "<token>",
+     "username": "olga"
+    }
+   },
+   "request": "POST /api/users",
+   "status": 201,
+   "step": "register olga"
+  },
+  {
+   "body": {
+    "user": {
+     "bio": null,
+     "email": "pete@example.com",
+     "image": null,
+     "token": "<token>",
+     "username": "pete"
+    }
+   },
+   "request": "POST /api/users",
+   "status": 201,
+   "step": "register pete"
+  },
+  {
+   "body": {
+    "user": {
+     "bio": null,
+     "email": "quinn@example.com",
+     "image": null,
+     "token": "<token>",
+     "username": "quinn"
+    }
+   },
+   "request": "POST /api/users",
+   "status": 201,
+   "step": "register quinn"
+  },
+  {
+   "body": {
+    "article": {
+     "author": {
+      "bio": null,
+      "followersCount": 0,
+      "following": false,
+      "image": null,
+      "username": "olga"
+     },
+     "body": "Body of Fav me",
+     "createdAt": "<ts>",
+     "description": "About Fav me",
+     "favorited": false,
+     "favoritesCount": 0,
+     "slug": "fav-me",
+     "tagList": [
+      "love"
+     ],
+     "title": "Fav me",
+     "updatedAt": "<ts>"
+    }
+   },
+   "request": "POST /api/articles",
+   "status": 201,
+   "step": "olga creates 'Fav me'"
+  },
+  {
+   "body": {
+    "article": {
+     "author": {
+      "bio": null,
+      "followersCount": 0,
+      "following": false,
+      "image": null,
+      "username": "olga"
+     },
+     "body": "Body of Not me",
+     "createdAt": "<ts>",
+     "description": "About Not me",
+     "favorited": false,
+     "favoritesCount": 0,
+     "slug": "not-me",
+     "tagList": [],
+     "title": "Not me",
+     "updatedAt": "<ts>"
+    }
+   },
+   "request": "POST /api/articles",
+   "status": 201,
+   "step": "olga creates 'Not me'"
+  },
+  {
+   "body": {
+    "article": {
+     "author": {
+      "bio": null,
+      "followersCount": 0,
+      "following": false,
+      "image": null,
+      "username": "olga"
+     },
+     "body": "Body of Fav me",
+     "createdAt": "<ts>",
+     "description": "About Fav me",
+     "favorited": true,
+     "favoritesCount": 1,
+     "slug": "fav-me",
+     "tagList": [
+      "love"
+     ],
+     "title": "Fav me",
+     "updatedAt": "<ts>"
+    }
+   },
+   "request": "POST /api/articles/fav-me/favorite",
+   "status": 200,
+   "step": "pete favorites"
+  },
+  {
+   "body": {
+    "article": {
+     "author": {
+      "bio": null,
+      "followersCount": 0,
+      "following": false,
+      "image": null,
+      "username": "olga"
+     },
+     "body": "Body of Fav me",
+     "createdAt": "<ts>",
+     "description": "About Fav me",
+     "favorited": true,
+     "favoritesCount": 1,
+     "slug": "fav-me",
+     "tagList": [
+      "love"
+     ],
+     "title": "Fav me",
+     "updatedAt": "<ts>"
+    }
+   },
+   "request": "POST /api/articles/fav-me/favorite",
+   "status": 200,
+   "step": "pete favorites again (idempotent)"
+  },
+  {
+   "body": {
+    "article": {
+     "author": {
+      "bio": null,
+      "followersCount": 0,
+      "following": false,
+      "image": null,
+      "username": "olga"
+     },
+     "body": "Body of Fav me",
+     "createdAt": "<ts>",
+     "description": "About Fav me",
+     "favorited": true,
+     "favoritesCount": 2,
+     "slug": "fav-me",
+     "tagList": [
+      "love"
+     ],
+     "title": "Fav me",
+     "updatedAt": "<ts>"
+    }
+   },
+   "request": "POST /api/articles/fav-me/favorite",
+   "status": 200,
+   "step": "quinn favorites"
+  },
+  {
+   "body": {
+    "article": {
+     "author": {
+      "bio": null,
+      "followersCount": 0,
+      "following": false,
+      "image": null,
+      "username": "olga"
+     },
+     "body": "Body of Fav me",
+     "createdAt": "<ts>",
+     "description": "About Fav me",
+     "favorited": true,
+     "favoritesCount": 2,
+     "slug": "fav-me",
+     "tagList": [
+      "love"
+     ],
+     "title": "Fav me",
+     "updatedAt": "<ts>"
+    }
+   },
+   "request": "GET /api/articles/fav-me",
+   "status": 200,
+   "step": "article as pete"
+  },
+  {
+   "body": {
+    "article": {
+     "author": {
+      "bio": null,
+      "followersCount": 0,
+      "following": false,
+      "image": null,
+      "username": "olga"
+     },
+     "body": "Body of Fav me",
+     "createdAt": "<ts>",
+     "description": "About Fav me",
+     "favorited": false,
+     "favoritesCount": 2,
+     "slug": "fav-me",
+     "tagList": [
+      "love"
+     ],
+     "title": "Fav me",
+     "updatedAt": "<ts>"
+    }
+   },
+   "request": "GET /api/articles/fav-me",
+   "status": 200,
+   "step": "article anonymous"
+  },
+  {
+   "body": {
+    "articles": [
+     {
+      "author": {
+       "bio": null,
+       "followersCount": 0,
+       "following": false,
+       "image": null,
+       "username": "olga"
+      },
+      "body": "Body of Not me",
+      "createdAt": "<ts>",
+      "description": "About Not me",
+      "favorited": false,
+      "favoritesCount": 0,
+      "slug": "not-me",
+      "tagList": [],
+      "title": "Not me",
+      "updatedAt": "<ts>"
+     },
+     {
+      "author": {
+       "bio": null,
+       "followersCount": 0,
+       "following": false,
+       "image": null,
+       "username": "olga"
+      },
+      "body": "Body of Fav me",
+      "createdAt": "<ts>",
+      "description": "About Fav me",
+      "favorited": true,
+      "favoritesCount": 2,
+      "slug": "fav-me",
+      "tagList": [
+       "love"
+      ],
+      "title": "Fav me",
+      "updatedAt": "<ts>"
+     }
+    ],
+    "articlesCount": 2
+   },
+   "request": "GET /api/articles?limit=10",
+   "status": 200,
+   "step": "list as quinn"
+  },
+  {
+   "body": {
+    "articles": [
+     {
+      "author": {
+       "bio": null,
+       "followersCount": 0,
+       "following": false,
+       "image": null,
+       "username": "olga"
+      },
+      "body": "Body of Fav me",
+      "createdAt": "<ts>",
+      "description": "About Fav me",
+      "favorited": false,
+      "favoritesCount": 2,
+      "slug": "fav-me",
+      "tagList": [
+       "love"
+      ],
+      "title": "Fav me",
+      "updatedAt": "<ts>"
+     }
+    ],
+    "articlesCount": 1
+   },
+   "request": "GET /api/articles?favorited=pete&limit=10",
+   "status": 200,
+   "step": "favorited by pete"
+  },
+  {
+   "body": {
+    "articles": [
+     {
+      "author": {
+       "bio": null,
+       "followersCount": 0,
+       "following": false,
+       "image": null,
+       "username": "olga"
+      },
+      "body": "Body of Fav me",
+      "createdAt": "<ts>",
+      "description": "About Fav me",
+      "favorited": false,
+      "favoritesCount": 2,
+      "slug": "fav-me",
+      "tagList": [
+       "love"
+      ],
+      "title": "Fav me",
+      "updatedAt": "<ts>"
+     }
+    ],
+    "articlesCount": 1
+   },
+   "request": "GET /api/articles?favorited=pete",
+   "status": 200,
+   "step": "favorited by pete as olga"
+  },
+  {
+   "body": {
+    "articles": [],
+    "articlesCount": 0
+   },
+   "request": "GET /api/articles?favorited=olga",
+   "status": 200,
+   "step": "favorited by olga (none)"
+  },
+  {
+   "body": {
+    "errors": {
+     "body": [
+      "You need to login first!"
+     ]
+    }
+   },
+   "request": "POST /api/articles/fav-me/favorite",
+   "status": 401,
+   "step": "favorite without auth"
+  },
+  {
+   "body": {
+    "errors": {
+     "body": [
+      "Article not found "
+     ]
+    }
+   },
+   "request": "POST /api/articles/nope/favorite",
+   "status": 404,
+   "step": "favorite unknown article"
+  },
+  {
+   "body": {
+    "article": {
+     "author": {
+      "bio": null,
+      "followersCount": 0,
+      "following": false,
+      "image": null,
+      "username": "olga"
+     },
+     "body": "Body of Fav me",
+     "createdAt": "<ts>",
+     "description": "About Fav me",
+     "favorited": false,
+     "favoritesCount": 1,
+     "slug": "fav-me",
+     "tagList": [
+      "love"
+     ],
+     "title": "Fav me",
+     "updatedAt": "<ts>"
+    }
+   },
+   "request": "DELETE /api/articles/fav-me/favorite",
+   "status": 200,
+   "step": "pete unfavorites"
+  },
+  {
+   "body": {
+    "article": {
+     "author": {
+      "bio": null,
+      "followersCount": 0,
+      "following": false,
+      "image": null,
+      "username": "olga"
+     },
+     "body": "Body of Fav me",
+     "createdAt": "<ts>",
+     "description": "About Fav me",
+     "favorited": false,
+     "favoritesCount": 1,
+     "slug": "fav-me",
+     "tagList": [
+      "love"
+     ],
+     "title": "Fav me",
+     "updatedAt": "<ts>"
+    }
+   },
+   "request": "DELETE /api/articles/fav-me/favorite",
+   "status": 200,
+   "step": "pete unfavorites again"
+  },
+  {
+   "body": {
+    "article": {
+     "author": {
+      "bio": null,
+      "followersCount": 0,
+      "following": false,
+      "image": null,
+      "username": "olga"
+     },
+     "body": "Body of Fav me",
+     "createdAt": "<ts>",
+     "description": "About Fav me",
+     "favorited": false,
+     "favoritesCount": 1,
+     "slug": "fav-me",
+     "tagList": [
+      "love"
+     ],
+     "title": "Fav me",
+     "updatedAt": "<ts>"
+    }
+   },
+   "request": "GET /api/articles/fav-me",
+   "status": 200,
+   "step": "article after unfavorite"
+  },
+  {
+   "body": {
+    "articles": [],
+    "articlesCount": 0
+   },
+   "request": "GET /api/articles?favorited=pete",
+   "status": 200,
+   "step": "favorited by pete after unfavorite"
+  },
+  {
+   "body": {
+    "message": {
+     "body": [
+      "Article deleted successfully"
+     ]
+    }
+   },
+   "request": "DELETE /api/articles/fav-me",
+   "status": 200,
+   "step": "olga deletes favorited article"
+  },
+  {
+   "body": {
+    "articles": [],
+    "articlesCount": 0
+   },
+   "request": "GET /api/articles?favorited=quinn",
+   "status": 200,
+   "step": "favorited by quinn after delete"
+  }
+ ],
+ "feed": [
+  {
+   "body": {
+    "user": {
+     "bio": null,
+     "email": "jack@example.com",
+     "image": null,
+     "token": "<token>",
+     "username": "jack"
+    }
+   },
+   "request": "POST /api/users",
+   "status": 201,
+   "step": "register jack"
+  },
+  {
+   "body": {
+    "user": {
+     "bio": null,
+     "email": "kim@example.com",
+     "image": null,
+     "token": "<token>",
+     "username": "kim"
+    }
+   },
+   "request": "POST /api/users",
+   "status": 201,
+   "step": "register kim"
+  },
+  {
+   "body": {
+    "user": {
+     "bio": null,
+     "email": "leo@example.com",
+     "image": null,
+     "token": "<token>",
+     "username": "leo"
+    }
+   },
+   "request": "POST /api/users",
+   "status": 201,
+   "step": "register leo"
+  },
+  {
+   "body": {
+    "article": {
+     "author": {
+      "bio": null,
+      "followersCount": 0,
+      "following": false,
+      "image": null,
+      "username": "kim"
+     },
+     "body": "Body of Kim one",
+     "createdAt": "<ts>",
+     "description": "About Kim one",
+     "favorited": false,
+     "favoritesCount": 0,
+     "slug": "kim-one",
+     "tagList": [
+      "a1",
+      "b22"
+     ],
+     "title": "Kim one",
+     "updatedAt": "<ts>"
+    }
+   },
+   "request": "POST /api/articles",
+   "status": 201,
+   "step": "kim creates 'Kim one'"
+  },
+  {
+   "body": {
+    "article": {
+     "author": {
+      "bio": null,
+      "followersCount": 0,
+      "following": false,
+      "image": null,
+      "username": "leo"
+     },
+     "body": "Body of Leo one",
+     "createdAt": "<ts>",
+     "description": "About Leo one",
+     "favorited": false,
+     "favoritesCount": 0,
+     "slug": "leo-one",
+     "tagList": [
+      "dragons"
+     ],
+     "title": "Leo one",
+     "updatedAt": "<ts>"
+    }
+   },
+   "request": "POST /api/articles",
+   "status": 201,
+   "step": "leo creates 'Leo one'"
+  },
+  {
+   "body": {
+    "article": {
+     "author": {
+      "bio": null,
+      "followersCount": 0,
+      "following": false,
+      "image": null,
+      "username": "kim"
+     },
+     "body": "Body of Kim two",
+     "createdAt": "<ts>",
+     "description": "About Kim two",
+     "favorited": false,
+     "favoritesCount": 0,
+     "slug": "kim-two",
+     "tagList": [],
+     "title": "Kim two",
+     "updatedAt": "<ts>"
+    }
+   },
+   "request": "POST /api/articles",
+   "status": 201,
+   "step": "kim creates 'Kim two'"
+  },
+  {
+   "body": {
+    "errors": {
+     "body": [
+      "You need to login first!"
+     ]
+    }
+   },
+   "request": "GET /api/articles/feed",
+   "status": 401,
+   "step": "feed without auth"
+  },
+  {
+   "body": {
+    "articles": [],
+    "articlesCount": 0
+   },
+   "request": "GET /api/articles/feed",
+   "status": 200,
+   "step": "feed following nobody"
+  },
+  {
+   "body": {
+    "profile": {
+     "bio": null,
+     "followersCount": 1,
+     "following": true,
+     "image": null,
+     "username": "kim"
+    }
+   },
+   "request": "POST /api/profiles/kim/follow",
+   "status": 200,
+   "step": "jack follows kim"
+  },
+  {
+   "body": {
+    "articles": [
+     {
+      "author": {
+       "bio": null,
+       "followersCount": 1,
+       "following": true,
+       "image": null,
+       "username": "kim"
+      },
+      "body": "Body of Kim two",
+      "createdAt": "<ts>",
+      "description": "About Kim two",
+      "favorited": false,
+      "favoritesCount": 0,
+      "slug": "kim-two",
+      "tagList": [],
+      "title": "Kim two",
+      "updatedAt": "<ts>"
+     },
+     {
+      "author": {
+       "bio": null,
+       "followersCount": 1,
+       "following": true,
+       "image": null,
+       "username": "kim"
+      },
+      "body": "Body of Kim one",
+      "createdAt": "<ts>",
+      "description": "About Kim one",
+      "favorited": false,
+      "favoritesCount": 0,
+      "slug": "kim-one",
+      "tagList": [
+       "b22"
+      ],
+      "title": "Kim one",
+      "updatedAt": "<ts>"
+     }
+    ],
+    "articlesCount": 2
+   },
+   "request": "GET /api/articles/feed",
+   "status": 200,
+   "step": "feed with kim"
+  },
+  {
+   "body": {
+    "profile": {
+     "bio": null,
+     "followersCount": 1,
+     "following": true,
+     "image": null,
+     "username": "leo"
+    }
+   },
+   "request": "POST /api/profiles/leo/follow",
+   "status": 200,
+   "step": "jack follows leo"
+  },
+  {
+   "body": {
+    "articles": [
+     {
+      "author": {
+       "bio": null,
+       "followersCount": 1,
+       "following": true,
+       "image": null,
+       "username": "kim"
+      },
+      "body": "Body of Kim two",
+      "createdAt": "<ts>",
+      "description": "About Kim two",
+      "favorited": false,
+      "favoritesCount": 0,
+      "slug": "kim-two",
+      "tagList": [],
+      "title": "Kim two",
+      "updatedAt": "<ts>"
+     },
+     {
+      "author": {
+       "bio": null,
+       "followersCount": 1,
+       "following": true,
+       "image": null,
+       "username": "leo"
+      },
+      "body": "Body of Leo one",
+      "createdAt": "<ts>",
+      "description": "About Leo one",
+      "favorited": false,
+      "favoritesCount": 0,
+      "slug": "leo-one",
+      "tagList": [
+       "dragons"
+      ],
+      "title": "Leo one",
+      "updatedAt": "<ts>"
+     },
+     {
+      "author": {
+       "bio": null,
+       "followersCount": 1,
+       "following": true,
+       "image": null,
+       "username": "kim"
+      },
+      "body": "Body of Kim one",
+      "createdAt": "<ts>",
+      "description": "About Kim one",
+      "favorited": false,
+      "favoritesCount": 0,
+      "slug": "kim-one",
+      "tagList": [
+       "b22"
+      ],
+      "title": "Kim one",
+      "updatedAt": "<ts>"
+     }
+    ],
+    "articlesCount": 3
+   },
+   "request": "GET /api/articles/feed?limit=10",
+   "status": 200,
+   "step": "feed with kim+leo"
+  },
+  {
+   "body": {
+    "articles": [
+     {
+      "author": {
+       "bio": null,
+       "followersCount": 1,
+       "following": true,
+       "image": null,
+       "username": "leo"
+      },
+      "body": "Body of Leo one",
+      "createdAt": "<ts>",
+      "description": "About Leo one",
+      "favorited": false,
+      "favoritesCount": 0,
+      "slug": "leo-one",
+      "tagList": [
+       "dragons"
+      ],
+      "title": "Leo one",
+      "updatedAt": "<ts>"
+     }
+    ],
+    "articlesCount": 3
+   },
+   "request": "GET /api/articles/feed?limit=1&offset=1",
+   "status": 200,
+   "step": "feed limit 1 offset 1"
+  },
+  {
+   "body": {
+    "article": {
+     "author": {
+      "bio": null,
+      "followersCount": 1,
+      "following": true,
+      "image": null,
+      "username": "kim"
+     },
+     "body": "Body of Kim one",
+     "createdAt": "<ts>",
+     "description": "About Kim one",
+     "favorited": false,
+     "favoritesCount": 0,
+     "slug": "kim-one",
+     "tagList": [
+      "b22"
+     ],
+     "title": "Kim one",
+     "updatedAt": "<ts>"
+    }
+   },
+   "request": "GET /api/articles/kim-one",
+   "status": 200,
+   "step": "article shows following=true for jack"
+  },
+  {
+   "body": {
+    "profile": {
+     "bio": null,
+     "followersCount": 0,
+     "following": false,
+     "image": null,
+     "username": "kim"
+    }
+   },
+   "request": "DELETE /api/profiles/kim/follow",
+   "status": 200,
+   "step": "jack unfollows kim"
+  },
+  {
+   "body": {
+    "articles": [
+     {
+      "author": {
+       "bio": null,
+       "followersCount": 1,
+       "following": true,
+       "image": null,
+       "username": "leo"
+      },
+      "body": "Body of Leo one",
+      "createdAt": "<ts>",
+      "description": "About Leo one",
+      "favorited": false,
+      "favoritesCount": 0,
+      "slug": "leo-one",
+      "tagList": [
+       "dragons"
+      ],
+      "title": "Leo one",
+      "updatedAt": "<ts>"
+     }
+    ],
+    "articlesCount": 1
+   },
+   "request": "GET /api/articles/feed?limit=10",
+   "status": 200,
+   "step": "feed after unfollow"
+  }
+ ],
+ "profiles_and_follows": [
+  {
+   "body": {
+    "user": {
+     "bio": null,
+     "email": "carol@example.com",
+     "image": null,
+     "token": "<token>",
+     "username": "carol"
+    }
+   },
+   "request": "POST /api/users",
+   "status": 201,
+   "step": "register carol"
+  },
+  {
+   "body": {
+    "user": {
+     "bio": null,
+     "email": "dave@example.com",
+     "image": null,
+     "token": "<token>",
+     "username": "dave"
+    }
+   },
+   "request": "POST /api/users",
+   "status": 201,
+   "step": "register dave"
+  },
+  {
+   "body": {
+    "user": {
+     "bio": null,
+     "email": "erin@example.com",
+     "image": null,
+     "token": "<token>",
+     "username": "erin"
+    }
+   },
+   "request": "POST /api/users",
+   "status": 201,
+   "step": "register erin"
+  },
+  {
+   "body": {
+    "profile": {
+     "bio": null,
+     "followersCount": 0,
+     "following": false,
+     "image": null,
+     "username": "carol"
+    }
+   },
+   "request": "GET /api/profiles/carol",
+   "status": 200,
+   "step": "profile anonymous"
+  },
+  {
+   "body": {
+    "profile": {
+     "bio": null,
+     "followersCount": 0,
+     "following": false,
+     "image": null,
+     "username": "carol"
+    }
+   },
+   "request": "GET /api/profiles/carol",
+   "status": 200,
+   "step": "profile as dave"
+  },
+  {
+   "body": {
+    "errors": {
+     "body": [
+      "User profile not found "
+     ]
+    }
+   },
+   "request": "GET /api/profiles/nobody",
+   "status": 404,
+   "step": "unknown profile"
+  },
+  {
+   "body": {
+    "profile": {
+     "bio": null,
+     "followersCount": 1,
+     "following": true,
+     "image": null,
+     "username": "carol"
+    }
+   },
+   "request": "POST /api/profiles/carol/follow",
+   "status": 200,
+   "step": "dave follows carol"
+  },
+  {
+   "body": {
+    "profile": {
+     "bio": null,
+     "followersCount": 1,
+     "following": true,
+     "image": null,
+     "username": "carol"
+    }
+   },
+   "request": "POST /api/profiles/carol/follow",
+   "status": 200,
+   "step": "dave follows carol again (idempotent)"
+  },
+  {
+   "body": {
+    "profile": {
+     "bio": null,
+     "followersCount": 2,
+     "following": true,
+     "image": null,
+     "username": "carol"
+    }
+   },
+   "request": "POST /api/profiles/carol/follow",
+   "status": 200,
+   "step": "erin follows carol"
+  },
+  {
+   "body": {
+    "profile": {
+     "bio": null,
+     "followersCount": 2,
+     "following": true,
+     "image": null,
+     "username": "carol"
+    }
+   },
+   "request": "GET /api/profiles/carol",
+   "status": 200,
+   "step": "carol as dave (following, 2 followers)"
+  },
+  {
+   "body": {
+    "profile": {
+     "bio": null,
+     "followersCount": 2,
+     "following": false,
+     "image": null,
+     "username": "carol"
+    }
+   },
+   "request": "GET /api/profiles/carol",
+   "status": 200,
+   "step": "carol anonymous (following false)"
+  },
+  {
+   "body": {
+    "profile": {
+     "bio": null,
+     "followersCount": 0,
+     "following": false,
+     "image": null,
+     "username": "dave"
+    }
+   },
+   "request": "GET /api/profiles/dave",
+   "status": 200,
+   "step": "dave as carol (not following back)"
+  },
+  {
+   "body": {
+    "profile": {
+     "bio": null,
+     "followersCount": 3,
+     "following": true,
+     "image": null,
+     "username": "carol"
+    }
+   },
+   "request": "POST /api/profiles/carol/follow",
+   "status": 200,
+   "step": "carol follows herself"
+  },
+  {
+   "body": {
+    "profile": {
+     "bio": null,
+     "followersCount": 3,
+     "following": true,
+     "image": null,
+     "username": "carol"
+    }
+   },
+   "request": "GET /api/profiles/carol",
+   "status": 200,
+   "step": "carol self-view"
+  },
+  {
+   "body": {
+    "profile": {
+     "bio": null,
+     "followersCount": 2,
+     "following": false,
+     "image": null,
+     "username": "carol"
+    }
+   },
+   "request": "DELETE /api/profiles/carol/follow",
+   "status": 200,
+   "step": "dave unfollows carol"
+  },
+  {
+   "body": {
+    "profile": {
+     "bio": null,
+     "followersCount": 2,
+     "following": false,
+     "image": null,
+     "username": "carol"
+    }
+   },
+   "request": "DELETE /api/profiles/carol/follow",
+   "status": 200,
+   "step": "dave unfollows carol again"
+  },
+  {
+   "body": {
+    "profile": {
+     "bio": null,
+     "followersCount": 2,
+     "following": false,
+     "image": null,
+     "username": "carol"
+    }
+   },
+   "request": "GET /api/profiles/carol",
+   "status": 200,
+   "step": "carol as dave after unfollow"
+  },
+  {
+   "body": {
+    "errors": {
+     "body": [
+      "You need to login first!"
+     ]
+    }
+   },
+   "request": "POST /api/profiles/carol/follow",
+   "status": 401,
+   "step": "follow without auth"
+  },
+  {
+   "body": {
+    "errors": {
+     "body": [
+      "User profile not found "
+     ]
+    }
+   },
+   "request": "POST /api/profiles/nobody/follow",
+   "status": 404,
+   "step": "follow unknown user"
+  },
+  {
+   "body": {
+    "errors": {
+     "body": [
+      "User profile not found "
+     ]
+    }
+   },
+   "request": "DELETE /api/profiles/nobody/follow",
+   "status": 404,
+   "step": "unfollow unknown user"
+  }
+ ],
+ "tags": [
+  {
+   "body": {
+    "tags": []
+   },
+   "request": "GET /api/tags",
+   "status": 200,
+   "step": "tags on empty db"
+  },
+  {
+   "body": {
+    "user": {
+     "bio": null,
+     "email": "rita@example.com",
+     "image": null,
+     "token": "<token>",
+     "username": "rita"
+    }
+   },
+   "request": "POST /api/users",
+   "status": 201,
+   "step": "register rita"
+  },
+  {
+   "body": {
+    "article": {
+     "author": {
+      "bio": null,
+      "followersCount": 0,
+      "following": false,
+      "image": null,
+      "username": "rita"
+     },
+     "body": "Body of Tagged one",
+     "createdAt": "<ts>",
+     "description": "About Tagged one",
+     "favorited": false,
+     "favoritesCount": 0,
+     "slug": "tagged-one",
+     "tagList": [
+      "ab",
+      "apple",
+      "mango",
+      "zebra"
+     ],
+     "title": "Tagged one",
+     "updatedAt": "<ts>"
+    }
+   },
+   "request": "POST /api/articles",
+   "status": 201,
+   "step": "rita creates 'Tagged one'"
+  },
+  {
+   "body": {
+    "article": {
+     "author": {
+      "bio": null,
+      "followersCount": 0,
+      "following": false,
+      "image": null,
+      "username": "rita"
+     },
+     "body": "Body of Tagged two",
+     "createdAt": "<ts>",
+     "description": "About Tagged two",
+     "favorited": false,
+     "favoritesCount": 0,
+     "slug": "tagged-two",
+     "tagList": [
+      "apple",
+      "kiwi"
+     ],
+     "title": "Tagged two",
+     "updatedAt": "<ts>"
+    }
+   },
+   "request": "POST /api/articles",
+   "status": 201,
+   "step": "rita creates 'Tagged two'"
+  },
+  {
+   "body": {
+    "tags": [
+     "apple",
+     "kiwi",
+     "mango",
+     "zebra"
+    ]
+   },
+   "request": "GET /api/tags",
+   "status": 200,
+   "step": "tags after two articles (short tag 'ab' not created)"
+  },
+  {
+   "body": {
+    "article": {
+     "author": {
+      "bio": null,
+      "followersCount": 0,
+      "following": false,
+      "image": null,
+      "username": "rita"
+     },
+     "body": "Body of Tagged one",
+     "createdAt": "<ts>",
+     "description": "About Tagged one",
+     "favorited": false,
+     "favoritesCount": 0,
+     "slug": "tagged-one",
+     "tagList": [
+      "apple",
+      "mango",
+      "zebra"
+     ],
+     "title": "Tagged one",
+     "updatedAt": "<ts>"
+    }
+   },
+   "request": "GET /api/articles/tagged-one",
+   "status": 200,
+   "step": "short tag is still on the article response list"
+  },
+  {
+   "body": {
+    "message": {
+     "body": [
+      "Article deleted successfully"
+     ]
+    }
+   },
+   "request": "DELETE /api/articles/tagged-one",
+   "status": 200,
+   "step": "delete article keeps tags"
+  },
+  {
+   "body": {
+    "tags": [
+     "apple",
+     "kiwi",
+     "mango",
+     "zebra"
+    ]
+   },
+   "request": "GET /api/tags",
+   "status": 200,
+   "step": "tags after delete"
+  }
+ ],
+ "unknown_route": [
+  {
+   "body": {
+    "errors": {
+     "body": [
+      "Not found"
+     ]
+    }
+   },
+   "request": "GET /api/nothing-here",
+   "status": 404,
+   "step": "unknown api route"
+  }
+ ]
+}

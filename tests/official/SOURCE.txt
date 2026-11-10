@@ -1,0 +1,1 @@
+Source: https://github.com/gothinkster/realworld commit 25588846c314b15a5e427ffe816e6b4af7be68c7 (specs/api)

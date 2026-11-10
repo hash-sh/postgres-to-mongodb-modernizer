@@ -1,0 +1,10 @@
+.env
+node_modules/
+__pycache__/
+.venv/
+*.pyc
+.pytest_cache/
+bench/data/
+logs/*_backend.log
+state/*.tmp
+reports/raw/probe*

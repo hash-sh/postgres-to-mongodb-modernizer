@@ -1,0 +1,38 @@
+{
+  "chunks": {},
+  "llm": {
+    "calls": 0,
+    "tokens": 0
+  },
+  "stages": {
+    "analysis": {
+      "status": "pending"
+    },
+    "baseline": {
+      "characterization_steps": 155,
+      "error": "RuntimeError: characterization recording is not deterministic for: ['comments']",
+      "manifest_hash": "5f3a314bbbf326bdcb14c76d31f85698d18ae678fa2c109628008485460e7231",
+      "official_flaky": 0,
+      "official_passed": 72,
+      "official_total": 157,
+      "seconds": 19.4,
+      "status": "done",
+      "updated": "2026-11-10T14:37:27"
+    },
+    "benchmark": {
+      "status": "pending"
+    },
+    "migrate": {
+      "status": "pending"
+    },
+    "report": {
+      "status": "pending"
+    },
+    "schema": {
+      "status": "pending"
+    },
+    "transform": {
+      "status": "pending"
+    }
+  }
+}

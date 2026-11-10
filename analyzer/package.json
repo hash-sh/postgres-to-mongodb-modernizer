@@ -1,0 +1,7 @@
+{
+  "name": "amp-analyzer",
+  "private": true,
+  "description": "Deterministic static analyzer: Sequelize models, associations, query call sites, routes",
+  "scripts": { "test": "node --test" },
+  "dependencies": { "@babel/parser": "7.28.5", "@babel/traverse": "7.28.5" }
+}
