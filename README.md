@@ -114,5 +114,9 @@ faster yet. Everything is listed in the results file.
 | `logs/` | every LLM call (`llm_calls.jsonl`, transcripts) and every repair iteration (`transform/`) |
 | `reports/` | results and raw measurements |
 
+ ## Authors
+  - Deeksha Thakur (@deek-sha545)
+  - Harsh (@hash-sh)
+
 Docs: [DESIGN.md](DESIGN.md) · [DECISIONS.md](DECISIONS.md) · [INTERVIEW_NOTES.md](INTERVIEW_NOTES.md) ·
 [design/schema.md](design/schema.md) · [design/paper_notes.md](design/paper_notes.md)
