@@ -2,13 +2,15 @@ const { UnauthorizedError } = require("../helper/customErrors");
 const { bcryptHash } = require("../helper/bcrypt");
 const { User, mongoose } = require("../models");
 
-// fields that are allowed to be sent to client for a user
+// fields that are allowed to be sent to client for a user (GET /api/user)
 const PUBLIC_USER_FIELDS = ["username", "bio", "image", "token", "email"];
+// fields for the response of PUT /api/user (must NOT include email)
+const UPDATE_PUBLIC_FIELDS = ["username", "bio", "image", "token"];
 
-// build a plain user object containing only public fields
-const buildPublicUser = (src) => {
+// build a plain user object containing only selected public fields
+const buildPublicUser = (src, fields) => {
   const out = {};
-  PUBLIC_USER_FIELDS.forEach((key) => {
+  fields.forEach((key) => {
     if (src[key] !== undefined) out[key] = src[key];
   });
   return out;
@@ -20,11 +22,10 @@ const currentUser = async (req, res, next) => {
     const { loggedUser } = req;
     if (!loggedUser) throw new UnauthorizedError();
 
-    // email is stored in header by auth middleware
     const email = req.headers.email;
     delete req.headers.email;
 
-    const userForResp = buildPublicUser({ ...loggedUser, email });
+    const userForResp = buildPublicUser({ ...loggedUser, email }, PUBLIC_USER_FIELDS);
     res.json({ user: userForResp });
   } catch (error) {
     next(error);
@@ -47,8 +48,11 @@ const updateUser = async (req, res, next) => {
       const dbUser = await User.findOne({ _id: loggedUser._id }).session(session);
       if (!dbUser) throw new UnauthorizedError();
 
+      // Apply updates, ignoring password and email (email updates are not allowed here)
       Object.entries(user).forEach(([key, value]) => {
-        if (value !== undefined && key !== "password") dbUser[key] = value;
+        if (value !== undefined && key !== "password" && key !== "email") {
+          dbUser[key] = value;
+        }
       });
 
       // Preserve original buggy condition (always true)
@@ -57,13 +61,15 @@ const updateUser = async (req, res, next) => {
       }
 
       await dbUser.save({ session });
-
-      // update loggedUser reference for consistency (only public fields)
-      Object.assign(loggedUser, dbUser.toObject());
     });
     await session.endSession();
 
-    const userForResp = buildPublicUser(loggedUser);
+    // Fetch fresh data for response (lean to avoid Mongoose magic)
+    const freshUser = await User.findOne({ _id: loggedUser._id }).lean();
+    const userForResp = buildPublicUser(
+      { ...freshUser, token: loggedUser.token },
+      UPDATE_PUBLIC_FIELDS
+    );
     res.json({ user: userForResp });
   } catch (error) {
     next(error);

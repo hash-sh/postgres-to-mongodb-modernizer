@@ -1,0 +1,5 @@
+
+=== Stage: transform ===
+  slice1_users_profiles: already done
+  slice2_articles_feed: generating controllers/articles.js (function by function)
+    [rate limiter] 3437+6169 tokens > 7360/min, sleeping 58s

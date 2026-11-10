@@ -2,3 +2,36 @@
 === Stage: transform ===
   slice1_users_profiles round 5 iter 0: char 28/42 official-mismatch 1
     repairing controllers/profiles.js
+  slice1_users_profiles round 5 iter 1: char 41/42 official-mismatch 0
+    repairing controllers/user.js
+    [rate limiter] 4603+5672 tokens > 7360/min, sleeping 50s
+  slice1_users_profiles round 5 iter 2: char 41/42 official-mismatch 0
+    repairing controllers/user.js
+    [rate limiter] 3400+5724 tokens > 7360/min, sleeping 51s
+  slice1_users_profiles round 5 iter 3: char 42/42 official-mismatch 0
+  slice2_articles_feed: generating controllers/articles.js
+Traceback (most recent call last):
+  File "/home/harsh/Work_Space/Mongodb_proj/pipeline/__main__.py", line 22, in run_stage
+    importlib.import_module(f"pipeline.stages.{name}").run(state, **kw)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/harsh/Work_Space/Mongodb_proj/pipeline/stages/transform.py", line 289, in run
+    if not t.run_chunk(c):
+           ~~~~~~~~~~~^^^
+  File "/home/harsh/Work_Space/Mongodb_proj/pipeline/stages/transform.py", line 187, in run_chunk
+    self.generate(cid, rel)
+    ~~~~~~~~~~~~~^^^^^^^^^^
+  File "/home/harsh/Work_Space/Mongodb_proj/pipeline/stages/transform.py", line 111, in generate
+    reply = self.llm.chat([{"role": "user", "content": prompt}], purpose="transform.generate", chunk=chunk_id,
+                          max_tokens=4200 if len(orig) > 4000 else 3000)
+  File "/home/harsh/Work_Space/Mongodb_proj/pipeline/llm.py", line 85, in chat
+    return self._chat(messages, purpose=purpose, chunk=chunk, model=m, max_tokens=max_tokens,
+           ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                      reasoning=reasoning, json_mode=json_mode)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/harsh/Work_Space/Mongodb_proj/pipeline/llm.py", line 113, in _chat
+    self._wait_for_capacity(need, model)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/harsh/Work_Space/Mongodb_proj/pipeline/llm.py", line 57, in _wait_for_capacity
+    raise RequestTooLarge(f"request needs ~{need} tokens but the per-minute limit is {settings.llm_tpm_limit}")
+pipeline.llm.RequestTooLarge: request needs ~8860 tokens but the per-minute limit is 8000
+EXIT 1

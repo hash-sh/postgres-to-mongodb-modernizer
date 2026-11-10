@@ -93,16 +93,67 @@
           "repaired": "controllers/profiles.js",
           "round": 5,
           "time": "18:22:57"
+        },
+        {
+          "char": "41/42",
+          "iteration": 1,
+          "llm_tokens_total": 91241,
+          "official_mismatch": 0,
+          "repaired": "controllers/user.js",
+          "round": 5,
+          "time": "18:23:08"
+        },
+        {
+          "char": "41/42",
+          "iteration": 2,
+          "llm_tokens_total": 94641,
+          "official_mismatch": 0,
+          "repaired": "controllers/user.js",
+          "round": 5,
+          "time": "18:24:09"
+        },
+        {
+          "char": "42/42",
+          "iteration": 3,
+          "llm_tokens_total": 97838,
+          "official_mismatch": 0,
+          "repaired": null,
+          "round": 5,
+          "time": "18:25:13"
         }
       ],
+      "result": {
+        "char_passed": 42,
+        "char_total": 42,
+        "official_passed": 19,
+        "official_total": 56
+      },
       "round": 5,
+      "status": "done"
+    },
+    "slice2_articles_feed": {
+      "diagnoses": [
+        {
+          "after_round": 0,
+          "findings": [
+            "controllers/articles.js (6.8 KB) + context needs ~8.9k tokens in one request; Groq free tier allows 8k tokens/min -> RequestTooLarge before any LLM call"
+          ],
+          "fix": "function-level chunking for files > 4000 chars: analyzer/split.js (Babel) splits header/functions/exports; generation in groups of <=2600 chars, repair targets the failing handler function only; deterministic reassembly",
+          "root_cause": "bad chunking"
+        }
+      ],
+      "files": [
+        "controllers/articles.js"
+      ],
+      "iterations": [],
+      "round": 2,
       "status": "running"
     }
   },
   "llm": {
-    "calls": 29,
+    "calls": 32,
     "daily_exhausted": {},
-    "tokens": 91241
+    "tokens": 101275
   },
   "stages": {
     "analysis": {
@@ -146,7 +197,7 @@
     },
     "transform": {
       "status": "running",
-      "updated": "2026-11-10T18:22:49"
+      "updated": "2026-11-10T18:26:57"
     }
   }
 }

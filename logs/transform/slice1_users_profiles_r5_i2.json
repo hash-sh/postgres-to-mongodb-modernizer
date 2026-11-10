@@ -1,0 +1,38 @@
+{
+ "round": 5,
+ "iteration": 2,
+ "time": "18:24:09",
+ "char": "41/42",
+ "official_mismatch": 0,
+ "llm_tokens_total": 94641,
+ "result": {
+  "slice": 1,
+  "char_passed": 41,
+  "char_total": 42,
+  "char_failures": [
+   {
+    "scenario": "auth_happy_path",
+    "step": "update bio+image+password",
+    "request": "PUT /api/user",
+    "diffs": [
+     "$body.user.email: unexpected key (got 'alice@example.com')"
+    ]
+   }
+  ],
+  "official_passed": 19,
+  "official_total": 56,
+  "official_mismatch": [],
+  "official_baseline_passed": 19,
+  "server_errors": [
+   "FieldRequiredError: A username is required\n    controllers/users.js:15:26)",
+   "FieldRequiredError: An email is required\n    controllers/users.js:16:23)",
+   "FieldRequiredError: A password is required\n    controllers/users.js:17:26)",
+   "AlreadyTakenError: Email already exists.. try logging in\n    controllers/users.js:20:27)\n    controllers/users.js:55:26)",
+   "NotFoundError: Email not found sign in first\n    controllers/users.js:55:26)\n    controllers/users.js:58:26)",
+   "ValidationError: Wrong email/password combination\n    controllers/users.js:58:26)\n    controllers/users.js:55:26)",
+   "ValidationError: Wrong email/password combination\n    controllers/users.js:58:26)\n    controllers/user.js:21:28)",
+   "UnauthorizedError: You need to login first!\n    controllers/user.js:21:28)\n    middleware/authentication.js:8:40)"
+  ],
+  "ok": false
+ }
+}

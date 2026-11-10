@@ -63,14 +63,16 @@ class Transformer:
         LOGDIR.mkdir(parents=True, exist_ok=True)
 
     # ---------------------------------------------------------------- context builders
-    def notes_for(self, rel):
-        notes = [n["text"] for n in self.inv["semanticNotes"] if n["file"] == rel]
+    def notes_for(self, rel, funcs=None):
+        notes = list(dict.fromkeys(n["text"] for n in self.inv["semanticNotes"]
+                                   if n["file"] == rel and (funcs is None or n["function"] in funcs)))
         if rel in EXTRA_NOTES:
             notes.append(EXTRA_NOTES[rel])
         return notes
 
-    def shapes_for(self, rel):
-        eps = [r for r in self.inv["routes"] if r["handler"]["file"] == rel or r["routeFile"] == rel]
+    def shapes_for(self, rel, funcs=None):
+        eps = [r for r in self.inv["routes"] if (r["handler"]["file"] == rel or r["routeFile"] == rel)
+               and (funcs is None or r["handler"]["function"] in funcs)]
         if rel in ("helper/helpers.js", "middleware/authentication.js"):
             return {}
         prefixes = sorted({r["path"].split(":")[0].rstrip("/") or r["path"] for r in eps})
@@ -81,7 +83,11 @@ class Transformer:
     def converted_context(self, rel):
         """Already-converted shared modules the file depends on (keeps conventions consistent across slices)."""
         out = []
-        for dep in ("middleware/authentication.js", "helper/helpers.js"):
+        if rel != "middleware/authentication.js" and (APP / "middleware/authentication.js").exists():
+            out.append("req.loggedUser (set by the converted auth middleware) is a lean User document WITHOUT email, "
+                       "with `_id`, username, bio, image, password, followersCount and `token`; it is undefined when no "
+                       "Authorization header was sent.")
+        for dep in ("helper/helpers.js",):
             p = APP / dep
             if dep != rel and p.exists() and "require(\"../models\")" in p.read_text() and "Sequelize" not in p.read_text():
                 src = (settings.original_backend / rel).read_text() if (settings.original_backend / rel).exists() else ""
@@ -90,13 +96,13 @@ class Transformer:
                 out.append(f"--- already converted {dep} (use its exports as-is) ---\n{p.read_text()}")
         return "\n".join(out)
 
-    def base_prompt(self, rel):
-        shapes = self.shapes_for(rel)
+    def base_prompt(self, rel, funcs=None):
+        shapes = self.shapes_for(rel, funcs)
         parts = [RULES, "MODELS (generated from the reviewed schema; you cannot change them):", self.models_api]
         if shapes:
             parts += ["RESPONSE SHAPES the endpoints of this file must produce (from the original app):"] + \
                      [f"- {k}: {v}" for k, v in shapes.items()]
-        notes = self.notes_for(rel)
+        notes = self.notes_for(rel, funcs)
         if notes:
             parts += ["ORM BEHAVIOUR TO PRESERVE (found by the static analyzer):"] + [f"- {n}" for n in notes]
         ctx = self.converted_context(rel)
@@ -124,6 +130,124 @@ class Transformer:
         reply = self.llm.chat([{"role": "user", "content": prompt}], purpose=purpose, chunk=chunk_id,
                               max_tokens=4200 if len(cur) > 4000 else 3000)
         self.writer.write(rel, extract_code(reply))
+
+    # ---------------------------------------------------------------- function mode (large files)
+    # A file above FUNC_MODE_CHARS does not fit one free-tier request (prompt + answer <= 8k tokens), so it is
+    # converted and repaired one handler function at a time. Splitting/assembly is deterministic (Babel AST).
+    FUNC_MODE_CHARS = 4000
+
+    @staticmethod
+    def segments(code):
+        tmp = LOGDIR / "_split_tmp.js"
+        tmp.write_text(code)
+        r = subprocess.run(["node", str(settings.root / "analyzer/split.js"), str(tmp)], capture_output=True, text=True)
+        if r.returncode != 0:
+            raise ValueError("cannot parse JS: " + r.stderr[-400:])
+        return json.loads(r.stdout)
+
+    def big(self, rel):
+        return len((settings.original_backend / rel).read_text()) > self.FUNC_MODE_CHARS
+
+    def _merge_header(self, header, extra_segments):
+        for seg in extra_segments:
+            t = seg["text"].strip()
+            if seg["kind"] == "other" and t and t not in header:
+                header = header.rstrip() + "\n" + t + "\n"
+        return header
+
+    def _assemble(self, header, funcs, order, exports):
+        body = "\n\n".join(funcs[n] for n in order)
+        return header.rstrip() + "\n\n" + body + "\n\n" + exports.strip() + "\n"
+
+    def generate_funcs(self, chunk_id, rel):
+        orig = (settings.original_backend / rel).read_text()
+        segs = self.segments(orig)
+        fsegs = [x for x in segs if x["kind"] == "function"]
+        header_orig = "\n".join(x["text"] for x in segs if x["kind"] == "other")
+        exports = next(x["text"] for x in segs if x["kind"] == "exports")
+        groups, cur, size = [], [], 0
+        for f in fsegs:
+            if cur and size + len(f["text"]) > 2600:
+                groups.append(cur)
+                cur, size = [], 0
+            cur.append(f)
+            size += len(f["text"])
+        groups.append(cur)
+        header, funcs = None, {}
+        for g in groups:
+            names = [f["name"] for f in g]
+            src = "\n\n".join(f["text"] for f in g)
+            if header is None:
+                task = (f"ORIGINAL MODULE HEADER of {rel}:\n```javascript\n{header_orig}\n```\nReturn the CONVERTED header "
+                        f"(requires/shared consts) first, then the converted functions {names}.")
+            else:
+                task = f"The converted module header is:\n```javascript\n{header}```\nDo not repeat it. Return ONLY the converted functions {names}."
+            prompt = (f"{self.base_prompt(rel, names)}\n\nYou convert PART of {rel}, function by function. {task}\n"
+                      f"Keep each as `const NAME = async (req, res, next) => {{ ... }};`. Do NOT write module.exports.\n"
+                      f"FUNCTIONS TO CONVERT:\n```javascript\n{src}\n```")
+            reply = self.llm.chat([{"role": "user", "content": prompt}], purpose="transform.generate", chunk=chunk_id, max_tokens=3200)
+            out = self.segments(extract_code(reply))
+            if header is None:
+                header = "\n".join(x["text"] for x in out if x["kind"] == "other") + "\n"
+            else:
+                header = self._merge_header(header, out)
+            for x in out:
+                if x["kind"] == "function":
+                    funcs[x["name"]] = x["text"]
+            missing = [n for n in names if n not in funcs]
+            if missing:
+                raise ValueError(f"LLM reply for {rel} is missing functions {missing}")
+        self.writer.write(rel, self._assemble(header, funcs, [f["name"] for f in fsegs], exports))
+
+    def repair_func(self, chunk_id, rel, fname, report, purpose="transform.repair"):
+        cur_segs = self.segments((APP / rel).read_text())
+        orig_segs = self.segments((settings.original_backend / rel).read_text())
+        header = "\n".join(x["text"] for x in cur_segs if x["kind"] == "other") + "\n"
+        funcs = {x["name"]: x["text"] for x in cur_segs if x["kind"] == "function"}
+        order = [x["name"] for x in cur_segs if x["kind"] == "function"]
+        exports = next(x["text"] for x in cur_segs if x["kind"] == "exports")
+        orig_f = next((x["text"] for x in orig_segs if x["name"] == fname), "")
+        prompt = (f"{self.base_prompt(rel, [fname])}\n\nFunction `{fname}` of {rel} FAILS frozen tests (expected = the "
+                  f"original app's behaviour). Fix it.\nFAILURES:\n{report[:2400]}\n\nMODULE HEADER (current, already "
+                  f"converted):\n```javascript\n{header}```\nORIGINAL `{fname}`:\n```javascript\n{orig_f}\n```\n"
+                  f"CURRENT `{fname}`:\n```javascript\n{funcs.get(fname, '')}\n```\nReturn ONLY the corrected function "
+                  f"(prefix new require lines only if you need new imports).")
+        reply = self.llm.chat([{"role": "user", "content": prompt}], purpose=purpose, chunk=chunk_id, max_tokens=2600)
+        out = self.segments(extract_code(reply))
+        new = {x["name"]: x["text"] for x in out if x["kind"] == "function"}
+        if fname not in new:
+            raise ValueError(f"repair reply did not contain function {fname}")
+        funcs[fname] = new[fname]
+        header = self._merge_header(header, out)
+        self.writer.write(rel, self._assemble(header, funcs, order, exports))
+
+    def implicated_func(self, rel, res, stale=0):
+        """Which handler function of `rel` to repair: first failing step per scenario weighs most."""
+        score = {}
+        cur = (APP / rel).read_text()
+        segs = self.segments(cur)
+        line_of = lambda pos: cur.count("\n", 0, pos) + 1
+        ranges = [(x["name"], line_of(x["start"]), line_of(x["end"])) for x in segs if x["kind"] == "function"]
+        routes = [(r["method"], re.compile("^" + re.sub(r":\w+", r"[^/]+", r["path"]) + "$"), r) for r in self.inv["routes"]]
+        seen = set()
+        for fl in res.get("char_failures", []):
+            w = 5 if fl["scenario"] not in seen else 1
+            seen.add(fl["scenario"])
+            m, p = fl["request"].split(" ", 1)
+            p = p.split("?")[0]
+            for rm, rx, r in routes:
+                if rm == m and rx.match(p):
+                    if r["handler"]["file"] == rel:
+                        score[r["handler"]["function"]] = score.get(r["handler"]["function"], 0) + w
+                    break
+        for e in res.get("server_errors", []):
+            for mt in re.finditer(re.escape(rel) + r":(\d+)", e):
+                ln = int(mt.group(1))
+                for name, a, b in ranges:
+                    if a <= ln <= b:
+                        score[name] = score.get(name, 0) + 6
+        ranked = sorted(score, key=lambda k: -score[k]) or [ranges[0][0]]
+        return ranked[min(stale, len(ranked) - 1)]
 
     # ---------------------------------------------------------------- failure analysis
     def implicated(self, chunk, res, files):
@@ -183,8 +307,8 @@ class Transformer:
         self.state.save_chunk(cid, status="running", round=rnd, files=files)
         if not st.get("generated"):
             for rel in files:
-                print(f"  {cid}: generating {rel}")
-                self.generate(cid, rel)
+                print(f"  {cid}: generating {rel}" + (" (function by function)" if self.big(rel) else ""))
+                (self.generate_funcs if self.big(rel) else self.generate)(cid, rel)
             self.state.save_chunk(cid, generated=True)
         last_pass, stale = -1, 0
         for it in range(settings.llm_max_repair_iters + 1):
@@ -223,8 +347,14 @@ class Transformer:
                 stale = stale + 1 if p <= last_pass else 0
                 last_pass = max(last_pass, p)
                 target = ranked[min(stale, len(ranked) - 1)]
-            print(f"    repairing {target}")
-            self.repair(cid, target, rep)
+            if self.big(target) and not syn and "boot_error" not in res:
+                fname = self.implicated_func(target, res, stale)
+                print(f"    repairing {target}#{fname}")
+                self.repair_func(cid, target, fname, rep)
+                target = f"{target}#{fname}"
+            else:
+                print(f"    repairing {target}")
+                self.repair(cid, target, rep)
             st["iterations"].append({**entry, "repaired": target})
             self.state.save()
         self.state.save_chunk(cid, status="needs_diagnosis")
@@ -251,8 +381,13 @@ class Transformer:
                 "favorites for those ids), use the embedded `tagList` and the stored `favoritesCount`/`followersCount` "
                 "counters instead of counting junction documents. Keep exports, response shapes, ordering, error order.")
         for f in targets:
-            print(f"  optimization: rewriting {f}")
-            self.repair("optimization_pass", f, task, purpose="transform.optimize")
+            if self.big(f):
+                for fn in [x["name"] for x in self.segments((APP / f).read_text()) if x["kind"] == "function"]:
+                    print(f"  optimization: rewriting {f}#{fn}")
+                    self.repair_func("optimization_pass", f, fn, task, purpose="transform.optimize")
+            else:
+                print(f"  optimization: rewriting {f}")
+                self.repair("optimization_pass", f, task, purpose="transform.optimize")
         res = None
         for it in range(3):
             syn = [(f, e) for f in targets if (e := node_check(APP / f))]
@@ -268,7 +403,11 @@ class Transformer:
                 self.state.save_chunk("optimization_pass", status="done", reverted=False)
                 return True
             tgt = self.implicated({"files": targets}, res, targets)[0]
-            self.repair("optimization_pass", tgt, self.report(res), purpose="transform.optimize_repair")
+            if self.big(tgt):
+                self.repair_func("optimization_pass", tgt, self.implicated_func(tgt, res), self.report(res),
+                                 purpose="transform.optimize_repair")
+            else:
+                self.repair("optimization_pass", tgt, self.report(res), purpose="transform.optimize_repair")
         # could not keep behaviour identical: revert (correctness beats speed), and record it honestly
         for f in targets:
             shutil.copy2(backup / f, APP / f)
