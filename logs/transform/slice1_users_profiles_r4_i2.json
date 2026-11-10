@@ -1,0 +1,183 @@
+{
+ "round": 4,
+ "iteration": 2,
+ "time": "18:19:59",
+ "char": "27/42",
+ "official_mismatch": 1,
+ "llm_tokens_total": 77955,
+ "result": {
+  "slice": 1,
+  "char_passed": 27,
+  "char_total": 42,
+  "char_failures": [
+   {
+    "scenario": "auth_happy_path",
+    "step": "current user",
+    "request": "GET /api/user",
+    "diffs": [
+     "$body.user._id: unexpected key (got 1)",
+     "$body.user.createdAt: unexpected key (got '<ts>')",
+     "$body.user.followersCount: unexpected key (got 0)",
+     "$body.user.password: unexpected key (got '$2b$10$pxNhAjEQolExnRAgZuDksuy37OLmg0zf9z7W3m4UuwfKOOoTOS/XK')",
+     "$body.user.updatedAt: unexpected key (got '<ts>')"
+    ]
+   },
+   {
+    "scenario": "auth_happy_path",
+    "step": "current user with login token",
+    "request": "GET /api/user",
+    "diffs": [
+     "$body.user._id: unexpected key (got 1)",
+     "$body.user.createdAt: unexpected key (got '<ts>')",
+     "$body.user.followersCount: unexpected key (got 0)",
+     "$body.user.password: unexpected key (got '$2b$10$pxNhAjEQolExnRAgZuDksuy37OLmg0zf9z7W3m4UuwfKOOoTOS/XK')",
+     "$body.user.updatedAt: unexpected key (got '<ts>')"
+    ]
+   },
+   {
+    "scenario": "auth_happy_path",
+    "step": "update bio+image+password",
+    "request": "PUT /api/user",
+    "diffs": [
+     "$body.user._id: unexpected key (got 1)",
+     "$body.user.createdAt: unexpected key (got '<ts>')",
+     "$body.user.email: unexpected key (got 'alice@example.com')",
+     "$body.user.followersCount: unexpected key (got 0)",
+     "$body.user.password: unexpected key (got '$2b$10$p2LuiMiApJLJw1PGTK0cL.rqmlUuU.pF/a22VYTGQkYGwR1W5sTTW')",
+     "$body.user.updatedAt: unexpected key (got '<ts>')"
+    ]
+   },
+   {
+    "scenario": "auth_happy_path",
+    "step": "current user after update",
+    "request": "GET /api/user",
+    "diffs": [
+     "$body.user._id: unexpected key (got 1)",
+     "$body.user.createdAt: unexpected key (got '<ts>')",
+     "$body.user.followersCount: unexpected key (got 0)",
+     "$body.user.password: unexpected key (got '$2b$10$p2LuiMiApJLJw1PGTK0cL.rqmlUuU.pF/a22VYTGQkYGwR1W5sTTW')",
+     "$body.user.updatedAt: unexpected key (got '<ts>')"
+    ]
+   },
+   {
+    "scenario": "auth_errors",
+    "step": "bio unchanged after failed update",
+    "request": "GET /api/user",
+    "diffs": [
+     "$body.user._id: unexpected key (got 1)",
+     "$body.user.createdAt: unexpected key (got '<ts>')",
+     "$body.user.followersCount: unexpected key (got 0)",
+     "$body.user.password: unexpected key (got '$2b$10$LAzZgPljVHrQxe69ibNMUeFSRXj7L/LSr4gQJOD7Dbv7yP/b8Qena')",
+     "$body.user.updatedAt: unexpected key (got '<ts>')"
+    ]
+   },
+   {
+    "scenario": "profiles_and_follows",
+    "step": "dave follows carol",
+    "request": "POST /api/profiles/carol/follow",
+    "diffs": [
+     "status: expected 200 got 500",
+     "$body.errors: unexpected key (got {'body': ['<internal error>']})",
+     "$body.profile: missing (expected {'bio': None, 'followersCount': 1, 'following': True, 'image': None, 'username': 'carol'})"
+    ]
+   },
+   {
+    "scenario": "profiles_and_follows",
+    "step": "dave follows carol again (idempotent)",
+    "request": "POST /api/profiles/carol/follow",
+    "diffs": [
+     "status: expected 200 got 500",
+     "$body.errors: unexpected key (got {'body': ['<internal error>']})",
+     "$body.profile: missing (expected {'bio': None, 'followersCount': 1, 'following': True, 'image': None, 'username': 'carol'})"
+    ]
+   },
+   {
+    "scenario": "profiles_and_follows",
+    "step": "erin follows carol",
+    "request": "POST /api/profiles/carol/follow",
+    "diffs": [
+     "status: expected 200 got 500",
+     "$body.errors: unexpected key (got {'body': ['<internal error>']})",
+     "$body.profile: missing (expected {'bio': None, 'followersCount': 2, 'following': True, 'image': None, 'username': 'carol'})"
+    ]
+   },
+   {
+    "scenario": "profiles_and_follows",
+    "step": "carol as dave (following, 2 followers)",
+    "request": "GET /api/profiles/carol",
+    "diffs": [
+     "$body.profile.followersCount: expected 2 got 0",
+     "$body.profile.following: expected True got False"
+    ]
+   },
+   {
+    "scenario": "profiles_and_follows",
+    "step": "carol anonymous (following false)",
+    "request": "GET /api/profiles/carol",
+    "diffs": [
+     "$body.profile.followersCount: expected 2 got 0"
+    ]
+   },
+   {
+    "scenario": "profiles_and_follows",
+    "step": "carol follows herself",
+    "request": "POST /api/profiles/carol/follow",
+    "diffs": [
+     "status: expected 200 got 500",
+     "$body.errors: unexpected key (got {'body': ['<internal error>']})",
+     "$body.profile: missing (expected {'bio': None, 'followersCount': 3, 'following': True, 'image': None, 'username': 'carol'})"
+    ]
+   },
+   {
+    "scenario": "profiles_and_follows",
+    "step": "carol self-view",
+    "request": "GET /api/profiles/carol",
+    "diffs": [
+     "$body.profile.followersCount: expected 3 got 0",
+     "$body.profile.following: expected True got False"
+    ]
+   },
+   {
+    "scenario": "profiles_and_follows",
+    "step": "dave unfollows carol",
+    "request": "DELETE /api/profiles/carol/follow",
+    "diffs": [
+     "$body.profile.followersCount: expected 2 got 0"
+    ]
+   },
+   {
+    "scenario": "profiles_and_follows",
+    "step": "dave unfollows carol again",
+    "request": "DELETE /api/profiles/carol/follow",
+    "diffs": [
+     "$body.profile.followersCount: expected 2 got 0"
+    ]
+   },
+   {
+    "scenario": "profiles_and_follows",
+    "step": "carol as dave after unfollow",
+    "request": "GET /api/profiles/carol",
+    "diffs": [
+     "$body.profile.followersCount: expected 2 got 0"
+    ]
+   }
+  ],
+  "official_passed": 18,
+  "official_total": 56,
+  "official_mismatch": [
+   "profiles.hurl:45"
+  ],
+  "official_baseline_passed": 19,
+  "server_errors": [
+   "AlreadyTakenError: Email already exists.. try logging in\n    controllers/users.js:20:27)\n    controllers/users.js:55:26)",
+   "NotFoundError: Email not found sign in first\n    controllers/users.js:55:26)\n    controllers/users.js:58:26)",
+   "ValidationError: Wrong email/password combination\n    controllers/users.js:58:26)\n    controllers/users.js:55:26)",
+   "ValidationError: Wrong email/password combination\n    controllers/users.js:58:26)\n    controllers/user.js:9:28)",
+   "UnauthorizedError: You need to login first!\n    controllers/user.js:9:28)\n    middleware/authentication.js:8:40)",
+   "UnauthorizedError: You need to login first!\n    controllers/user.js:24:28)\n    middleware/authentication.js:8:40)",
+   "NotFoundError: User profile not found\n    controllers/profiles.js:24:25)\n    controllers/profiles.js:38:28)",
+   "MongoServerError: Plan executor error during update :: caused by :: Performing an update on the path '_id' would modify the immutable field '_id'\n    controllers/profiles.js:52:26"
+  ],
+  "ok": false
+ }
+}

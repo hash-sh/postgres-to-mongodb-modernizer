@@ -30,7 +30,7 @@ class Backend:
         self.stop_port()
         settings.logs.mkdir(exist_ok=True)
         env = {**os.environ, **self.env, **({"MONGO_DB": self.db} if self.db else {})}
-        logf = open(self.log, "a")
+        logf = open(self.log, "w")  # one log per start: stack traces fed to the repair agent must be from THIS run
         logf.write(f"\n===== start {time.ctime()} =====\n")
         logf.flush()
         self.proc = subprocess.Popen(["node", "index.js"], cwd=self.cwd, env=env, stdout=logf, stderr=subprocess.STDOUT,
@@ -40,7 +40,7 @@ class Backend:
             if self.proc.poll() is not None:
                 raise RuntimeError(f"{self.name} backend exited with code {self.proc.returncode}; see {self.log}")
             try:
-                if requests.get(self.url + "/api/tags", timeout=1).status_code < 500:
+                if requests.get(self.url + "/", timeout=1).status_code < 500:
                     time.sleep(0.3)  # let sequelize.sync / index creation settle
                     return self
             except requests.RequestException:

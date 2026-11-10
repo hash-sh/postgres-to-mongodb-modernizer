@@ -1,0 +1,21 @@
+
+=== Stage: transform ===
+Traceback (most recent call last):
+  File "/home/harsh/Work_Space/Mongodb_proj/pipeline/__main__.py", line 22, in run_stage
+    importlib.import_module(f"pipeline.stages.{name}").run(state, **kw)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/harsh/Work_Space/Mongodb_proj/pipeline/stages/transform.py", line 279, in run
+    if not t.run_chunk(c):
+           ~~~~~~~~~~~^^^
+  File "/home/harsh/Work_Space/Mongodb_proj/pipeline/stages/transform.py", line 188, in run_chunk
+    res = testrun.run_slice(self.state, k)
+  File "/home/harsh/Work_Space/Mongodb_proj/pipeline/testrun.py", line 38, in run_slice
+    results = httpcheck.run_all(be.url, scen, reset=reset_test_db)
+  File "/home/harsh/Work_Space/Mongodb_proj/pipeline/httpcheck.py", line 96, in run_all
+    results[sc["name"]] = run_scenario(base_url, sc, ts_cutoff)
+                          ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/harsh/Work_Space/Mongodb_proj/pipeline/httpcheck.py", line 66, in run_scenario
+    headers["Authorization"] = f"Token {tokens[step['as']]}"
+                                        ~~~~~~^^^^^^^^^^^^
+KeyError: 'alice'
+EXIT 1

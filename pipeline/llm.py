@@ -31,6 +31,10 @@ class BudgetExhausted(RuntimeError):
     pass
 
 
+class DailyLimit(RuntimeError):
+    pass
+
+
 class RequestTooLarge(ValueError):
     pass
 
@@ -71,6 +75,22 @@ class LLM:
     # ------------------------------------------------------------------ main entry point
     def chat(self, messages, *, purpose, chunk=None, model=None, max_tokens=3000, reasoning="low", json_mode=False):
         model = model or settings.llm_model
+        exhausted = self.state.data["llm"].setdefault("daily_exhausted", {})
+        today = time.strftime("%Y-%m-%d")
+        chain = [model] + [m for m in settings.llm_fallback_models.split(",") if m and m != model]
+        for m in chain:
+            if exhausted.get(m) == today:
+                continue
+            try:
+                return self._chat(messages, purpose=purpose, chunk=chunk, model=m, max_tokens=max_tokens,
+                                  reasoning=reasoning, json_mode=json_mode)
+            except DailyLimit as e:
+                exhausted[m] = today
+                self.state.save()
+                print(f"    [llm] {m} hit its daily limit; falling back ({e})")
+        raise BudgetExhausted("every configured Groq model hit its daily limit today")
+
+    def _chat(self, messages, *, purpose, chunk, model, max_tokens, reasoning, json_mode):
         payload = {"model": model, "messages": messages, "max_completion_tokens": max_tokens, "temperature": 0.2}
         if model.startswith("openai/gpt-oss"):
             payload["reasoning_effort"] = reasoning
@@ -103,7 +123,7 @@ class LLM:
             if r.status_code == 429:
                 msg = r.text[:400]
                 if "per day" in msg or "TPD" in msg or "RPD" in msg:
-                    raise BudgetExhausted(f"Groq daily limit reached for {model}: {msg}")
+                    raise DailyLimit(msg[:200])
                 wait = float(r.headers.get("retry-after", 20))
                 print(f"    [llm] 429 rate limited, waiting {wait:.0f}s")
                 time.sleep(wait + 1)

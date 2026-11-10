@@ -1,0 +1,6 @@
+- Article (collection articles): _id:Number(=Articles.id), slug:string, title:string, description:string, body:string, createdAt:date, updatedAt:date, authorId:int, tagList:[String] (embedded TagList), favoritesCount:Number (counter of Favorites.articleId, YOU must $inc/$dec it). Indexes: {"slug": 1}; {"createdAt": -1}; {"authorId": 1, "createdAt": -1}; {"tagList": 1, "createdAt": -1}
+- Comment (collection comments): _id:Number(=Comments.id), body:string, createdAt:date, updatedAt:date, articleId:int, authorId:int. Indexes: {"articleId": 1}
+- Tag (collection tags): _id:String(=tag name). Indexes: -
+- User (collection users): _id:Number(=Users.id), email:string, username:string, bio:string, image:string, password:string, createdAt:date, updatedAt:date, followersCount:Number (counter of Followers.userId, YOU must $inc/$dec it). Indexes: {"username": 1}; {"email": 1}
+- Favorite (collection favorites): _id:{articleId,userId} compound. Indexes: {"_id.articleId": 1}; {"_id.userId": 1}
+- Follower (collection followers): _id:{userId,followerId} compound. Indexes: {"_id.followerId": 1}; {"_id.userId": 1}

@@ -1,0 +1,11 @@
+
+=== Stage: transform ===
+  slice1_users_profiles round 3 iter 0: char 14/42 official-mismatch 15
+    repairing controllers/profiles.js
+  slice1_users_profiles round 3 iter 1: char 15/42 official-mismatch 15
+    repairing controllers/profiles.js
+    [rate limiter] 5012+7355 tokens > 7360/min, sleeping 50s
+  slice1_users_profiles round 3 iter 2: char 15/42 official-mismatch 15
+    repairing controllers/users.js
+    [rate limiter] 4965+6587 tokens > 7360/min, sleeping 51s
+EXIT 143

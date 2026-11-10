@@ -1,0 +1,4 @@
+
+=== Stage: transform ===
+  slice1_users_profiles round 5 iter 0: char 28/42 official-mismatch 1
+    repairing controllers/profiles.js

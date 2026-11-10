@@ -1,0 +1,312 @@
+{
+ "round": 3,
+ "iteration": 1,
+ "time": "18:17:32",
+ "char": "15/42",
+ "official_mismatch": 15,
+ "llm_tokens_total": 64783,
+ "result": {
+  "slice": 1,
+  "char_passed": 15,
+  "char_total": 42,
+  "char_failures": [
+   {
+    "scenario": "auth_happy_path",
+    "step": "register alice",
+    "request": "POST /api/users",
+    "diffs": [
+     "status: expected 201 got 500",
+     "$body.errors: unexpected key (got {'body': ['<internal error>']})",
+     "$body.user: missing (expected {'bio': None, 'email': 'alice@example.com', 'image': None, 'token': '<token>', 'username': 'alice'})"
+    ]
+   },
+   {
+    "scenario": "auth_happy_path",
+    "step": "login",
+    "request": "POST /api/users/login",
+    "diffs": [
+     "$body.user.id: unexpected key (got 1)"
+    ]
+   },
+   {
+    "scenario": "auth_happy_path",
+    "step": "current user",
+    "request": "GET /api/user",
+    "diffs": [
+     "status: expected 200 got 500",
+     "$body.errors: unexpected key (got {'body': ['<internal error>']})",
+     "$body.user: missing (expected {'bio': None, 'email': 'alice@example.com', 'image': None, 'token': '<token>', 'username': 'alice'})"
+    ]
+   },
+   {
+    "scenario": "auth_happy_path",
+    "step": "current user with login token",
+    "request": "GET /api/user",
+    "diffs": [
+     "$body.user._id: unexpected key (got 1)",
+     "$body.user.createdAt: unexpected key (got '<ts>')",
+     "$body.user.followersCount: unexpected key (got 0)",
+     "$body.user.password: unexpected key (got '$2b$10$mRQT6tHOMDVf1DVuIhtsp.w2HyKUqTn.nYOD2FBo83zooB2Ydc8s6')",
+     "$body.user.updatedAt: unexpected key (got '<ts>')"
+    ]
+   },
+   {
+    "scenario": "auth_happy_path",
+    "step": "update bio+image+password",
+    "request": "PUT /api/user",
+    "diffs": [
+     "status: expected 200 got 500",
+     "$body.errors: unexpected key (got {'body': ['<internal error>']})",
+     "$body.user: missing (expected {'bio': 'I like dragons', 'image': 'https://i.example.com/a.png', 'token': '<token>', 'username': 'alice'})"
+    ]
+   },
+   {
+    "scenario": "auth_happy_path",
+    "step": "current user after update",
+    "request": "GET /api/user",
+    "diffs": [
+     "status: expected 200 got 500",
+     "$body.errors: unexpected key (got {'body': ['<internal error>']})",
+     "$body.user: missing (expected {'bio': 'I like dragons', 'email': 'alice@example.com', 'image': 'https://i.example.com/a.png', 'token': '<token>', 'use...)"
+    ]
+   },
+   {
+    "scenario": "auth_happy_path",
+    "step": "login with new password",
+    "request": "POST /api/users/login",
+    "diffs": [
+     "status: expected 200 got 422",
+     "$body.errors: unexpected key (got {'body': ['Wrong email/password combination']})",
+     "$body.user: missing (expected {'bio': 'I like dragons', 'email': 'alice@example.com', 'image': 'https://i.example.com/a.png', 'token': '<token>', 'use...)"
+    ]
+   },
+   {
+    "scenario": "auth_happy_path",
+    "step": "login with old password fails",
+    "request": "POST /api/users/login",
+    "diffs": [
+     "status: expected 422 got 200",
+     "$body.errors: missing (expected {'body': ['Wrong email/password combination']})",
+     "$body.user: unexpected key (got {'id': 1, 'email': 'alice@example.com', 'username': 'alice', 'bio': None, 'image': None, 'token': '<token>'})"
+    ]
+   },
+   {
+    "scenario": "auth_errors",
+    "step": "register bob",
+    "request": "POST /api/users",
+    "diffs": [
+     "status: expected 201 got 500",
+     "$body.errors: unexpected key (got {'body': ['<internal error>']})",
+     "$body.user: missing (expected {'bio': None, 'email': 'bob@example.com', 'image': None, 'token': '<token>', 'username': 'bob'})"
+    ]
+   },
+   {
+    "scenario": "auth_errors",
+    "step": "bio unchanged after failed update",
+    "request": "GET /api/user",
+    "diffs": [
+     "status: expected 200 got 500",
+     "$body.errors: unexpected key (got {'body': ['<internal error>']})",
+     "$body.user: missing (expected {'bio': None, 'email': 'bob@example.com', 'image': None, 'token': '<token>', 'username': 'bob'})"
+    ]
+   },
+   {
+    "scenario": "profiles_and_follows",
+    "step": "register carol",
+    "request": "POST /api/users",
+    "diffs": [
+     "status: expected 201 got 500",
+     "$body.errors: unexpected key (got {'body': ['<internal error>']})",
+     "$body.user: missing (expected {'bio': None, 'email': 'carol@example.com', 'image': None, 'token': '<token>', 'username': 'carol'})"
+    ]
+   },
+   {
+    "scenario": "profiles_and_follows",
+    "step": "register dave",
+    "request": "POST /api/users",
+    "diffs": [
+     "status: expected 201 got 500",
+     "$body.errors: unexpected key (got {'body': ['<internal error>']})",
+     "$body.user: missing (expected {'bio': None, 'email': 'dave@example.com', 'image': None, 'token': '<token>', 'username': 'dave'})"
+    ]
+   },
+   {
+    "scenario": "profiles_and_follows",
+    "step": "register erin",
+    "request": "POST /api/users",
+    "diffs": [
+     "status: expected 201 got 500",
+     "$body.errors: unexpected key (got {'body': ['<internal error>']})",
+     "$body.user: missing (expected {'bio': None, 'email': 'erin@example.com', 'image': None, 'token': '<token>', 'username': 'erin'})"
+    ]
+   },
+   {
+    "scenario": "profiles_and_follows",
+    "step": "profile as dave",
+    "request": "GET /api/profiles/carol",
+    "diffs": [
+     "status: expected 200 got 500",
+     "$body.errors: unexpected key (got {'body': ['<internal error>']})",
+     "$body.profile: missing (expected {'bio': None, 'followersCount': 0, 'following': False, 'image': None, 'username': 'carol'})"
+    ]
+   },
+   {
+    "scenario": "profiles_and_follows",
+    "step": "dave follows carol",
+    "request": "POST /api/profiles/carol/follow",
+    "diffs": [
+     "status: expected 200 got 500",
+     "$body.errors: unexpected key (got {'body': ['<internal error>']})",
+     "$body.profile: missing (expected {'bio': None, 'followersCount': 1, 'following': True, 'image': None, 'username': 'carol'})"
+    ]
+   },
+   {
+    "scenario": "profiles_and_follows",
+    "step": "dave follows carol again (idempotent)",
+    "request": "POST /api/profiles/carol/follow",
+    "diffs": [
+     "status: expected 200 got 500",
+     "$body.errors: unexpected key (got {'body': ['<internal error>']})",
+     "$body.profile: missing (expected {'bio': None, 'followersCount': 1, 'following': True, 'image': None, 'username': 'carol'})"
+    ]
+   },
+   {
+    "scenario": "profiles_and_follows",
+    "step": "erin follows carol",
+    "request": "POST /api/profiles/carol/follow",
+    "diffs": [
+     "status: expected 200 got 500",
+     "$body.errors: unexpected key (got {'body': ['<internal error>']})",
+     "$body.profile: missing (expected {'bio': None, 'followersCount': 2, 'following': True, 'image': None, 'username': 'carol'})"
+    ]
+   },
+   {
+    "scenario": "profiles_and_follows",
+    "step": "carol as dave (following, 2 followers)",
+    "request": "GET /api/profiles/carol",
+    "diffs": [
+     "status: expected 200 got 500",
+     "$body.errors: unexpected key (got {'body': ['<internal error>']})",
+     "$body.profile: missing (expected {'bio': None, 'followersCount': 2, 'following': True, 'image': None, 'username': 'carol'})"
+    ]
+   },
+   {
+    "scenario": "profiles_and_follows",
+    "step": "carol anonymous (following false)",
+    "request": "GET /api/profiles/carol",
+    "diffs": [
+     "$body.profile.followersCount: expected 2 got 0"
+    ]
+   },
+   {
+    "scenario": "profiles_and_follows",
+    "step": "dave as carol (not following back)",
+    "request": "GET /api/profiles/dave",
+    "diffs": [
+     "status: expected 200 got 500",
+     "$body.errors: unexpected key (got {'body': ['<internal error>']})",
+     "$body.profile: missing (expected {'bio': None, 'followersCount': 0, 'following': False, 'image': None, 'username': 'dave'})"
+    ]
+   },
+   {
+    "scenario": "profiles_and_follows",
+    "step": "carol follows herself",
+    "request": "POST /api/profiles/carol/follow",
+    "diffs": [
+     "status: expected 200 got 500",
+     "$body.errors: unexpected key (got {'body': ['<internal error>']})",
+     "$body.profile: missing (expected {'bio': None, 'followersCount': 3, 'following': True, 'image': None, 'username': 'carol'})"
+    ]
+   },
+   {
+    "scenario": "profiles_and_follows",
+    "step": "carol self-view",
+    "request": "GET /api/profiles/carol",
+    "diffs": [
+     "status: expected 200 got 500",
+     "$body.errors: unexpected key (got {'body': ['<internal error>']})",
+     "$body.profile: missing (expected {'bio': None, 'followersCount': 3, 'following': True, 'image': None, 'username': 'carol'})"
+    ]
+   },
+   {
+    "scenario": "profiles_and_follows",
+    "step": "dave unfollows carol",
+    "request": "DELETE /api/profiles/carol/follow",
+    "diffs": [
+     "status: expected 200 got 500",
+     "$body.errors: unexpected key (got {'body': ['<internal error>']})",
+     "$body.profile: missing (expected {'bio': None, 'followersCount': 2, 'following': False, 'image': None, 'username': 'carol'})"
+    ]
+   },
+   {
+    "scenario": "profiles_and_follows",
+    "step": "dave unfollows carol again",
+    "request": "DELETE /api/profiles/carol/follow",
+    "diffs": [
+     "status: expected 200 got 500",
+     "$body.errors: unexpected key (got {'body': ['<internal error>']})",
+     "$body.profile: missing (expected {'bio': None, 'followersCount': 2, 'following': False, 'image': None, 'username': 'carol'})"
+    ]
+   },
+   {
+    "scenario": "profiles_and_follows",
+    "step": "carol as dave after unfollow",
+    "request": "GET /api/profiles/carol",
+    "diffs": [
+     "status: expected 200 got 500",
+     "$body.errors: unexpected key (got {'body': ['<internal error>']})",
+     "$body.profile: missing (expected {'bio': None, 'followersCount': 2, 'following': False, 'image': None, 'username': 'carol'})"
+    ]
+   },
+   {
+    "scenario": "profiles_and_follows",
+    "step": "follow unknown user",
+    "request": "POST /api/profiles/nobody/follow",
+    "diffs": [
+     "status: expected 404 got 500",
+     "$body.errors.body[0]: expected 'User profile not found ' got '<internal error>'"
+    ]
+   },
+   {
+    "scenario": "profiles_and_follows",
+    "step": "unfollow unknown user",
+    "request": "DELETE /api/profiles/nobody/follow",
+    "diffs": [
+     "status: expected 404 got 500",
+     "$body.errors.body[0]: expected 'User profile not found ' got '<internal error>'"
+    ]
+   }
+  ],
+  "official_passed": 24,
+  "official_total": 56,
+  "official_mismatch": [
+   "auth.hurl:2",
+   "errors_auth.hurl:158",
+   "errors_auth.hurl:168",
+   "errors_auth.hurl:180",
+   "errors_auth.hurl:190",
+   "errors_auth.hurl:200",
+   "errors_auth.hurl:214",
+   "errors_auth.hurl:224",
+   "errors_auth.hurl:234",
+   "errors_auth.hurl:54",
+   "errors_profiles.hurl:20",
+   "errors_profiles.hurl:33",
+   "errors_profiles.hurl:40",
+   "profiles.hurl:15",
+   "profiles.hurl:2"
+  ],
+  "official_baseline_passed": 19,
+  "server_errors": [
+   "MongooseError: document must have an _id before saving\n    controllers/users.js:20:27)",
+   "AlreadyTakenError: Email already exists.. try logging in\n    controllers/users.js:20:27)\n    controllers/users.js:58:26)",
+   "NotFoundError: Email not found sign in first\n    controllers/users.js:58:26)\n    controllers/users.js:61:26)",
+   "ValidationError: Wrong email/password combination\n    controllers/users.js:61:26)\n    controllers/users.js:58:26)",
+   "ValidationError: Wrong email/password combination\n    controllers/users.js:61:26)\n    controllers/user.js:9:28)",
+   "UnauthorizedError: You need to login first!\n    controllers/user.js:9:28)\n    middleware/authentication.js:8:40)",
+   "UnauthorizedError: You need to login first!\n    controllers/user.js:24:28)\n    middleware/authentication.js:8:40)",
+   "NotFoundError: User profile not found\n    controllers/profiles.js:24:25)\n    controllers/profiles.js:38:28)"
+  ],
+  "ok": false
+ }
+}

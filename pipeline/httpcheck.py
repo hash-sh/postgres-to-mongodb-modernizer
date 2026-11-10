@@ -63,7 +63,7 @@ def run_scenario(base_url, scenario, ts_cutoff=None, timeout=15):
         path = step["path"].format(**vars_)
         headers = {}
         if step.get("as"):
-            headers["Authorization"] = f"Token {tokens[step['as']]}"
+            headers["Authorization"] = f"Token {tokens.get(step['as'], 'missing-token')}"
         if "auth_header" in step:
             headers["Authorization"] = step["auth_header"]
         try:

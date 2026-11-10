@@ -1,0 +1,13 @@
+{
+ "round": 1,
+ "iteration": 0,
+ "time": "18:15:11",
+ "char": "0/0",
+ "official_mismatch": null,
+ "llm_tokens_total": 56563,
+ "result": {
+  "char_passed": 0,
+  "char_total": 0,
+  "boot_error": "mongo backend did not become ready; see /home/harsh/Work_Space/Mongodb_proj/logs/mongo_backend.log"
+ }
+}

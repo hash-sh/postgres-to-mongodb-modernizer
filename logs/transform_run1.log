@@ -1,0 +1,15 @@
+
+=== Stage: transform ===
+  slice1_users_profiles: generating index.js
+  slice1_users_profiles: generating middleware/authentication.js
+  slice1_users_profiles: generating helper/helpers.js
+    [rate limiter] 3509+4676 tokens > 7360/min, sleeping 58s
+  slice1_users_profiles: generating controllers/profiles.js
+    [rate limiter] 2332+5378 tokens > 7360/min, sleeping 59s
+  slice1_users_profiles: generating controllers/user.js
+    [rate limiter] 3065+4668 tokens > 7360/min, sleeping 59s
+  slice1_users_profiles: generating controllers/users.js
+  slice1_users_profiles round 1 iter 0: char 0/0 official-mismatch None
+    repairing index.js
+    [rate limiter] 4416+5924 tokens > 7360/min, sleeping 15s
+    [rate limiter] 2308+5924 tokens > 7360/min, sleeping 2s
