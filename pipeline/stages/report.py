@@ -57,7 +57,14 @@ def run(state):
         ("6. Benchmark, report, docs", bool(bench), "reports/raw/benchmark.json"),
     ]
     L += ["## Milestone status", "", "| Milestone | Status | Evidence |", "|---|---|---|"]
-    L += [f"| {m} | {'DONE' if ok else 'NOT DONE'} | {ev} |" for m, ok, ev in ms]
+    acc = st.get("accepted_deviations", {})
+    def status(m, ok):
+        if not ok:
+            return "NOT DONE"
+        if m.startswith("5.") and acc:
+            return f"DONE except {len(acc)} accepted deviation ({', '.join(acc)})"
+        return "DONE"
+    L += [f"| {m} | {status(m, ok)} | {ev} |" for m, ok, ev in ms]
 
     # tests
     L += ["", "## Tests", "", "Source: `reports/raw/official_original.json`, `reports/raw/migrate_stage.json`, `logs/transform/final.json`.", ""]
@@ -104,6 +111,11 @@ def run(state):
         tp += a["prompt"]
         tc += a["completion"]
     L += [f"| **total** | | | | **{tp}** | **{tc}** |", "",
+          (f"Daily free-tier limits reached during the run (each model: 200,000 tokens/day): "
+           f"{', '.join(f'`{m}` on {d}' for m, d in st['llm'].get('daily_exhausted', {}).items())}. The client then fell "
+           f"back automatically to the next model, so later slice-2 rounds, slice 3 and the end of the optimization pass "
+           f"were written by `qwen/qwen3.8-27b` and then `openai/gpt-oss-20b` (see the per-model rows above)." if st['llm'].get('daily_exhausted') else ""),
+          "",
           f"Cost: **$0.00**. All calls went to Groq's free tier (rate limit observed: 8,000 tokens/minute per model). "
           f"No paid-tier price is quoted here because none was measured."]
 
@@ -152,12 +164,13 @@ def run(state):
     L += ["", "## What failed or is not done", ""]
     probs = []
     for s, v in st["stages"].items():
-        if v["status"] != "done":
+        if v["status"] != "done" and s != "report":
             probs.append(f"- Stage `{s}`: {v['status']} {v.get('error', '')}")
     if mig and mig["characterization_failures"]:
         probs += [f"- characterization `{f['scenario']}/{f['step']}`: {f['diffs'][:2]}" for f in mig["characterization_failures"][:10]]
     if mig and mig["official_mismatch_vs_original"]:
         probs.append(f"- official entries behaving differently from the original: {mig['official_mismatch_vs_original']}")
+    probs += [f"- **Accepted deviation** `{k}`: {v}" for k, v in acc.items()]
     probs += [f"- {x}" for x in st.get("known_issues", [])]
     L += probs or ["- Nothing outstanding."]
     L += ["", "## Reproduce", "", "```bash", "docker compose up -d --wait", "python -m pipeline all          # or one stage at a time:",

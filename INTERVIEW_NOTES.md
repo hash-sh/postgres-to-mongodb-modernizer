@@ -85,7 +85,11 @@ That's why I measure four variants:
 3. naive one-to-one MongoDB;
 4. the designed MongoDB schema.
 All four use the same batched query strategy, so the difference comes from the schema. Separately, I measure the
-real apps over HTTP (that includes the original's N+1 queries). See results.md for which effects are real.
+real apps over HTTP (that includes the original's N+1 queries). Measured at 100k articles (p50): on lists, the
+designed schema runs in 4.7–5.2 ms vs 15.7–19.5 ms for **indexed** Postgres, because the embedded `tagList` and the
+counters remove the joins and counts. But indexed Postgres *wins* on single article + comments (2.0 vs 5.7 ms) and on
+profile (0.6 vs 1.9 ms). Most of the gap against the *original* schema (33–50 ms) is indexing, not documents. The
+naive one-to-one MongoDB schema is 10–100× slower than either, which is the paper's point.
 
 **14. How would you cut over production with zero downtime?**
 Run the bulk migration (it's idempotent), then stream changes from Postgres (logical replication / Debezium) and apply
@@ -99,6 +103,20 @@ spreads writes but makes every list a scatter-gather. A ranged key `{authorId: 1
 index and targets the feed's `$in` per author, while the global "latest" list can come from a small materialized
 recent-articles collection. `favorites` shards on `articleId` and `followers` on `userId`, the first field of each
 compound `_id`. `comments` shards on `articleId`, so "comments of an article" stays on a single shard.
+
+**16. What did the differential test catch that the frozen tests missed?**
+Favoriting an article changed its `updatedAt` on MongoDB, because Mongoose `timestamps: true` also stamps
+`updateOne($inc favoritesCount)`. The original writes only the junction row, so no frozen step noticed, but the
+differential compares migrated timestamps strictly. The fix went back through the agent (`{timestamps: false}` on the
+counter updates). It also showed that the original's comment order is unspecified (no `ORDER BY`), so I report a
+strict number and an order-insensitive number.
+
+**17. What isn't done, honestly?**
+- One accepted deviation: the feed's inflated `articlesCount` with multi-tag articles. Three agent attempts crashed,
+  and I accepted it explicitly instead of hiding it.
+- The optimization pass skipped two files.
+- The default article list isn't faster yet (probably the full-collection count aggregation; not profiled).
+- An email change in `PUT /api/user` isn't covered by any test.
 
 **Bonus: what was hardest?**
 - **Reproducing ORM semantics.** Sequelize's `findAndCountAll` with a many-to-many include counts *joined rows*. The

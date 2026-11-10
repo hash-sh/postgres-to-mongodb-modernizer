@@ -1,0 +1,311 @@
+{
+ "dataset": {
+  "Users": 20000,
+  "Tags": 40,
+  "Articles": 100000,
+  "TagList": 199611,
+  "Favorites": 84902,
+  "Followers": 70109,
+  "Comments": 201086,
+  "seconds": 105.47
+ },
+ "migration_designed": {
+  "db": "conduit_bench",
+  "collections": {
+   "articles": 100000,
+   "comments": 201086,
+   "tags": 40,
+   "users": 20000,
+   "favorites": 84902,
+   "followers": 70109
+  },
+  "rows_written": 476137,
+  "load_seconds": 31.25,
+  "total_seconds": 34.69,
+  "rows_per_second": 15235.4,
+  "batches": 241,
+  "batches_skipped": 0
+ },
+ "migration_naive": {
+  "db": "conduit_naive",
+  "collections": {
+   "Articles": 100000,
+   "Comments": 201086,
+   "Favorites": 84902,
+   "Followers": 70109,
+   "TagList": 199611,
+   "Tags": 40,
+   "Users": 20000
+  },
+  "rows_written": 675748,
+  "load_seconds": 41.18,
+  "total_seconds": 41.19,
+  "rows_per_second": 16411.5,
+  "batches": 341,
+  "batches_skipped": 0
+ },
+ "params": {
+  "viewer": "user5",
+  "author": "user1",
+  "tag": "ai",
+  "slug": "article-3-search-et"
+ },
+ "data_access": {
+  "article list (default)": {
+   "postgres": {
+    "n": 200,
+    "p50_ms": 49.93,
+    "p95_ms": 58.06,
+    "mean_ms": 50.83
+   },
+   "mongo_naive": {
+    "n": 108,
+    "p50_ms": 405.21,
+    "p95_ms": 479.88,
+    "mean_ms": 417.77
+   },
+   "mongo_designed": {
+    "n": 200,
+    "p50_ms": 4.74,
+    "p95_ms": 5.58,
+    "mean_ms": 4.74
+   },
+   "postgres_indexed": {
+    "n": 200,
+    "p50_ms": 15.7,
+    "p95_ms": 19.1,
+    "mean_ms": 15.98
+   }
+  },
+  "article list ?tag=": {
+   "postgres": {
+    "n": 200,
+    "p50_ms": 49.43,
+    "p95_ms": 60.82,
+    "mean_ms": 51.1
+   },
+   "mongo_naive": {
+    "n": 88,
+    "p50_ms": 500.75,
+    "p95_ms": 583.6,
+    "mean_ms": 513.84
+   },
+   "mongo_designed": {
+    "n": 200,
+    "p50_ms": 5.02,
+    "p95_ms": 5.64,
+    "mean_ms": 4.98
+   },
+   "postgres_indexed": {
+    "n": 200,
+    "p50_ms": 15.9,
+    "p95_ms": 19.79,
+    "mean_ms": 16.36
+   }
+  },
+  "article list ?author=": {
+   "postgres": {
+    "n": 200,
+    "p50_ms": 42.7,
+    "p95_ms": 54.42,
+    "mean_ms": 44.49
+   },
+   "mongo_naive": {
+    "n": 109,
+    "p50_ms": 401.06,
+    "p95_ms": 477.59,
+    "mean_ms": 413.04
+   },
+   "mongo_designed": {
+    "n": 200,
+    "p50_ms": 5.15,
+    "p95_ms": 6.08,
+    "mean_ms": 4.8
+   },
+   "postgres_indexed": {
+    "n": 200,
+    "p50_ms": 19.49,
+    "p95_ms": 24.38,
+    "mean_ms": 20.04
+   }
+  },
+  "feed": {
+   "postgres": {
+    "n": 200,
+    "p50_ms": 32.59,
+    "p95_ms": 40.58,
+    "mean_ms": 33.68
+   },
+   "mongo_naive": {
+    "n": 95,
+    "p50_ms": 460.61,
+    "p95_ms": 537.83,
+    "mean_ms": 474.17
+   },
+   "mongo_designed": {
+    "n": 200,
+    "p50_ms": 5.23,
+    "p95_ms": 6.21,
+    "mean_ms": 5.17
+   },
+   "postgres_indexed": {
+    "n": 200,
+    "p50_ms": 9.68,
+    "p95_ms": 12.12,
+    "mean_ms": 9.92
+   }
+  },
+  "single article + comments": {
+   "postgres": {
+    "n": 200,
+    "p50_ms": 45.91,
+    "p95_ms": 53.89,
+    "mean_ms": 46.49
+   },
+   "mongo_naive": {
+    "n": 56,
+    "p50_ms": 791.81,
+    "p95_ms": 891.39,
+    "mean_ms": 812.54
+   },
+   "mongo_designed": {
+    "n": 200,
+    "p50_ms": 5.74,
+    "p95_ms": 7.69,
+    "mean_ms": 5.8
+   },
+   "postgres_indexed": {
+    "n": 200,
+    "p50_ms": 2.02,
+    "p95_ms": 4.97,
+    "mean_ms": 2.55
+   }
+  },
+  "profile": {
+   "postgres": {
+    "n": 200,
+    "p50_ms": 3.96,
+    "p95_ms": 4.65,
+    "mean_ms": 3.96
+   },
+   "mongo_naive": {
+    "n": 200,
+    "p50_ms": 81.38,
+    "p95_ms": 100.93,
+    "mean_ms": 84.6
+   },
+   "mongo_designed": {
+    "n": 200,
+    "p50_ms": 1.87,
+    "p95_ms": 2.33,
+    "mean_ms": 1.85
+   },
+   "postgres_indexed": {
+    "n": 200,
+    "p50_ms": 0.61,
+    "p95_ms": 1.16,
+    "mean_ms": 0.68
+   }
+  }
+ },
+ "http": {
+  "GET /api/articles?limit=20": {
+   "original": {
+    "n": 100,
+    "p50_ms": 262.4,
+    "p95_ms": 323.37,
+    "mean_ms": 273.18
+   },
+   "mongo": {
+    "n": 100,
+    "p50_ms": 258.27,
+    "p95_ms": 314.76,
+    "mean_ms": 265.17
+   }
+  },
+  "GET /api/articles?tag=ai": {
+   "original": {
+    "n": 100,
+    "p50_ms": 563.2,
+    "p95_ms": 667.0,
+    "mean_ms": 578.3
+   },
+   "mongo": {
+    "n": 100,
+    "p50_ms": 17.11,
+    "p95_ms": 25.17,
+    "mean_ms": 18.42
+   }
+  },
+  "GET /api/articles?author=user1": {
+   "original": {
+    "n": 100,
+    "p50_ms": 258.62,
+    "p95_ms": 332.53,
+    "mean_ms": 269.88
+   },
+   "mongo": {
+    "n": 100,
+    "p50_ms": 31.2,
+    "p95_ms": 42.52,
+    "mean_ms": 32.92
+   }
+  },
+  "GET /api/articles/feed": {
+   "original": {
+    "n": 100,
+    "p50_ms": 209.32,
+    "p95_ms": 259.08,
+    "mean_ms": 214.73
+   },
+   "mongo": {
+    "n": 100,
+    "p50_ms": 78.06,
+    "p95_ms": 103.99,
+    "mean_ms": 81.45
+   }
+  },
+  "GET /api/articles/:slug": {
+   "original": {
+    "n": 100,
+    "p50_ms": 12.41,
+    "p95_ms": 16.44,
+    "mean_ms": 12.86
+   },
+   "mongo": {
+    "n": 100,
+    "p50_ms": 8.26,
+    "p95_ms": 12.62,
+    "mean_ms": 8.9
+   }
+  },
+  "GET /api/articles/:slug/comments": {
+   "original": {
+    "n": 100,
+    "p50_ms": 73.23,
+    "p95_ms": 89.61,
+    "mean_ms": 74.74
+   },
+   "mongo": {
+    "n": 100,
+    "p50_ms": 31.92,
+    "p95_ms": 42.4,
+    "mean_ms": 33.54
+   }
+  },
+  "GET /api/profiles/:username": {
+   "original": {
+    "n": 100,
+    "p50_ms": 10.17,
+    "p95_ms": 12.03,
+    "mean_ms": 10.4
+   },
+   "mongo": {
+    "n": 100,
+    "p50_ms": 10.45,
+    "p95_ms": 14.3,
+    "mean_ms": 10.95
+   }
+  }
+ }
+}

@@ -191,3 +191,63 @@ alternatives considered. They are in roughly chronological order.
   schema, to isolate the effect of the schema.
 - The original Sequelize schema has only primary-key indexes. Postgres is therefore also measured **with the same
   secondary indexes**, so the comparison does not credit MongoDB for what is really an indexing difference.
+
+---
+
+## Stage 4 in practice: every root cause found, and its fix
+
+The repair loop's cap (5 iterations per round) was reached several times. Each time I diagnosed the root cause
+and fixed **that** in the harness, the prompts or the chunking, never by hand-editing the agent's code or touching
+tests, and then re-ran. Every diagnosis is also stored in `state/pipeline_state.json → chunks[*].diagnoses`.
+
+| # | Symptom | Root cause | Fix |
+|---|---|---|---|
+| D25 | every registration returned 500; repairs went to `profiles.js` | repair targeting counted cascaded failures, and old stack traces stayed in an appended log | weight the **first** failing step of each scenario ×5, real crashes over the app's own errors, one fresh log per start |
+| D26 | follow/unfollow returned 500 | **my porting rule** prescribed an upsert (dotted `_id` filter plus `$setOnInsert: {_id}`) that MongoDB rejects | verified the correct pattern in mongosh (exact compound `_id` filter) and rewrote rule 6 |
+| D27 | responses leaked `_id`, `createdAt`, `email` | the agent spread database documents into responses | rule 9: build each response field by field from the shape |
+| D28 | `articles.js` request too large (about 8.9k tokens > 8k/min) | **bad chunking** for one large file | function-level chunking: `analyzer/split.js` (Babel) splits the file, then one handler is converted or repaired at a time and deterministically reassembled |
+| D29 | the feed kept calling `loggedUser.getFollowing()` ("Preserve original bug") | the model read "preserve bugs" as "keep Sequelize calls" | rule 2 clarified (observable HTTP behaviour only) and rule 10: a Sequelize mixin → MongoDB translation table |
+| D30 | the same broken function came back after 3 repairs | **anchoring** on the current broken code in the prompt | a function repaired without progress is regenerated **fresh** from the original |
+| D31 | Sequelize calls kept slipping through | there was no static check | a deterministic **Sequelize-residue lint** runs before every test run (offending functions are regenerated), plus analyzer-derived hints listing the exact translation for each call site |
+| D32 | every handler leaked different internal fields | **missing shared abstraction** (the original had `dataValues` helpers) | one agent-written `articleResponse()` serializer in `helpers.js`, rule 11 requiring it, and all handlers regenerated against it (83 → 91/104) |
+| D33 | slice-1 `GET /api/user` broke during slice 2 | a repair of a shared file regressed, and the loop kept the worse version | restored the last committed passing version (agent-generated), plus a **keep-best** guard that reverts any iteration scoring lower (→ 103/104) |
+| D34 | `deleteArticle` returned 500 for 5 iterations | `ReferenceError: Comment is not defined` was hidden behind control-flow errors | report only real crashes, plus a deterministic **import-fixer codemod** (→ 104/104) |
+| D35 | half of the late repairs went to a correct function | the *intended* 500 (missing `tagList` reproduces the original's crash) was scored as a defect | crashes are ignored for targeting once all characterization steps pass |
+| D36 | invalid-JS replies and duplicate `require` declarations | the reply parser and header merge were too naive | one retry with the parser error, then keep the old function; destructured requires are merged rather than appended |
+
+### D37. One explicitly accepted deviation: `feed.hurl:110`
+- `GET /api/articles/feed?limit=1&offset=1` with articles that have 2+ tags. The original's `findAndCountAll`
+  (with a `belongsToMany` include) inflates `articlesCount` by joined tag rows. The MongoDB `articlesFeed` returns
+  the plain count, so the official check passes on MongoDB where it fails on the original.
+- Three agent attempts at the inflated count crashed (`MongoServerError: unknown group operator '$size'`), and the
+  keep-best guard reverted them. All 155 characterization steps pass; the frozen feed scenarios have at most one tag
+  per article, which is why they didn't catch it.
+- **Decision:** accept it explicitly to stay within the free-tier budget. It is recorded in
+  `state.accepted_deviations`, printed in every test result, and listed as NOT done in `reports/results.md`. No
+  test was modified or skipped.
+- **Next step:** give `articlesFeed` the working aggregation from `allArticles` (a refactor into a shared
+  `inflatedCount(match)` helper).
+
+### D38. Token cap raised twice (150k → 250k → 400k → 550k)
+- Slice 2 needed 16 rounds. Every increase was logged. All usage is free-tier (cost $0), and the per-model daily
+  limits and model fallback stayed in force. Totals are in `reports/results.md`.
+
+### D39. Optimization pass result: partial, behaviour preserved
+- The 6 article handlers and `favorites.js` were rewritten to batch-load data and use the embedded `tagList` and the
+  counters. `helpers.js` (the reply was unusable) and `comments.js` (its prompt exceeded the per-request limit) were
+  left unchanged. The suite still passes 155/155 after the pass.
+
+## Stage 5 in practice
+
+### D40. The differential test found a bug the frozen tests could not
+- On MongoDB, favoriting an article changed its `updatedAt`, because Mongoose `timestamps: true` also stamps
+  `updateOne($inc favoritesCount)`. The original only writes the junction row. No characterization step looks at
+  `updatedAt` after a favorite, but the differential test compares migrated timestamps strictly, so it saw the change
+  (90/94). The fix went through the agent (one repair with the diff as feedback): `{timestamps: false}` on counter
+  updates, and the same for `followersCount` for data fidelity.
+
+### D41. Comment order in the original is unspecified, so the differential reports two numbers
+- `article.getComments()` has no `ORDER BY`. In one run Postgres returned ids `[…, 3, 2, …]` while MongoDB returned
+  `_id` order (93/94); in the next run Postgres happened to return id order (94/94). The report gives the **strict**
+  number and, as a secondary number, the one where order-unspecified comment lists are compared as sets. The frozen
+  characterization comparison stays strict.

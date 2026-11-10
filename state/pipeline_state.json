@@ -574,6 +574,12 @@
       "status": "done"
     }
   },
+  "known_issues": [
+    "Optimization pass is partial: the 6 article handlers and controllers/favorites.js were rewritten; helper/helpers.js (the model reply had no code block) and controllers/comments.js (the prompt exceeded the free-tier per-request limit) were left as first translated. Behaviour is unchanged (155/155).",
+    "The default article list over HTTP is no faster on MongoDB (p50 262 vs 258 ms). Likely cause (NOT profiled): to reproduce the original's inflated articlesCount, allArticles aggregates over every article on each request. A maintained or cached count is the next step.",
+    "Behaviour the frozen tests do not cover, found in review: the converted updateUser ignores an `email` field in the request body, while the original would set it. No test or differential step exercises an email change, so it is not verified either way.",
+    "The original returns comments without ORDER BY. One differential run saw a different order from Postgres (93/94 strict); the final run was 94/94."
+  ],
   "llm": {
     "calls": 122,
     "daily_exhausted": {
@@ -607,7 +613,10 @@
       "updated": "2026-11-10T14:37:27"
     },
     "benchmark": {
-      "status": "pending"
+      "articles": 100000,
+      "seconds": 704.0,
+      "status": "done",
+      "updated": "2026-11-10T20:16:33"
     },
     "migrate": {
       "characterization": "155/155",
@@ -619,7 +628,9 @@
       "updated": "2026-11-10T20:04:35"
     },
     "report": {
-      "status": "pending"
+      "seconds": 0.0,
+      "status": "done",
+      "updated": "2026-11-10T20:17:27"
     },
     "schema": {
       "critic_blocking": 1,

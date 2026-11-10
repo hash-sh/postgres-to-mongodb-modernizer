@@ -1,0 +1,27 @@
+
+=== Stage: benchmark ===
+  benchmark dataset in Postgres: {'Users': 20000, 'Tags': 40, 'Articles': 100000, 'TagList': 199611, 'Favorites': 84902, 'Followers': 70109, 'Comments': 201086, 'seconds': 105.47}
+  migrating into 'conduit_bench': 241 batches (0 already checkpointed), 8 workers
+  migrating into 'conduit_naive': 341 batches (0 already checkpointed), 8 workers
+  migration designed: 476137 rows in 31.25s (15235.4 rows/s)
+  [data access] article list (default): postgres p50=49.93ms p95=58.06ms (n=200), mongo_naive p50=405.21ms p95=479.88ms (n=108), mongo_designed p50=4.74ms p95=5.58ms (n=200)
+  [data access] article list ?tag=: postgres p50=49.43ms p95=60.82ms (n=200), mongo_naive p50=500.75ms p95=583.6ms (n=88), mongo_designed p50=5.02ms p95=5.64ms (n=200)
+  [data access] article list ?author=: postgres p50=42.7ms p95=54.42ms (n=200), mongo_naive p50=401.06ms p95=477.59ms (n=109), mongo_designed p50=5.15ms p95=6.08ms (n=200)
+  [data access] feed: postgres p50=32.59ms p95=40.58ms (n=200), mongo_naive p50=460.61ms p95=537.83ms (n=95), mongo_designed p50=5.23ms p95=6.21ms (n=200)
+  [data access] single article + comments: postgres p50=45.91ms p95=53.89ms (n=200), mongo_naive p50=791.81ms p95=891.39ms (n=56), mongo_designed p50=5.74ms p95=7.69ms (n=200)
+  [data access] profile: postgres p50=3.96ms p95=4.65ms (n=200), mongo_naive p50=81.38ms p95=100.93ms (n=200), mongo_designed p50=1.87ms p95=2.33ms (n=200)
+  [data access] article list (default): postgres_indexed p50=15.7ms
+  [data access] article list ?tag=: postgres_indexed p50=15.9ms
+  [data access] article list ?author=: postgres_indexed p50=19.49ms
+  [data access] feed: postgres_indexed p50=9.68ms
+  [data access] single article + comments: postgres_indexed p50=2.02ms
+  [data access] profile: postgres_indexed p50=0.61ms
+  [http] GET /api/articles?limit=20: original p50=262.4ms p95=323.37ms, mongo p50=258.27ms p95=314.76ms
+  [http] GET /api/articles?tag=ai: original p50=563.2ms p95=667.0ms, mongo p50=17.11ms p95=25.17ms
+  [http] GET /api/articles?author=user1: original p50=258.62ms p95=332.53ms, mongo p50=31.2ms p95=42.52ms
+  [http] GET /api/articles/feed: original p50=209.32ms p95=259.08ms, mongo p50=78.06ms p95=103.99ms
+  [http] GET /api/articles/:slug: original p50=12.41ms p95=16.44ms, mongo p50=8.26ms p95=12.62ms
+  [http] GET /api/articles/:slug/comments: original p50=73.23ms p95=89.61ms, mongo p50=31.92ms p95=42.4ms
+  [http] GET /api/profiles/:username: original p50=10.17ms p95=12.03ms, mongo p50=10.45ms p95=14.3ms
+=== benchmark: done (704.0s)
+EXIT 0
