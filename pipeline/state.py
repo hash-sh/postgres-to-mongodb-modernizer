@@ -34,6 +34,8 @@ class State:
 
     def set_stage(self, name, status, **extra):
         st = self.data["stages"][name]
+        if status in ("running", "done"):
+            st.pop("error", None)
         st.update(status=status, updated=time.strftime("%Y-%m-%dT%H:%M:%S"), **extra)
         self.save()
 

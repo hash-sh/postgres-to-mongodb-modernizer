@@ -1,0 +1,129 @@
+{
+  "relationships": [
+    {
+      "relationship": "Article\u2011User (author)",
+      "cardinality": "N:1",
+      "decision": "reference",
+      "rules": [
+        "R1",
+        "R5"
+      ],
+      "reason": "author data needed on hot article reads, so store authorId and copy username/image (rarely change)"
+    },
+    {
+      "relationship": "Article\u2011Comment",
+      "cardinality": "1:N",
+      "decision": "reference",
+      "rules": [
+        "R2"
+      ],
+      "reason": "comments are unbounded per article, must stay in separate collection"
+    },
+    {
+      "relationship": "Article\u2011Tag (TagList)",
+      "cardinality": "N:M",
+      "decision": "embed array",
+      "rules": [
+        "R1",
+        "R2"
+      ],
+      "reason": "each article has a small bounded list of tags, read together on article endpoints"
+    },
+    {
+      "relationship": "Article\u2011User (Favorites)",
+      "cardinality": "N:M",
+      "decision": "junction collection",
+      "rules": [
+        "R3",
+        "R6"
+      ],
+      "reason": "favorites per article are unbounded; keep separate collection and denormalize a favoritesCount on Article"
+    },
+    {
+      "relationship": "User\u2011User (Followers)",
+      "cardinality": "N:M self\u2011referential",
+      "decision": "junction collection",
+      "rules": [
+        "R4",
+        "R3",
+        "R6"
+      ],
+      "reason": "followers/following are unbounded; use a Followers collection and counters on User"
+    },
+    {
+      "relationship": "Comment\u2011User (author)",
+      "cardinality": "N:1",
+      "decision": "reference",
+      "rules": [
+        "R1",
+        "R5"
+      ],
+      "reason": "author info shown on comment reads, copy username/image for hot reads"
+    }
+  ],
+  "collections": [
+    {
+      "name": "articles",
+      "source": "Articles",
+      "contains": "authorId + authorUsername/image (extended), tags array, favoritesCount, commentsCount"
+    },
+    {
+      "name": "comments",
+      "source": "Comments",
+      "contains": "authorId + authorUsername/image (extended)"
+    },
+    {
+      "name": "tags",
+      "source": "Tags",
+      "contains": "tag name only"
+    },
+    {
+      "name": "users",
+      "source": "Users",
+      "contains": "followersCount, followingCount"
+    },
+    {
+      "name": "favorites",
+      "source": "Favorites",
+      "contains": "compound _id {articleId,userId}"
+    },
+    "",
+    {
+      "name": "followers",
+      "source": "Followers",
+      "contains": "compound _id {userId,followerId}"
+    }
+  ],
+  "counters": [
+    {
+      "collection": "articles",
+      "field": "favoritesCount",
+      "counts": "Favorites",
+      "maintainedBy": "POST/DELETE /api/articles/:slug/favorite"
+    },
+    {
+      "collection": "articles",
+      "field": "commentsCount",
+      "counts": "Comments",
+      "maintainedBy": "POST/DELETE /api/articles/:slug/comments"
+    },
+    {
+      "collection": "users",
+      "field": "followersCount",
+      "counts": "Followers",
+      "maintainedBy": "POST/DELETE /api/profiles/:username/follow (as follower)"
+    },
+    "",
+    {
+      "collection": "users",
+      "field": "followingCount",
+      "counts": "Followers",
+      "maintainedBy": "POST/DELETE /api/profiles/:username/follow (as following)"
+    }
+  ],
+  "risks": [
+    "Extended author fields can become stale if username or image changes; must update all embedded copies on user update",
+    "Embedded tag array assumes a small bound; a surge in tags per article could approach document size limits",
+    "Denormalized counters require transactional updates; race conditions could cause off\u2011by\u2011one errors"
+  ]
+}

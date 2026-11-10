@@ -1,0 +1,222 @@
+{
+  "collections": [
+    {
+      "name": "Articles",
+      "source": "Articles",
+      "id": [
+        "id"
+      ],
+      "fields": [
+        {
+          "name": "slug",
+          "from": "slug",
+          "type": "string"
+        },
+        {
+          "name": "title",
+          "from": "title",
+          "type": "string"
+        },
+        {
+          "name": "description",
+          "from": "description",
+          "type": "string"
+        },
+        {
+          "name": "body",
+          "from": "body",
+          "type": "string"
+        },
+        {
+          "name": "createdAt",
+          "from": "createdAt",
+          "type": "date"
+        },
+        {
+          "name": "updatedAt",
+          "from": "updatedAt",
+          "type": "date"
+        },
+        {
+          "name": "userId",
+          "from": "userId",
+          "type": "int"
+        }
+      ],
+      "embedArrays": [],
+      "extendedRefs": [],
+      "counters": [],
+      "indexes": []
+    },
+    {
+      "name": "Comments",
+      "source": "Comments",
+      "id": [
+        "id"
+      ],
+      "fields": [
+        {
+          "name": "body",
+          "from": "body",
+          "type": "string"
+        },
+        {
+          "name": "createdAt",
+          "from": "createdAt",
+          "type": "date"
+        },
+        {
+          "name": "updatedAt",
+          "from": "updatedAt",
+          "type": "date"
+        },
+        {
+          "name": "articleId",
+          "from": "articleId",
+          "type": "int"
+        },
+        {
+          "name": "userId",
+          "from": "userId",
+          "type": "int"
+        }
+      ],
+      "embedArrays": [],
+      "extendedRefs": [],
+      "counters": [],
+      "indexes": []
+    },
+    {
+      "name": "Favorites",
+      "source": "Favorites",
+      "id": [
+        "articleId",
+        "userId"
+      ],
+      "fields": [
+        {
+          "name": "articleId",
+          "from": "articleId",
+          "type": "int"
+        },
+        {
+          "name": "userId",
+          "from": "userId",
+          "type": "int"
+        }
+      ],
+      "embedArrays": [],
+      "extendedRefs": [],
+      "counters": [],
+      "indexes": []
+    },
+    {
+      "name": "Followers",
+      "source": "Followers",
+      "id": [
+        "userId",
+        "followerId"
+      ],
+      "fields": [
+        {
+          "name": "userId",
+          "from": "userId",
+          "type": "int"
+        },
+        {
+          "name": "followerId",
+          "from": "followerId",
+          "type": "int"
+        }
+      ],
+      "embedArrays": [],
+      "extendedRefs": [],
+      "counters": [],
+      "indexes": []
+    },
+    {
+      "name": "TagList",
+      "source": "TagList",
+      "id": [
+        "articleId",
+        "tagName"
+      ],
+      "fields": [
+        {
+          "name": "articleId",
+          "from": "articleId",
+          "type": "int"
+        },
+        {
+          "name": "tagName",
+          "from": "tagName",
+          "type": "string"
+        }
+      ],
+      "embedArrays": [],
+      "extendedRefs": [],
+      "counters": [],
+      "indexes": []
+    },
+    {
+      "name": "Tags",
+      "source": "Tags",
+      "id": [
+        "name"
+      ],
+      "fields": [],
+      "embedArrays": [],
+      "extendedRefs": [],
+      "counters": [],
+      "indexes": []
+    },
+    {
+      "name": "Users",
+      "source": "Users",
+      "id": [
+        "id"
+      ],
+      "fields": [
+        {
+          "name": "email",
+          "from": "email",
+          "type": "string"
+        },
+        {
+          "name": "username",
+          "from": "username",
+          "type": "string"
+        },
+        {
+          "name": "bio",
+          "from": "bio",
+          "type": "string"
+        },
+        {
+          "name": "image",
+          "from": "image",
+          "type": "string"
+        },
+        {
+          "name": "password",
+          "from": "password",
+          "type": "string"
+        },
+        {
+          "name": "createdAt",
+          "from": "createdAt",
+          "type": "date"
+        },
+        {
+          "name": "updatedAt",
+          "from": "updatedAt",
+          "type": "date"
+        }
+      ],
+      "embedArrays": [],
+      "extendedRefs": [],
+      "counters": [],
+      "indexes": []
+    }
+  ]
+}

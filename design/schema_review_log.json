@@ -1,0 +1,164 @@
+{
+  "lint_rounds": [
+    {
+      "stage": "initial",
+      "round": 0,
+      "errors": [
+        "no index on articles for query [] sort createdAt (source Articles[]; used by controllers/articles.js:54 findAndCountAll order) (R10)",
+        "no index on articles for query ['author.id'] sort createdAt (source Articles['userId']; used by controllers/articles.js:130 findAndCountAll) (R10)",
+        "no index on comments for query ['articleId'] (source Comments['articleId']; used by controllers/comments.js:19 getComments) (R10)",
+        "no index on favorites for query ['_id.articleId'] (source Favorites['articleId']; used by controllers/favorites.js:34 addUser) (R10)",
+        "no index on favorites for query ['_id.userId'] (source Favorites['userId']; used by controllers/articles.js:51 getFavorites) (R10)",
+        "no index on followers for query ['_id.followerId'] (source Followers['followerId']; used by controllers/articles.js:128 getFollowing) (R10)",
+        "no index on followers for query ['_id.userId'] (source Followers['userId']; used by controllers/profiles.js:40 addFollower) (R10)",
+        "no index on articles for query ['tagList'] (source TagList['tagName']; used by controllers/articles.js:51 include filter) (R10)",
+        "no index on users for query ['email'] (source Users['email']; used by controllers/users.js:19 findOne) (R10)"
+      ],
+      "warnings": []
+    },
+    {
+      "stage": "initial",
+      "round": 1,
+      "errors": [
+        "articles: index {'userId': 1, 'createdAt': 1} uses unknown fields ['userId']",
+        "favorites: index {'articleId': 1} uses unknown fields ['articleId']",
+        "favorites: index {'userId': 1} uses unknown fields ['userId']",
+        "followers: index {'followerId': 1} uses unknown fields ['followerId']",
+        "followers: index {'userId': 1} uses unknown fields ['userId']",
+        "no index on articles for query ['author.id'] sort createdAt (source Articles['userId']; used by controllers/articles.js:130 findAndCountAll) (R10)",
+        "no index on favorites for query ['_id.articleId'] (source Favorites['articleId']; used by controllers/favorites.js:34 addUser) (R10)",
+        "no index on favorites for query ['_id.userId'] (source Favorites['userId']; used by controllers/articles.js:51 getFavorites) (R10)",
+        "no index on followers for query ['_id.followerId'] (source Followers['followerId']; used by controllers/articles.js:128 getFollowing) (R10)",
+        "no index on followers for query ['_id.userId'] (source Followers['userId']; used by controllers/profiles.js:40 addFollower) (R10)"
+      ],
+      "warnings": []
+    },
+    {
+      "stage": "initial",
+      "round": 2,
+      "errors": [
+        "no index on articles for query ['author.id'] sort createdAt (source Articles['userId']; used by controllers/articles.js:130 findAndCountAll) (R10)"
+      ],
+      "warnings": [
+        "articles: source column 'userId' is stored twice"
+      ]
+    },
+    {
+      "stage": "initial",
+      "round": 3,
+      "errors": [],
+      "warnings": [
+        "articles: source column 'userId' is stored twice"
+      ]
+    },
+    {
+      "stage": "after-critic",
+      "round": 0,
+      "errors": [
+        "comments: index {'userId': 1} uses unknown fields ['userId']"
+      ],
+      "warnings": [
+        "articles: source column 'userId' is stored twice"
+      ]
+    },
+    {
+      "stage": "after-critic",
+      "round": 1,
+      "errors": [],
+      "warnings": [
+        "articles: source column 'userId' is stored twice"
+      ]
+    },
+    {
+      "stage": "after-self-review",
+      "round": 0,
+      "errors": [],
+      "warnings": []
+    }
+  ],
+  "critic": {
+    "issues": [
+      {
+        "severity": "blocking",
+        "issue": "Missing index on comments.userId prevents efficient retrieval of user comments if needed, and lacks composite index for articleId+createdAt for sorting.",
+        "fix": "Add index {userId: 1} and {articleId: 1, createdAt: -1} to comments collection."
+      },
+      {
+        "severity": "minor",
+        "issue": "articles.indexes includes redundant {author.id: 1, createdAt: 1} alongside {authorId: 1, createdAt: 1}.",
+        "fix": "Remove the redundant index on author.id to reduce write overhead."
+      },
+      {
+        "severity": "minor",
+        "issue": "favorites and followers use compound _id but lack explicit indexes on individual fields for standalone queries.",
+        "fix": "Ensure _id subfields are indexed or add separate indexes if queries filter by single field."
+      }
+    ],
+    "verdict": "revise"
+  },
+  "self_review_changes": [
+    "In collection articles: remove the extendedRefs entry \"author\"; keep the plain field authorId (from userId, type int); remove the index {\"author.id\":1,\"createdAt\":1}.",
+    "In collection comments: remove the extendedRefs entry \"author\" and add a plain field authorId (from userId, type int).",
+    "In collection articles: remove the counter commentsCount. In collection users: remove the counter followingCount.",
+    "Set the articles indexes to exactly: {\"slug\":1} (NOT unique), {\"createdAt\":-1}, {\"authorId\":1,\"createdAt\":-1}, {\"tagList\":1,\"createdAt\":-1}.",
+    "Set the comments indexes to exactly: {\"articleId\":1}.",
+    "Set the users indexes to exactly: {\"username\":1} (NOT unique), {\"email\":1} (NOT unique). The original database has no unique constraints and the API behavior must not change."
+  ],
+  "naive_lint_errors": [
+    "no index on Articles for query [] sort createdAt (source Articles[]; used by controllers/articles.js:54 findAndCountAll order) (R10)",
+    "no index on Articles for query ['slug'] (source Articles['slug']; used by controllers/articles.js:158 findOne) (R10)",
+    "no index on Articles for query ['userId'] sort createdAt (source Articles['userId']; used by controllers/articles.js:130 findAndCountAll) (R10)",
+    "no index on Comments for query ['articleId'] (source Comments['articleId']; used by controllers/comments.js:19 getComments) (R10)",
+    "no index on Favorites for query ['articleId'] (source Favorites['articleId']; used by controllers/favorites.js:34 addUser) (R10)",
+    "no index on Favorites for query ['articleId', 'userId'] (source Favorites['articleId', 'userId']; used by controllers/favorites.js:34 addUser) (R10)",
+    "no index on Favorites for query ['userId'] (source Favorites['userId']; used by controllers/articles.js:51 getFavorites) (R10)",
+    "no index on Followers for query ['followerId'] (source Followers['followerId']; used by controllers/articles.js:128 getFollowing) (R10)",
+    "no index on Followers for query ['followerId', 'userId'] (source Followers['followerId', 'userId']; used by controllers/profiles.js:40 addFollower) (R10)",
+    "no index on Followers for query ['userId'] (source Followers['userId']; used by controllers/profiles.js:40 addFollower) (R10)",
+    "no index on TagList for query ['articleId'] (source TagList['articleId']; used by controllers/articles.js:103 addTagList) (R10)",
+    "no index on TagList for query ['tagName'] (source TagList['tagName']; used by controllers/articles.js:51 include filter) (R10)",
+    "no index on Users for query ['email'] (source Users['email']; used by controllers/users.js:19 findOne) (R10)",
+    "no index on Users for query ['username'] (source Users['username']; used by controllers/articles.js:49 findOne) (R10)"
+  ],
+  "profile": {
+    "maxRowBytes": {
+      "Users": 240,
+      "Articles": 972,
+      "Comments": 264,
+      "Tags": 35,
+      "TagList": 39,
+      "Favorites": 32,
+      "Followers": 32
+    },
+    "fanout": {
+      "TagList.articleId": {
+        "max": 4,
+        "avg": 2.37
+      },
+      "Favorites.articleId": {
+        "max": 20,
+        "avg": 1.7
+      },
+      "Favorites.userId": {
+        "max": 15,
+        "avg": 5.72
+      },
+      "Followers.userId": {
+        "max": 43,
+        "avg": 3.94
+      },
+      "Followers.followerId": {
+        "max": 10,
+        "avg": 4.04
+      },
+      "Comments.articleId": {
+        "max": 6,
+        "avg": 3.0
+      },
+      "Articles.userId": {
+        "max": 95,
+        "avg": 5.56
+      }
+    }
+  }
+}

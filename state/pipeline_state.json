@@ -1,8 +1,8 @@
 {
   "chunks": {},
   "llm": {
-    "calls": 0,
-    "tokens": 0
+    "calls": 15,
+    "tokens": 43241
   },
   "stages": {
     "analysis": {
@@ -38,7 +38,11 @@
       "status": "pending"
     },
     "schema": {
-      "status": "pending"
+      "critic_blocking": 1,
+      "lint_rounds": 7,
+      "seconds": 2.6,
+      "status": "done",
+      "updated": "2026-11-10T14:55:52"
     },
     "transform": {
       "status": "pending"

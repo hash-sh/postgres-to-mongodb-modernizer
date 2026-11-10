@@ -36,28 +36,29 @@ class RequestTooLarge(ValueError):
 
 
 def est_tokens(text: str) -> int:
-    return int(len(text) / 3.2) + 8  # conservative for code (code tokenizes densely)
+    return int(len(text) / 3.4) + 16  # measured ~3.65 chars/token on our prompts; keep a margin
 
 
 class LLM:
     def __init__(self, state):
         self.state = state
-        self.window = deque()  # (timestamp, tokens)
+        self.windows = {}  # model -> deque[(timestamp, tokens)]; Groq limits are per model
         TRANSCRIPTS.mkdir(parents=True, exist_ok=True)
 
     # ------------------------------------------------------------------ rate limiting
-    def _wait_for_capacity(self, need: int):
+    def _wait_for_capacity(self, need: int, model: str):
+        window = self.windows.setdefault(model, deque())
         limit = int(settings.llm_tpm_limit * 0.92)
         if need > limit:
             raise RequestTooLarge(f"request needs ~{need} tokens but the per-minute limit is {settings.llm_tpm_limit}")
         while True:
             now = time.time()
-            while self.window and now - self.window[0][0] > 61:
-                self.window.popleft()
-            used = sum(t for _, t in self.window)
+            while window and now - window[0][0] > 61:
+                window.popleft()
+            used = sum(t for _, t in window)
             if used + need <= limit:
                 return
-            sleep = 61 - (now - self.window[0][0]) + 0.5
+            sleep = 61 - (now - window[0][0]) + 0.5
             print(f"    [rate limiter] {used}+{need} tokens > {limit}/min, sleeping {sleep:.0f}s")
             time.sleep(max(1, sleep))
 
@@ -89,9 +90,10 @@ class LLM:
         self._budget_check(need)
         headers = {"Authorization": f"Bearer {settings.groq_api_key}", "Content-Type": "application/json"}
         for attempt in range(6):
-            self._wait_for_capacity(need)
+            self._wait_for_capacity(need, model)
+            window = self.windows[model]
             t0 = time.time()
-            self.window.append((t0, need))
+            window.append((t0, need))
             try:
                 r = requests.post(API, json=payload, headers=headers, timeout=180)
             except requests.RequestException as e:
@@ -118,7 +120,7 @@ class LLM:
             content = choice["message"].get("content") or ""
             usage = d.get("usage", {})
             # correct the window entry with the real number
-            self.window[-1] = (t0, usage.get("total_tokens", need))
+            window[-1] = (t0, usage.get("total_tokens", need))
             self.state.data["llm"]["tokens"] += usage.get("total_tokens", 0)
             self.state.data["llm"]["calls"] += 1
             self.state.save()

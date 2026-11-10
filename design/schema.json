@@ -1,0 +1,253 @@
+{
+  "generatedBy": "openai/gpt-oss-120b (design) / qwen/qwen3.8-27b (critic), linted by pipeline/schema_dsl.py",
+  "collections": [
+    {
+      "name": "articles",
+      "source": "Articles",
+      "id": [
+        "id"
+      ],
+      "fields": [
+        {
+          "name": "slug",
+          "from": "slug",
+          "type": "string"
+        },
+        {
+          "name": "title",
+          "from": "title",
+          "type": "string"
+        },
+        {
+          "name": "description",
+          "from": "description",
+          "type": "string"
+        },
+        {
+          "name": "body",
+          "from": "body",
+          "type": "string"
+        },
+        {
+          "name": "createdAt",
+          "from": "createdAt",
+          "type": "date"
+        },
+        {
+          "name": "updatedAt",
+          "from": "updatedAt",
+          "type": "date"
+        },
+        {
+          "name": "authorId",
+          "from": "userId",
+          "type": "int"
+        }
+      ],
+      "embedArrays": [
+        {
+          "name": "tagList",
+          "fromTable": "TagList",
+          "parentKey": "articleId",
+          "valueColumn": "tagName",
+          "maxItems": 20,
+          "reason": "each article has a small bounded list of tags, read together on article endpoints"
+        }
+      ],
+      "counters": [
+        {
+          "name": "favoritesCount",
+          "fromTable": "Favorites",
+          "parentKey": "articleId",
+          "reason": "favorites per article are unbounded; keep separate collection and denormalize a favoritesCount on Article"
+        }
+      ],
+      "indexes": [
+        {
+          "keys": {
+            "slug": 1
+          }
+        },
+        {
+          "keys": {
+            "createdAt": -1
+          }
+        },
+        {
+          "keys": {
+            "authorId": 1,
+            "createdAt": -1
+          }
+        },
+        {
+          "keys": {
+            "tagList": 1,
+            "createdAt": -1
+          }
+        }
+      ],
+      "estimatedMaxDocBytes": 3504
+    },
+    {
+      "name": "comments",
+      "source": "Comments",
+      "id": [
+        "id"
+      ],
+      "fields": [
+        {
+          "name": "body",
+          "from": "body",
+          "type": "string"
+        },
+        {
+          "name": "createdAt",
+          "from": "createdAt",
+          "type": "date"
+        },
+        {
+          "name": "updatedAt",
+          "from": "updatedAt",
+          "type": "date"
+        },
+        {
+          "name": "articleId",
+          "from": "articleId",
+          "type": "int"
+        },
+        {
+          "name": "authorId",
+          "from": "userId",
+          "type": "int"
+        }
+      ],
+      "indexes": [
+        {
+          "keys": {
+            "articleId": 1
+          }
+        }
+      ],
+      "estimatedMaxDocBytes": 528
+    },
+    {
+      "name": "tags",
+      "source": "Tags",
+      "id": [
+        "name"
+      ],
+      "fields": [],
+      "indexes": [],
+      "estimatedMaxDocBytes": 70
+    },
+    {
+      "name": "users",
+      "source": "Users",
+      "id": [
+        "id"
+      ],
+      "fields": [
+        {
+          "name": "email",
+          "from": "email",
+          "type": "string"
+        },
+        {
+          "name": "username",
+          "from": "username",
+          "type": "string"
+        },
+        {
+          "name": "bio",
+          "from": "bio",
+          "type": "string"
+        },
+        {
+          "name": "image",
+          "from": "image",
+          "type": "string"
+        },
+        {
+          "name": "password",
+          "from": "password",
+          "type": "string"
+        },
+        {
+          "name": "createdAt",
+          "from": "createdAt",
+          "type": "date"
+        },
+        {
+          "name": "updatedAt",
+          "from": "updatedAt",
+          "type": "date"
+        }
+      ],
+      "counters": [
+        {
+          "name": "followersCount",
+          "fromTable": "Followers",
+          "parentKey": "userId",
+          "reason": "followers/following are unbounded; use a Followers collection and counters on User"
+        }
+      ],
+      "indexes": [
+        {
+          "keys": {
+            "username": 1
+          }
+        },
+        {
+          "keys": {
+            "email": 1
+          }
+        }
+      ],
+      "estimatedMaxDocBytes": 480
+    },
+    {
+      "name": "favorites",
+      "source": "Favorites",
+      "id": [
+        "articleId",
+        "userId"
+      ],
+      "fields": [],
+      "indexes": [
+        {
+          "keys": {
+            "_id.articleId": 1
+          }
+        },
+        {
+          "keys": {
+            "_id.userId": 1
+          }
+        }
+      ],
+      "estimatedMaxDocBytes": 64
+    },
+    {
+      "name": "followers",
+      "source": "Followers",
+      "id": [
+        "userId",
+        "followerId"
+      ],
+      "fields": [],
+      "indexes": [
+        {
+          "keys": {
+            "_id.followerId": 1
+          }
+        },
+        {
+          "keys": {
+            "_id.userId": 1
+          }
+        }
+      ],
+      "estimatedMaxDocBytes": 64
+    }
+  ]
+}
