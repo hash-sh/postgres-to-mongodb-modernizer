@@ -1,0 +1,2438 @@
+{
+  "generatedBy": "analyzer/analyze.js (@babel/parser)",
+  "backend": "original/backend",
+  "models": [
+    {
+      "file": "models/Article.js",
+      "name": "Article",
+      "fields": {
+        "slug": {
+          "type": "STRING"
+        },
+        "title": {
+          "type": "STRING"
+        },
+        "description": {
+          "type": "TEXT"
+        },
+        "body": {
+          "type": "TEXT"
+        }
+      },
+      "options": {
+        "modelName": "Article"
+      },
+      "associations": [
+        {
+          "type": "belongsTo",
+          "target": "User",
+          "foreignKey": "userId",
+          "as": "author",
+          "line": 14
+        },
+        {
+          "type": "hasMany",
+          "target": "Comment",
+          "foreignKey": "articleId",
+          "onDelete": "cascade",
+          "line": 17
+        },
+        {
+          "type": "belongsToMany",
+          "target": "Tag",
+          "through": "TagList",
+          "as": "tagList",
+          "foreignKey": "articleId",
+          "timestamps": false,
+          "onDelete": "cascade",
+          "line": 20
+        },
+        {
+          "type": "belongsToMany",
+          "target": "User",
+          "through": "Favorites",
+          "foreignKey": "articleId",
+          "timestamps": false,
+          "line": 29
+        }
+      ],
+      "toJSONHidden": [
+        "id",
+        "userId"
+      ]
+    },
+    {
+      "file": "models/Comment.js",
+      "name": "Comment",
+      "fields": {
+        "id": {
+          "allowNull": false,
+          "autoIncrement": true,
+          "primaryKey": true,
+          "type": "INTEGER"
+        },
+        "body": {
+          "type": "TEXT"
+        }
+      },
+      "options": {
+        "modelName": "Comment"
+      },
+      "associations": [
+        {
+          "type": "belongsTo",
+          "target": "Article",
+          "foreignKey": "articleId",
+          "line": 14
+        },
+        {
+          "type": "belongsTo",
+          "target": "User",
+          "as": "author",
+          "foreignKey": "userId",
+          "line": 15
+        }
+      ],
+      "toJSONHidden": [
+        "articleId",
+        "userId"
+      ]
+    },
+    {
+      "file": "models/Tag.js",
+      "name": "Tag",
+      "fields": {
+        "name": {
+          "type": "STRING",
+          "allowNull": false,
+          "primaryKey": true
+        }
+      },
+      "options": {
+        "modelName": "Tag",
+        "timestamps": false
+      },
+      "associations": [
+        {
+          "type": "belongsToMany",
+          "target": "Article",
+          "through": "TagList",
+          "foreignKey": "tagName",
+          "timestamps": false,
+          "line": 14
+        }
+      ],
+      "toJSONHidden": [
+        "id",
+        "userId",
+        "TagList"
+      ]
+    },
+    {
+      "file": "models/User.js",
+      "name": "User",
+      "fields": {
+        "email": {
+          "type": "STRING"
+        },
+        "username": {
+          "type": "STRING"
+        },
+        "bio": {
+          "type": "TEXT"
+        },
+        "image": {
+          "type": "TEXT"
+        },
+        "password": {
+          "type": "STRING"
+        }
+      },
+      "options": {
+        "modelName": "User"
+      },
+      "associations": [
+        {
+          "type": "hasMany",
+          "target": "Article",
+          "foreignKey": "userId",
+          "onDelete": "CASCADE",
+          "line": 14
+        },
+        {
+          "type": "hasMany",
+          "target": "Comment",
+          "foreignKey": "articleId",
+          "line": 17
+        },
+        {
+          "type": "belongsToMany",
+          "target": "Article",
+          "through": "Favorites",
+          "as": "favorites",
+          "foreignKey": "userId",
+          "timestamps": false,
+          "line": 20
+        },
+        {
+          "type": "belongsToMany",
+          "target": "User",
+          "through": "Followers",
+          "as": "followers",
+          "foreignKey": "userId",
+          "timestamps": false,
+          "line": 28
+        },
+        {
+          "type": "belongsToMany",
+          "target": "User",
+          "through": "Followers",
+          "as": "following",
+          "foreignKey": "followerId",
+          "timestamps": false,
+          "line": 34
+        }
+      ],
+      "toJSONHidden": [
+        "id",
+        "password",
+        "updatedAt",
+        "createdAt"
+      ]
+    }
+  ],
+  "associations": [
+    {
+      "owner": "Article",
+      "type": "belongsTo",
+      "target": "User",
+      "foreignKey": "userId",
+      "as": "author",
+      "line": 14,
+      "cardinality": "N:1"
+    },
+    {
+      "owner": "Article",
+      "type": "hasMany",
+      "target": "Comment",
+      "foreignKey": "articleId",
+      "onDelete": "cascade",
+      "line": 17,
+      "cardinality": "1:N"
+    },
+    {
+      "owner": "Article",
+      "type": "belongsToMany",
+      "target": "Tag",
+      "through": "TagList",
+      "as": "tagList",
+      "foreignKey": "articleId",
+      "timestamps": false,
+      "onDelete": "cascade",
+      "line": 20,
+      "cardinality": "N:M"
+    },
+    {
+      "owner": "Article",
+      "type": "belongsToMany",
+      "target": "User",
+      "through": "Favorites",
+      "foreignKey": "articleId",
+      "timestamps": false,
+      "line": 29,
+      "cardinality": "N:M"
+    },
+    {
+      "owner": "Comment",
+      "type": "belongsTo",
+      "target": "Article",
+      "foreignKey": "articleId",
+      "line": 14,
+      "cardinality": "N:1"
+    },
+    {
+      "owner": "Comment",
+      "type": "belongsTo",
+      "target": "User",
+      "as": "author",
+      "foreignKey": "userId",
+      "line": 15,
+      "cardinality": "N:1"
+    },
+    {
+      "owner": "Tag",
+      "type": "belongsToMany",
+      "target": "Article",
+      "through": "TagList",
+      "foreignKey": "tagName",
+      "timestamps": false,
+      "line": 14,
+      "cardinality": "N:M"
+    },
+    {
+      "owner": "User",
+      "type": "hasMany",
+      "target": "Article",
+      "foreignKey": "userId",
+      "onDelete": "CASCADE",
+      "line": 14,
+      "cardinality": "1:N"
+    },
+    {
+      "owner": "User",
+      "type": "hasMany",
+      "target": "Comment",
+      "foreignKey": "articleId",
+      "line": 17,
+      "cardinality": "1:N"
+    },
+    {
+      "owner": "User",
+      "type": "belongsToMany",
+      "target": "Article",
+      "through": "Favorites",
+      "as": "favorites",
+      "foreignKey": "userId",
+      "timestamps": false,
+      "line": 20,
+      "cardinality": "N:M"
+    },
+    {
+      "owner": "User",
+      "type": "belongsToMany",
+      "target": "User",
+      "through": "Followers",
+      "as": "followers",
+      "foreignKey": "userId",
+      "timestamps": false,
+      "line": 28,
+      "cardinality": "N:M self-referential"
+    },
+    {
+      "owner": "User",
+      "type": "belongsToMany",
+      "target": "User",
+      "through": "Followers",
+      "as": "following",
+      "foreignKey": "followerId",
+      "timestamps": false,
+      "line": 34,
+      "cardinality": "N:M self-referential"
+    }
+  ],
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/",
+      "middleware": [],
+      "handler": {
+        "file": "index.js",
+        "function": "<inline GET />",
+        "line": 31
+      },
+      "routeFile": "index.js"
+    },
+    {
+      "method": "GET",
+      "path": "/*any",
+      "middleware": [],
+      "handler": {
+        "file": "index.js",
+        "function": "<inline GET /*any>",
+        "line": 38
+      },
+      "routeFile": "index.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/users",
+      "middleware": [],
+      "handler": {
+        "file": "controllers/users.js",
+        "function": "signUp"
+      },
+      "routeFile": "routes/users.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/users/login",
+      "middleware": [],
+      "handler": {
+        "file": "controllers/users.js",
+        "function": "signIn"
+      },
+      "routeFile": "routes/users.js"
+    },
+    {
+      "method": "GET",
+      "path": "/api/user",
+      "middleware": [
+        "verifyToken"
+      ],
+      "handler": {
+        "file": "controllers/user.js",
+        "function": "currentUser"
+      },
+      "routeFile": "routes/user.js"
+    },
+    {
+      "method": "PUT",
+      "path": "/api/user",
+      "middleware": [
+        "verifyToken"
+      ],
+      "handler": {
+        "file": "controllers/user.js",
+        "function": "updateUser"
+      },
+      "routeFile": "routes/user.js"
+    },
+    {
+      "method": "GET",
+      "path": "/api/articles",
+      "middleware": [
+        "verifyToken"
+      ],
+      "handler": {
+        "file": "controllers/articles.js",
+        "function": "allArticles"
+      },
+      "routeFile": "routes/articles.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/articles",
+      "middleware": [
+        "verifyToken"
+      ],
+      "handler": {
+        "file": "controllers/articles.js",
+        "function": "createArticle"
+      },
+      "routeFile": "routes/articles.js"
+    },
+    {
+      "method": "GET",
+      "path": "/api/articles/feed",
+      "middleware": [
+        "verifyToken"
+      ],
+      "handler": {
+        "file": "controllers/articles.js",
+        "function": "articlesFeed"
+      },
+      "routeFile": "routes/articles.js"
+    },
+    {
+      "method": "GET",
+      "path": "/api/articles/:slug",
+      "middleware": [
+        "verifyToken"
+      ],
+      "handler": {
+        "file": "controllers/articles.js",
+        "function": "singleArticle"
+      },
+      "routeFile": "routes/articles.js"
+    },
+    {
+      "method": "PUT",
+      "path": "/api/articles/:slug",
+      "middleware": [
+        "verifyToken"
+      ],
+      "handler": {
+        "file": "controllers/articles.js",
+        "function": "updateArticle"
+      },
+      "routeFile": "routes/articles.js"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/articles/:slug",
+      "middleware": [
+        "verifyToken"
+      ],
+      "handler": {
+        "file": "controllers/articles.js",
+        "function": "deleteArticle"
+      },
+      "routeFile": "routes/articles.js"
+    },
+    {
+      "method": "GET",
+      "path": "/api/profiles/:username",
+      "middleware": [
+        "verifyToken"
+      ],
+      "handler": {
+        "file": "controllers/profiles.js",
+        "function": "getProfile"
+      },
+      "routeFile": "routes/profiles.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/profiles/:username/follow",
+      "middleware": [
+        "verifyToken"
+      ],
+      "handler": {
+        "file": "controllers/profiles.js",
+        "function": "followToggler"
+      },
+      "routeFile": "routes/profiles.js"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/profiles/:username/follow",
+      "middleware": [
+        "verifyToken"
+      ],
+      "handler": {
+        "file": "controllers/profiles.js",
+        "function": "followToggler"
+      },
+      "routeFile": "routes/profiles.js"
+    },
+    {
+      "method": "GET",
+      "path": "/api/tags",
+      "middleware": [],
+      "handler": {
+        "file": "routes/tags.js",
+        "function": "<inline GET />",
+        "line": 7
+      },
+      "routeFile": "routes/tags.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/articles/:slug/favorite",
+      "middleware": [
+        "verifyToken"
+      ],
+      "handler": {
+        "file": "controllers/favorites.js",
+        "function": "favoriteToggler"
+      },
+      "routeFile": "routes/articles/favorites.js"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/articles/:slug/favorite",
+      "middleware": [
+        "verifyToken"
+      ],
+      "handler": {
+        "file": "controllers/favorites.js",
+        "function": "favoriteToggler"
+      },
+      "routeFile": "routes/articles/favorites.js"
+    },
+    {
+      "method": "GET",
+      "path": "/api/articles/:slug/comments",
+      "middleware": [
+        "verifyToken"
+      ],
+      "handler": {
+        "file": "controllers/comments.js",
+        "function": "allComments"
+      },
+      "routeFile": "routes/articles/comments.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/articles/:slug/comments",
+      "middleware": [
+        "verifyToken"
+      ],
+      "handler": {
+        "file": "controllers/comments.js",
+        "function": "createComment"
+      },
+      "routeFile": "routes/articles/comments.js"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/articles/:slug/comments/:commentId",
+      "middleware": [
+        "verifyToken"
+      ],
+      "handler": {
+        "file": "controllers/comments.js",
+        "function": "deleteComment"
+      },
+      "routeFile": "routes/articles/comments.js"
+    }
+  ],
+  "callSites": [
+    {
+      "kind": "query",
+      "method": "findOne",
+      "receiver": "User",
+      "model": "User",
+      "options": {
+        "where": {
+          "username": {
+            "$id": "favorited"
+          }
+        }
+      },
+      "file": "controllers/articles.js",
+      "line": 49,
+      "function": "allArticles",
+      "op": "read",
+      "features": [
+        "where"
+      ],
+      "usedBy": [
+        "GET /api/articles"
+      ]
+    },
+    {
+      "kind": "association",
+      "method": "getFavorites",
+      "receiver": "user",
+      "candidates": [
+        "User.favorites"
+      ],
+      "options": {
+        "include": [
+          {
+            "model": {
+              "$id": "Tag"
+            },
+            "as": "tagList",
+            "attributes": [
+              "name"
+            ],
+            "where": {
+              "$conditional": {
+                "name": {
+                  "$id": "tag"
+                }
+              }
+            }
+          },
+          {
+            "model": {
+              "$id": "User"
+            },
+            "as": "author",
+            "attributes": {
+              "exclude": [
+                "email"
+              ]
+            },
+            "where": {
+              "$conditional": {
+                "username": {
+                  "$id": "author"
+                }
+              }
+            }
+          }
+        ],
+        "limit": {
+          "$call": "parseInt"
+        },
+        "offset": {
+          "$expr": "offset * limit"
+        },
+        "order": [
+          [
+            "createdAt",
+            "DESC"
+          ]
+        ]
+      },
+      "op": "read",
+      "file": "controllers/articles.js",
+      "line": 51,
+      "function": "allArticles",
+      "features": [
+        "attributes",
+        "conditional:where",
+        "include",
+        "limit",
+        "offset",
+        "order",
+        "where"
+      ],
+      "usedBy": [
+        "GET /api/articles"
+      ]
+    },
+    {
+      "kind": "association",
+      "method": "countFavorites",
+      "receiver": "user",
+      "candidates": [
+        "User.favorites"
+      ],
+      "options": null,
+      "op": "read",
+      "file": "controllers/articles.js",
+      "line": 52,
+      "function": "allArticles",
+      "features": [],
+      "usedBy": [
+        "GET /api/articles"
+      ]
+    },
+    {
+      "kind": "query",
+      "method": "findAndCountAll",
+      "receiver": "Article",
+      "model": "Article",
+      "options": {
+        "include": [
+          {
+            "model": {
+              "$id": "Tag"
+            },
+            "as": "tagList",
+            "attributes": [
+              "name"
+            ],
+            "where": {
+              "$conditional": {
+                "name": {
+                  "$id": "tag"
+                }
+              }
+            }
+          },
+          {
+            "model": {
+              "$id": "User"
+            },
+            "as": "author",
+            "attributes": {
+              "exclude": [
+                "email"
+              ]
+            },
+            "where": {
+              "$conditional": {
+                "username": {
+                  "$id": "author"
+                }
+              }
+            }
+          }
+        ],
+        "limit": {
+          "$call": "parseInt"
+        },
+        "offset": {
+          "$expr": "offset * limit"
+        },
+        "order": [
+          [
+            "createdAt",
+            "DESC"
+          ]
+        ]
+      },
+      "file": "controllers/articles.js",
+      "line": 54,
+      "function": "allArticles",
+      "op": "read",
+      "features": [
+        "attributes",
+        "conditional:where",
+        "include",
+        "limit",
+        "offset",
+        "order",
+        "where"
+      ],
+      "usedBy": [
+        "GET /api/articles"
+      ]
+    },
+    {
+      "kind": "association",
+      "method": "getTagList",
+      "receiver": "article",
+      "candidates": [
+        "Article.tagList"
+      ],
+      "options": null,
+      "op": "read",
+      "file": "controllers/articles.js",
+      "line": 58,
+      "function": "allArticles",
+      "inLoop": true,
+      "features": [],
+      "usedBy": [
+        "GET /api/articles"
+      ]
+    },
+    {
+      "kind": "query",
+      "method": "findOne",
+      "receiver": "Article",
+      "model": "Article",
+      "options": {
+        "where": {
+          "slug": {
+            "$id": "slug"
+          }
+        }
+      },
+      "file": "controllers/articles.js",
+      "line": 85,
+      "function": "createArticle",
+      "op": "read",
+      "features": [
+        "where"
+      ],
+      "usedBy": [
+        "POST /api/articles"
+      ]
+    },
+    {
+      "kind": "query",
+      "method": "create",
+      "receiver": "Article",
+      "model": "Article",
+      "options": {
+        "slug": {
+          "$id": "slug"
+        },
+        "title": {
+          "$id": "title"
+        },
+        "description": {
+          "$id": "description"
+        },
+        "body": {
+          "$id": "body"
+        }
+      },
+      "file": "controllers/articles.js",
+      "line": 88,
+      "function": "createArticle",
+      "op": "write",
+      "features": [],
+      "usedBy": [
+        "POST /api/articles"
+      ]
+    },
+    {
+      "kind": "query",
+      "method": "findByPk",
+      "receiver": "Tag",
+      "model": "Tag",
+      "options": {
+        "$call": "tag.trim"
+      },
+      "file": "controllers/articles.js",
+      "line": 96,
+      "function": "createArticle",
+      "inLoop": true,
+      "op": "read",
+      "features": [],
+      "usedBy": [
+        "POST /api/articles"
+      ]
+    },
+    {
+      "kind": "association",
+      "method": "addTagList",
+      "receiver": "article",
+      "candidates": [
+        "Article.tagList"
+      ],
+      "options": {
+        "$id": "tagInDB"
+      },
+      "op": "write",
+      "file": "controllers/articles.js",
+      "line": 99,
+      "function": "createArticle",
+      "inLoop": true,
+      "features": [],
+      "usedBy": [
+        "POST /api/articles"
+      ]
+    },
+    {
+      "kind": "query",
+      "method": "create",
+      "receiver": "Tag",
+      "model": "Tag",
+      "options": {
+        "name": {
+          "$call": "tag.trim"
+        }
+      },
+      "file": "controllers/articles.js",
+      "line": 101,
+      "function": "createArticle",
+      "inLoop": true,
+      "op": "write",
+      "features": [],
+      "usedBy": [
+        "POST /api/articles"
+      ]
+    },
+    {
+      "kind": "association",
+      "method": "addTagList",
+      "receiver": "article",
+      "candidates": [
+        "Article.tagList"
+      ],
+      "options": {
+        "$id": "newTag"
+      },
+      "op": "write",
+      "file": "controllers/articles.js",
+      "line": 103,
+      "function": "createArticle",
+      "inLoop": true,
+      "features": [],
+      "usedBy": [
+        "POST /api/articles"
+      ]
+    },
+    {
+      "kind": "association",
+      "method": "setAuthor",
+      "receiver": "article",
+      "candidates": [
+        "Article.author",
+        "Comment.author"
+      ],
+      "options": {
+        "$id": "loggedUser"
+      },
+      "op": "write",
+      "file": "controllers/articles.js",
+      "line": 110,
+      "function": "createArticle",
+      "features": [],
+      "usedBy": [
+        "POST /api/articles"
+      ]
+    },
+    {
+      "kind": "association",
+      "method": "getFollowing",
+      "receiver": "loggedUser",
+      "candidates": [
+        "User.following"
+      ],
+      "options": null,
+      "op": "read",
+      "file": "controllers/articles.js",
+      "line": 128,
+      "function": "articlesFeed",
+      "features": [],
+      "usedBy": [
+        "GET /api/articles/feed"
+      ]
+    },
+    {
+      "kind": "query",
+      "method": "findAndCountAll",
+      "receiver": "Article",
+      "model": "Article",
+      "options": {
+        "include": [
+          {
+            "model": {
+              "$id": "Tag"
+            },
+            "as": "tagList",
+            "attributes": [
+              "name"
+            ]
+          },
+          {
+            "model": {
+              "$id": "User"
+            },
+            "as": "author",
+            "attributes": {
+              "exclude": [
+                "email"
+              ]
+            }
+          }
+        ],
+        "limit": {
+          "$call": "parseInt"
+        },
+        "offset": {
+          "$expr": "offset * limit"
+        },
+        "order": [
+          [
+            "createdAt",
+            "DESC"
+          ]
+        ],
+        "where": {
+          "userId": {
+            "$call": "authors.map"
+          }
+        }
+      },
+      "file": "controllers/articles.js",
+      "line": 130,
+      "function": "articlesFeed",
+      "op": "read",
+      "features": [
+        "attributes",
+        "include",
+        "limit",
+        "offset",
+        "order",
+        "where"
+      ],
+      "usedBy": [
+        "GET /api/articles/feed"
+      ]
+    },
+    {
+      "kind": "association",
+      "method": "getTagList",
+      "receiver": "article",
+      "candidates": [
+        "Article.tagList"
+      ],
+      "options": null,
+      "op": "read",
+      "file": "controllers/articles.js",
+      "line": 139,
+      "function": "articlesFeed",
+      "inLoop": true,
+      "features": [],
+      "usedBy": [
+        "GET /api/articles/feed"
+      ]
+    },
+    {
+      "kind": "query",
+      "method": "findOne",
+      "receiver": "Article",
+      "model": "Article",
+      "options": {
+        "where": {
+          "slug": {
+            "$id": "slug"
+          }
+        },
+        "include": [
+          {
+            "model": {
+              "$id": "Tag"
+            },
+            "as": "tagList",
+            "attributes": [
+              "name"
+            ]
+          },
+          {
+            "model": {
+              "$id": "User"
+            },
+            "as": "author",
+            "attributes": {
+              "exclude": [
+                "email"
+              ]
+            }
+          }
+        ]
+      },
+      "file": "controllers/articles.js",
+      "line": 158,
+      "function": "singleArticle",
+      "op": "read",
+      "features": [
+        "attributes",
+        "include",
+        "where"
+      ],
+      "usedBy": [
+        "GET /api/articles/:slug"
+      ]
+    },
+    {
+      "kind": "query",
+      "method": "findOne",
+      "receiver": "Article",
+      "model": "Article",
+      "options": {
+        "where": {
+          "slug": {
+            "$id": "slug"
+          }
+        },
+        "include": [
+          {
+            "model": {
+              "$id": "Tag"
+            },
+            "as": "tagList",
+            "attributes": [
+              "name"
+            ]
+          },
+          {
+            "model": {
+              "$id": "User"
+            },
+            "as": "author",
+            "attributes": {
+              "exclude": [
+                "email"
+              ]
+            }
+          }
+        ]
+      },
+      "file": "controllers/articles.js",
+      "line": 181,
+      "function": "updateArticle",
+      "op": "read",
+      "features": [
+        "attributes",
+        "include",
+        "where"
+      ],
+      "usedBy": [
+        "PUT /api/articles/:slug"
+      ]
+    },
+    {
+      "kind": "query",
+      "method": "save",
+      "receiver": "article",
+      "model": "Article",
+      "options": null,
+      "file": "controllers/articles.js",
+      "line": 198,
+      "function": "updateArticle",
+      "op": "write",
+      "features": [],
+      "usedBy": [
+        "PUT /api/articles/:slug"
+      ],
+      "modelResolvedBy": "receiver-name"
+    },
+    {
+      "kind": "query",
+      "method": "findOne",
+      "receiver": "Article",
+      "model": "Article",
+      "options": {
+        "where": {
+          "slug": {
+            "$id": "slug"
+          }
+        },
+        "include": [
+          {
+            "model": {
+              "$id": "Tag"
+            },
+            "as": "tagList",
+            "attributes": [
+              "name"
+            ]
+          },
+          {
+            "model": {
+              "$id": "User"
+            },
+            "as": "author",
+            "attributes": {
+              "exclude": [
+                "email"
+              ]
+            }
+          }
+        ]
+      },
+      "file": "controllers/articles.js",
+      "line": 217,
+      "function": "deleteArticle",
+      "op": "read",
+      "features": [
+        "attributes",
+        "include",
+        "where"
+      ],
+      "usedBy": [
+        "DELETE /api/articles/:slug"
+      ]
+    },
+    {
+      "kind": "query",
+      "method": "destroy",
+      "receiver": "article",
+      "model": "Article",
+      "options": null,
+      "file": "controllers/articles.js",
+      "line": 227,
+      "function": "deleteArticle",
+      "op": "write",
+      "features": [],
+      "usedBy": [
+        "DELETE /api/articles/:slug"
+      ],
+      "modelResolvedBy": "receiver-name"
+    },
+    {
+      "kind": "query",
+      "method": "findOne",
+      "receiver": "Article",
+      "model": "Article",
+      "options": {
+        "where": {
+          "slug": {
+            "$id": "slug"
+          }
+        }
+      },
+      "file": "controllers/comments.js",
+      "line": 16,
+      "function": "allComments",
+      "op": "read",
+      "features": [
+        "where"
+      ],
+      "usedBy": [
+        "GET /api/articles/:slug/comments"
+      ]
+    },
+    {
+      "kind": "association",
+      "method": "getComments",
+      "receiver": "article",
+      "candidates": [
+        "Article.Comment",
+        "User.Comment"
+      ],
+      "options": {
+        "include": [
+          {
+            "model": {
+              "$id": "User"
+            },
+            "as": "author",
+            "attributes": {
+              "exclude": [
+                "email"
+              ]
+            }
+          }
+        ]
+      },
+      "op": "read",
+      "file": "controllers/comments.js",
+      "line": 19,
+      "function": "allComments",
+      "features": [
+        "attributes",
+        "include"
+      ],
+      "usedBy": [
+        "GET /api/articles/:slug/comments"
+      ]
+    },
+    {
+      "kind": "query",
+      "method": "findOne",
+      "receiver": "Article",
+      "model": "Article",
+      "options": {
+        "where": {
+          "slug": {
+            "$id": "slug"
+          }
+        }
+      },
+      "file": "controllers/comments.js",
+      "line": 45,
+      "function": "createComment",
+      "op": "read",
+      "features": [
+        "where"
+      ],
+      "usedBy": [
+        "POST /api/articles/:slug/comments"
+      ]
+    },
+    {
+      "kind": "query",
+      "method": "create",
+      "receiver": "Comment",
+      "model": "Comment",
+      "options": {
+        "body": {
+          "$id": "body"
+        },
+        "articleId": {
+          "$id": "article.id"
+        },
+        "userId": {
+          "$id": "loggedUser.id"
+        }
+      },
+      "file": "controllers/comments.js",
+      "line": 48,
+      "function": "createComment",
+      "op": "write",
+      "features": [],
+      "usedBy": [
+        "POST /api/articles/:slug/comments"
+      ]
+    },
+    {
+      "kind": "query",
+      "method": "findByPk",
+      "receiver": "Comment",
+      "model": "Comment",
+      "options": {
+        "$id": "commentId"
+      },
+      "file": "controllers/comments.js",
+      "line": 72,
+      "function": "deleteComment",
+      "op": "read",
+      "features": [],
+      "usedBy": [
+        "DELETE /api/articles/:slug/comments/:commentId"
+      ]
+    },
+    {
+      "kind": "query",
+      "method": "destroy",
+      "receiver": "comment",
+      "model": "Comment",
+      "options": null,
+      "file": "controllers/comments.js",
+      "line": 79,
+      "function": "deleteComment",
+      "op": "write",
+      "features": [],
+      "usedBy": [
+        "DELETE /api/articles/:slug/comments/:commentId"
+      ],
+      "modelResolvedBy": "receiver-name"
+    },
+    {
+      "kind": "query",
+      "method": "findOne",
+      "receiver": "Article",
+      "model": "Article",
+      "options": {
+        "where": {
+          "slug": {
+            "$id": "slug"
+          }
+        },
+        "include": [
+          {
+            "model": {
+              "$id": "Tag"
+            },
+            "as": "tagList",
+            "attributes": [
+              "name"
+            ]
+          },
+          {
+            "model": {
+              "$id": "User"
+            },
+            "as": "author",
+            "attributes": [
+              "username",
+              "bio",
+              "image"
+            ]
+          }
+        ]
+      },
+      "file": "controllers/favorites.js",
+      "line": 17,
+      "function": "favoriteToggler",
+      "op": "read",
+      "features": [
+        "attributes",
+        "include",
+        "where"
+      ],
+      "usedBy": [
+        "POST /api/articles/:slug/favorite",
+        "DELETE /api/articles/:slug/favorite"
+      ]
+    },
+    {
+      "kind": "association",
+      "method": "addUser",
+      "receiver": "article",
+      "candidates": [
+        "Article.User"
+      ],
+      "options": {
+        "$id": "loggedUser"
+      },
+      "op": "write",
+      "file": "controllers/favorites.js",
+      "line": 34,
+      "function": "favoriteToggler",
+      "features": [],
+      "usedBy": [
+        "POST /api/articles/:slug/favorite",
+        "DELETE /api/articles/:slug/favorite"
+      ]
+    },
+    {
+      "kind": "association",
+      "method": "removeUser",
+      "receiver": "article",
+      "candidates": [
+        "Article.User"
+      ],
+      "options": {
+        "$id": "loggedUser"
+      },
+      "op": "write",
+      "file": "controllers/favorites.js",
+      "line": 35,
+      "function": "favoriteToggler",
+      "features": [],
+      "usedBy": [
+        "POST /api/articles/:slug/favorite",
+        "DELETE /api/articles/:slug/favorite"
+      ]
+    },
+    {
+      "kind": "query",
+      "method": "findOne",
+      "receiver": "User",
+      "model": "User",
+      "options": {
+        "where": {
+          "username": {
+            "$id": "username"
+          }
+        },
+        "attributes": {
+          "exclude": "email"
+        }
+      },
+      "file": "controllers/profiles.js",
+      "line": 11,
+      "function": "getProfile",
+      "op": "read",
+      "features": [
+        "attributes",
+        "where"
+      ],
+      "usedBy": [
+        "GET /api/profiles/:username"
+      ]
+    },
+    {
+      "kind": "query",
+      "method": "findOne",
+      "receiver": "User",
+      "model": "User",
+      "options": {
+        "where": {
+          "username": {
+            "$id": "username"
+          }
+        },
+        "attributes": {
+          "exclude": "email"
+        }
+      },
+      "file": "controllers/profiles.js",
+      "line": 33,
+      "function": "followToggler",
+      "op": "read",
+      "features": [
+        "attributes",
+        "where"
+      ],
+      "usedBy": [
+        "POST /api/profiles/:username/follow",
+        "DELETE /api/profiles/:username/follow"
+      ]
+    },
+    {
+      "kind": "association",
+      "method": "addFollower",
+      "receiver": "profile",
+      "candidates": [
+        "User.followers"
+      ],
+      "options": {
+        "$id": "loggedUser"
+      },
+      "op": "write",
+      "file": "controllers/profiles.js",
+      "line": 40,
+      "function": "followToggler",
+      "features": [],
+      "usedBy": [
+        "POST /api/profiles/:username/follow",
+        "DELETE /api/profiles/:username/follow"
+      ]
+    },
+    {
+      "kind": "association",
+      "method": "removeFollower",
+      "receiver": "profile",
+      "candidates": [
+        "User.followers"
+      ],
+      "options": {
+        "$id": "loggedUser"
+      },
+      "op": "write",
+      "file": "controllers/profiles.js",
+      "line": 42,
+      "function": "followToggler",
+      "features": [],
+      "usedBy": [
+        "POST /api/profiles/:username/follow",
+        "DELETE /api/profiles/:username/follow"
+      ]
+    },
+    {
+      "kind": "query",
+      "method": "save",
+      "receiver": "loggedUser",
+      "model": "User",
+      "options": null,
+      "file": "controllers/user.js",
+      "line": 40,
+      "function": "updateUser",
+      "op": "write",
+      "features": [],
+      "usedBy": [
+        "PUT /api/user"
+      ],
+      "modelResolvedBy": "receiver-name"
+    },
+    {
+      "kind": "query",
+      "method": "findOne",
+      "receiver": "User",
+      "model": "User",
+      "options": {
+        "where": {
+          "email": {
+            "$id": "req.body.user.email"
+          }
+        }
+      },
+      "file": "controllers/users.js",
+      "line": 19,
+      "function": "signUp",
+      "op": "read",
+      "features": [
+        "where"
+      ],
+      "usedBy": [
+        "POST /api/users"
+      ]
+    },
+    {
+      "kind": "query",
+      "method": "create",
+      "receiver": "User",
+      "model": "User",
+      "options": {
+        "email": {
+          "$id": "email"
+        },
+        "username": {
+          "$id": "username"
+        },
+        "bio": {
+          "$id": "bio"
+        },
+        "image": {
+          "$id": "image"
+        },
+        "password": {
+          "$expr": "AwaitExpression"
+        }
+      },
+      "file": "controllers/users.js",
+      "line": 24,
+      "function": "signUp",
+      "op": "write",
+      "features": [],
+      "usedBy": [
+        "POST /api/users"
+      ]
+    },
+    {
+      "kind": "query",
+      "method": "findOne",
+      "receiver": "User",
+      "model": "User",
+      "options": {
+        "where": {
+          "email": {
+            "$id": "user.email"
+          }
+        }
+      },
+      "file": "controllers/users.js",
+      "line": 45,
+      "function": "signIn",
+      "op": "read",
+      "features": [
+        "where"
+      ],
+      "usedBy": [
+        "POST /api/users/login"
+      ]
+    },
+    {
+      "kind": "association",
+      "method": "hasUser",
+      "receiver": "article",
+      "candidates": [
+        "Article.User"
+      ],
+      "options": {
+        "$expr": "ConditionalExpression"
+      },
+      "op": "read",
+      "file": "helper/helpers.js",
+      "line": 13,
+      "function": "appendFavorites",
+      "features": [],
+      "usedBy": [
+        "GET /api/articles",
+        "POST /api/articles",
+        "GET /api/articles/feed",
+        "GET /api/articles/:slug",
+        "PUT /api/articles/:slug",
+        "POST /api/articles/:slug/favorite",
+        "DELETE /api/articles/:slug/favorite"
+      ]
+    },
+    {
+      "kind": "association",
+      "method": "countUsers",
+      "receiver": "article",
+      "candidates": [
+        "Article.User"
+      ],
+      "options": null,
+      "op": "read",
+      "file": "helper/helpers.js",
+      "line": 16,
+      "function": "appendFavorites",
+      "features": [],
+      "usedBy": [
+        "GET /api/articles",
+        "POST /api/articles",
+        "GET /api/articles/feed",
+        "GET /api/articles/:slug",
+        "PUT /api/articles/:slug",
+        "POST /api/articles/:slug/favorite",
+        "DELETE /api/articles/:slug/favorite"
+      ]
+    },
+    {
+      "kind": "association",
+      "method": "getAuthor",
+      "receiver": "toAppend",
+      "candidates": [
+        "Article.author",
+        "Comment.author"
+      ],
+      "options": null,
+      "op": "read",
+      "file": "helper/helpers.js",
+      "line": 23,
+      "function": "appendFollowers",
+      "features": [],
+      "usedBy": [
+        "GET /api/articles",
+        "POST /api/articles",
+        "GET /api/articles/feed",
+        "GET /api/articles/:slug",
+        "PUT /api/articles/:slug",
+        "GET /api/profiles/:username",
+        "POST /api/profiles/:username/follow",
+        "DELETE /api/profiles/:username/follow",
+        "POST /api/articles/:slug/favorite",
+        "DELETE /api/articles/:slug/favorite",
+        "GET /api/articles/:slug/comments",
+        "POST /api/articles/:slug/comments"
+      ]
+    },
+    {
+      "kind": "association",
+      "method": "hasFollower",
+      "receiver": "author",
+      "candidates": [
+        "User.followers"
+      ],
+      "options": {
+        "$expr": "ConditionalExpression"
+      },
+      "op": "read",
+      "file": "helper/helpers.js",
+      "line": 25,
+      "function": "appendFollowers",
+      "features": [],
+      "usedBy": [
+        "GET /api/articles",
+        "POST /api/articles",
+        "GET /api/articles/feed",
+        "GET /api/articles/:slug",
+        "PUT /api/articles/:slug",
+        "GET /api/profiles/:username",
+        "POST /api/profiles/:username/follow",
+        "DELETE /api/profiles/:username/follow",
+        "POST /api/articles/:slug/favorite",
+        "DELETE /api/articles/:slug/favorite",
+        "GET /api/articles/:slug/comments",
+        "POST /api/articles/:slug/comments"
+      ]
+    },
+    {
+      "kind": "association",
+      "method": "countFollowers",
+      "receiver": "author",
+      "candidates": [
+        "User.followers"
+      ],
+      "options": null,
+      "op": "read",
+      "file": "helper/helpers.js",
+      "line": 28,
+      "function": "appendFollowers",
+      "features": [],
+      "usedBy": [
+        "GET /api/articles",
+        "POST /api/articles",
+        "GET /api/articles/feed",
+        "GET /api/articles/:slug",
+        "PUT /api/articles/:slug",
+        "GET /api/profiles/:username",
+        "POST /api/profiles/:username/follow",
+        "DELETE /api/profiles/:username/follow",
+        "POST /api/articles/:slug/favorite",
+        "DELETE /api/articles/:slug/favorite",
+        "GET /api/articles/:slug/comments",
+        "POST /api/articles/:slug/comments"
+      ]
+    },
+    {
+      "kind": "association",
+      "method": "hasFollower",
+      "receiver": "toAppend",
+      "candidates": [
+        "User.followers"
+      ],
+      "options": {
+        "$expr": "ConditionalExpression"
+      },
+      "op": "read",
+      "file": "helper/helpers.js",
+      "line": 32,
+      "function": "appendFollowers",
+      "features": [],
+      "usedBy": [
+        "GET /api/articles",
+        "POST /api/articles",
+        "GET /api/articles/feed",
+        "GET /api/articles/:slug",
+        "PUT /api/articles/:slug",
+        "GET /api/profiles/:username",
+        "POST /api/profiles/:username/follow",
+        "DELETE /api/profiles/:username/follow",
+        "POST /api/articles/:slug/favorite",
+        "DELETE /api/articles/:slug/favorite",
+        "GET /api/articles/:slug/comments",
+        "POST /api/articles/:slug/comments"
+      ]
+    },
+    {
+      "kind": "association",
+      "method": "countFollowers",
+      "receiver": "toAppend",
+      "candidates": [
+        "User.followers"
+      ],
+      "options": null,
+      "op": "read",
+      "file": "helper/helpers.js",
+      "line": 37,
+      "function": "appendFollowers",
+      "features": [],
+      "usedBy": [
+        "GET /api/articles",
+        "POST /api/articles",
+        "GET /api/articles/feed",
+        "GET /api/articles/:slug",
+        "PUT /api/articles/:slug",
+        "GET /api/profiles/:username",
+        "POST /api/profiles/:username/follow",
+        "DELETE /api/profiles/:username/follow",
+        "POST /api/articles/:slug/favorite",
+        "DELETE /api/articles/:slug/favorite",
+        "GET /api/articles/:slug/comments",
+        "POST /api/articles/:slug/comments"
+      ]
+    },
+    {
+      "kind": "query",
+      "method": "sync",
+      "receiver": "sequelize",
+      "model": null,
+      "options": {
+        "alter": true
+      },
+      "file": "index.js",
+      "line": 21,
+      "function": "<ArrowFunctionExpression>",
+      "op": "ddl",
+      "features": []
+    },
+    {
+      "kind": "query",
+      "method": "findOne",
+      "receiver": "User",
+      "model": "User",
+      "options": {
+        "attributes": {
+          "exclude": [
+            "email"
+          ]
+        },
+        "where": {
+          "email": {
+            "$id": "userVerified.email"
+          }
+        }
+      },
+      "file": "middleware/authentication.js",
+      "line": 16,
+      "function": "verifyToken",
+      "op": "read",
+      "features": [
+        "attributes",
+        "where"
+      ],
+      "usedBy": [
+        "GET /api/user",
+        "PUT /api/user",
+        "GET /api/articles",
+        "POST /api/articles",
+        "GET /api/articles/feed",
+        "GET /api/articles/:slug",
+        "PUT /api/articles/:slug",
+        "DELETE /api/articles/:slug",
+        "GET /api/profiles/:username",
+        "POST /api/profiles/:username/follow",
+        "DELETE /api/profiles/:username/follow",
+        "POST /api/articles/:slug/favorite",
+        "DELETE /api/articles/:slug/favorite",
+        "GET /api/articles/:slug/comments",
+        "POST /api/articles/:slug/comments",
+        "DELETE /api/articles/:slug/comments/:commentId"
+      ]
+    },
+    {
+      "kind": "query",
+      "method": "findAll",
+      "receiver": "Tag",
+      "model": "Tag",
+      "options": null,
+      "file": "routes/tags.js",
+      "line": 9,
+      "function": "<router.get />",
+      "op": "read",
+      "features": [],
+      "usedBy": [
+        "GET /api/tags"
+      ]
+    }
+  ],
+  "functions": {
+    "controllers/articles.js#allArticles": {
+      "file": "controllers/articles.js",
+      "function": "allArticles",
+      "callSites": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "calls": [
+        "appendTagList",
+        "appendFollowers",
+        "appendFavorites"
+      ],
+      "loopCalls": [
+        "appendTagList",
+        "appendFollowers",
+        "appendFavorites"
+      ]
+    },
+    "controllers/articles.js#createArticle": {
+      "file": "controllers/articles.js",
+      "function": "createArticle",
+      "callSites": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "calls": [
+        "slugify",
+        "appendFollowers",
+        "appendFavorites"
+      ]
+    },
+    "controllers/articles.js#articlesFeed": {
+      "file": "controllers/articles.js",
+      "function": "articlesFeed",
+      "callSites": [
+        12,
+        13,
+        14
+      ],
+      "calls": [
+        "appendTagList",
+        "appendFollowers",
+        "appendFavorites"
+      ],
+      "loopCalls": [
+        "appendTagList",
+        "appendFollowers",
+        "appendFavorites"
+      ]
+    },
+    "controllers/articles.js#singleArticle": {
+      "file": "controllers/articles.js",
+      "function": "singleArticle",
+      "callSites": [
+        15
+      ],
+      "calls": [
+        "appendTagList",
+        "appendFollowers",
+        "appendFavorites"
+      ]
+    },
+    "controllers/articles.js#updateArticle": {
+      "file": "controllers/articles.js",
+      "function": "updateArticle",
+      "callSites": [
+        16,
+        17
+      ],
+      "calls": [
+        "slugify",
+        "appendTagList",
+        "appendFollowers",
+        "appendFavorites"
+      ]
+    },
+    "controllers/articles.js#deleteArticle": {
+      "file": "controllers/articles.js",
+      "function": "deleteArticle",
+      "callSites": [
+        18,
+        19
+      ],
+      "calls": []
+    },
+    "controllers/comments.js#allComments": {
+      "file": "controllers/comments.js",
+      "function": "allComments",
+      "callSites": [
+        20,
+        21
+      ],
+      "calls": [
+        "appendFollowers"
+      ],
+      "loopCalls": [
+        "appendFollowers"
+      ]
+    },
+    "controllers/comments.js#createComment": {
+      "file": "controllers/comments.js",
+      "function": "createComment",
+      "callSites": [
+        22,
+        23
+      ],
+      "calls": [
+        "appendFollowers"
+      ]
+    },
+    "controllers/comments.js#deleteComment": {
+      "file": "controllers/comments.js",
+      "function": "deleteComment",
+      "callSites": [
+        24,
+        25
+      ],
+      "calls": []
+    },
+    "controllers/favorites.js#favoriteToggler": {
+      "file": "controllers/favorites.js",
+      "function": "favoriteToggler",
+      "callSites": [
+        26,
+        27,
+        28
+      ],
+      "calls": [
+        "appendTagList",
+        "appendFollowers",
+        "appendFavorites"
+      ]
+    },
+    "controllers/profiles.js#getProfile": {
+      "file": "controllers/profiles.js",
+      "function": "getProfile",
+      "callSites": [
+        29
+      ],
+      "calls": [
+        "appendFollowers"
+      ]
+    },
+    "controllers/profiles.js#followToggler": {
+      "file": "controllers/profiles.js",
+      "function": "followToggler",
+      "callSites": [
+        30,
+        31,
+        32
+      ],
+      "calls": [
+        "appendFollowers"
+      ]
+    },
+    "controllers/user.js#updateUser": {
+      "file": "controllers/user.js",
+      "function": "updateUser",
+      "callSites": [
+        33
+      ],
+      "calls": [
+        "bcryptHash"
+      ]
+    },
+    "controllers/users.js#signUp": {
+      "file": "controllers/users.js",
+      "function": "signUp",
+      "callSites": [
+        34,
+        35
+      ],
+      "calls": [
+        "bcryptHash",
+        "jwtSign"
+      ]
+    },
+    "controllers/users.js#signIn": {
+      "file": "controllers/users.js",
+      "function": "signIn",
+      "callSites": [
+        36
+      ],
+      "calls": [
+        "bcryptCompare",
+        "jwtSign"
+      ]
+    },
+    "helper/helpers.js#appendFavorites": {
+      "file": "helper/helpers.js",
+      "function": "appendFavorites",
+      "callSites": [
+        37,
+        38
+      ],
+      "calls": []
+    },
+    "helper/helpers.js#appendFollowers": {
+      "file": "helper/helpers.js",
+      "function": "appendFollowers",
+      "callSites": [
+        39,
+        40,
+        41,
+        42,
+        43
+      ],
+      "calls": []
+    },
+    "index.js#<ArrowFunctionExpression>": {
+      "file": "index.js",
+      "function": "<ArrowFunctionExpression>",
+      "callSites": [
+        44
+      ],
+      "calls": []
+    },
+    "middleware/authentication.js#verifyToken": {
+      "file": "middleware/authentication.js",
+      "function": "verifyToken",
+      "callSites": [
+        45
+      ],
+      "calls": [
+        "jwtVerify"
+      ]
+    },
+    "routes/tags.js#<router.get />": {
+      "file": "routes/tags.js",
+      "function": "<router.get />",
+      "callSites": [
+        46
+      ],
+      "calls": [
+        "appendTagList"
+      ]
+    }
+  },
+  "semanticNotes": [
+    {
+      "rule": "OFFSET_IS_PAGE_INDEX",
+      "file": "controllers/articles.js",
+      "line": 51,
+      "function": "allArticles",
+      "text": "`offset: offset * limit` - the query parameter `offset` is a PAGE index, not a row offset. skip = offset*limit."
+    },
+    {
+      "rule": "MIXIN_WITH_OPTIONS",
+      "file": "controllers/articles.js",
+      "line": 51,
+      "function": "allArticles",
+      "text": "getFavorites(...) runs a JOIN through the junction table; the receiver may be null if the preceding findOne found nothing (=> TypeError => HTTP 500 in the original)."
+    },
+    {
+      "rule": "COUNT_WITH_INCLUDE_NOT_DISTINCT",
+      "file": "controllers/articles.js",
+      "line": 54,
+      "function": "allArticles",
+      "text": "findAndCountAll with `include` and no `distinct: true`: Sequelize's count counts JOINED ROWS. With a to-many include (tagList) an article with k>1 tags is counted k times (LEFT JOIN => an article with 0 tags counts 1). A filtered include (`where` on the include) becomes an INNER JOIN. The rewrite must reproduce this count."
+    },
+    {
+      "rule": "OFFSET_IS_PAGE_INDEX",
+      "file": "controllers/articles.js",
+      "line": 54,
+      "function": "allArticles",
+      "text": "`offset: offset * limit` - the query parameter `offset` is a PAGE index, not a row offset. skip = offset*limit."
+    },
+    {
+      "rule": "MIXIN_WITH_OPTIONS",
+      "file": "controllers/articles.js",
+      "line": 128,
+      "function": "articlesFeed",
+      "text": "getFollowing(...) runs a JOIN through the junction table; the receiver may be null if the preceding findOne found nothing (=> TypeError => HTTP 500 in the original)."
+    },
+    {
+      "rule": "COUNT_WITH_INCLUDE_NOT_DISTINCT",
+      "file": "controllers/articles.js",
+      "line": 130,
+      "function": "articlesFeed",
+      "text": "findAndCountAll with `include` and no `distinct: true`: Sequelize's count counts JOINED ROWS. With a to-many include (tagList) an article with k>1 tags is counted k times (LEFT JOIN => an article with 0 tags counts 1). A filtered include (`where` on the include) becomes an INNER JOIN. The rewrite must reproduce this count."
+    },
+    {
+      "rule": "OFFSET_IS_PAGE_INDEX",
+      "file": "controllers/articles.js",
+      "line": 130,
+      "function": "articlesFeed",
+      "text": "`offset: offset * limit` - the query parameter `offset` is a PAGE index, not a row offset. skip = offset*limit."
+    },
+    {
+      "rule": "UNORDERED_FINDALL",
+      "file": "routes/tags.js",
+      "line": 9,
+      "function": "<router.get />",
+      "text": "findAll without `order`: result order is unspecified by SQL. Treat as an unordered set when comparing."
+    }
+  ],
+  "postgres": {
+    "Articles": {
+      "columns": {
+        "id": {
+          "type": "integer",
+          "nullable": false,
+          "default": "nextval('\"Articles_id_seq\"'::regclass)"
+        },
+        "slug": {
+          "type": "character varying(255)",
+          "nullable": true
+        },
+        "title": {
+          "type": "character varying(255)",
+          "nullable": true
+        },
+        "description": {
+          "type": "text",
+          "nullable": true
+        },
+        "body": {
+          "type": "text",
+          "nullable": true
+        },
+        "createdAt": {
+          "type": "timestamp with time zone",
+          "nullable": false
+        },
+        "updatedAt": {
+          "type": "timestamp with time zone",
+          "nullable": false
+        },
+        "userId": {
+          "type": "integer",
+          "nullable": true
+        }
+      },
+      "primaryKey": [
+        "id"
+      ],
+      "foreignKeys": [
+        {
+          "column": "userId",
+          "references": "Users.id",
+          "onDelete": "SET NULL"
+        }
+      ],
+      "unique": [],
+      "rowCount": 1000
+    },
+    "Comments": {
+      "columns": {
+        "id": {
+          "type": "integer",
+          "nullable": false,
+          "default": "nextval('\"Comments_id_seq\"'::regclass)"
+        },
+        "body": {
+          "type": "text",
+          "nullable": true
+        },
+        "createdAt": {
+          "type": "timestamp with time zone",
+          "nullable": false
+        },
+        "updatedAt": {
+          "type": "timestamp with time zone",
+          "nullable": false
+        },
+        "articleId": {
+          "type": "integer",
+          "nullable": true
+        },
+        "userId": {
+          "type": "integer",
+          "nullable": true
+        }
+      },
+      "primaryKey": [
+        "id"
+      ],
+      "foreignKeys": [
+        {
+          "column": "userId",
+          "references": "Users.id",
+          "onDelete": "SET NULL"
+        },
+        {
+          "column": "articleId",
+          "references": "Articles.id",
+          "onDelete": "CASCADE"
+        }
+      ],
+      "unique": [],
+      "rowCount": 2038
+    },
+    "Favorites": {
+      "columns": {
+        "articleId": {
+          "type": "integer",
+          "nullable": false
+        },
+        "userId": {
+          "type": "integer",
+          "nullable": false
+        }
+      },
+      "primaryKey": [
+        "articleId",
+        "userId"
+      ],
+      "foreignKeys": [
+        {
+          "column": "articleId",
+          "references": "Articles.id",
+          "onDelete": "CASCADE"
+        },
+        {
+          "column": "userId",
+          "references": "Users.id",
+          "onDelete": "CASCADE"
+        }
+      ],
+      "unique": [],
+      "rowCount": 841
+    },
+    "Followers": {
+      "columns": {
+        "userId": {
+          "type": "integer",
+          "nullable": false
+        },
+        "followerId": {
+          "type": "integer",
+          "nullable": false
+        }
+      },
+      "primaryKey": [
+        "userId",
+        "followerId"
+      ],
+      "foreignKeys": [
+        {
+          "column": "followerId",
+          "references": "Users.id",
+          "onDelete": "CASCADE"
+        },
+        {
+          "column": "userId",
+          "references": "Users.id",
+          "onDelete": "CASCADE"
+        }
+      ],
+      "unique": [],
+      "rowCount": 654
+    },
+    "TagList": {
+      "columns": {
+        "articleId": {
+          "type": "integer",
+          "nullable": false
+        },
+        "tagName": {
+          "type": "character varying(255)",
+          "nullable": false
+        }
+      },
+      "primaryKey": [
+        "articleId",
+        "tagName"
+      ],
+      "foreignKeys": [
+        {
+          "column": "tagName",
+          "references": "Tags.name",
+          "onDelete": "CASCADE"
+        },
+        {
+          "column": "articleId",
+          "references": "Articles.id",
+          "onDelete": "CASCADE"
+        }
+      ],
+      "unique": [],
+      "rowCount": 1957
+    },
+    "Tags": {
+      "columns": {
+        "name": {
+          "type": "character varying(255)",
+          "nullable": false
+        }
+      },
+      "primaryKey": [
+        "name"
+      ],
+      "foreignKeys": [],
+      "unique": [],
+      "rowCount": 20
+    },
+    "Users": {
+      "columns": {
+        "id": {
+          "type": "integer",
+          "nullable": false,
+          "default": "nextval('\"Users_id_seq\"'::regclass)"
+        },
+        "email": {
+          "type": "character varying(255)",
+          "nullable": true
+        },
+        "username": {
+          "type": "character varying(255)",
+          "nullable": true
+        },
+        "bio": {
+          "type": "text",
+          "nullable": true
+        },
+        "image": {
+          "type": "text",
+          "nullable": true
+        },
+        "password": {
+          "type": "character varying(255)",
+          "nullable": true
+        },
+        "createdAt": {
+          "type": "timestamp with time zone",
+          "nullable": false
+        },
+        "updatedAt": {
+          "type": "timestamp with time zone",
+          "nullable": false
+        }
+      },
+      "primaryKey": [
+        "id"
+      ],
+      "foreignKeys": [],
+      "unique": [],
+      "rowCount": 200
+    }
+  },
+  "summary": {
+    "models": 4,
+    "associations": 12,
+    "routes": 21,
+    "callSites": 47,
+    "rawSQL": 0,
+    "transactions": 0,
+    "selfReferential": [
+      "User.followers",
+      "User.following"
+    ],
+    "semanticNotes": 8
+  }
+}

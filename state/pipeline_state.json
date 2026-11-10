@@ -6,7 +6,16 @@
   },
   "stages": {
     "analysis": {
-      "status": "pending"
+      "associations": 12,
+      "callSites": 47,
+      "models": 4,
+      "rawSQL": 0,
+      "routes": 21,
+      "seconds": 0.8,
+      "semanticNotes": 8,
+      "status": "done",
+      "transactions": 0,
+      "updated": "2026-11-10T14:38:59"
     },
     "baseline": {
       "characterization_steps": 155,

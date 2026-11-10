@@ -1,0 +1,569 @@
+[
+  {
+    "endpoint": "GET /api/articles",
+    "handler": "controllers/articles.js#allArticles",
+    "readsTogether": [
+      "Articles",
+      "Favorites",
+      "Followers",
+      "TagList",
+      "Tags",
+      "Users"
+    ],
+    "writes": [],
+    "queryCount": 13,
+    "features": [
+      "attributes",
+      "conditional:where",
+      "include",
+      "limit",
+      "offset",
+      "order",
+      "where"
+    ],
+    "nPlusOneSites": [
+      "controllers/articles.js:58 getTagList",
+      "helper/helpers.js:13 hasUser",
+      "helper/helpers.js:16 countUsers",
+      "helper/helpers.js:23 getAuthor",
+      "helper/helpers.js:25 hasFollower",
+      "helper/helpers.js:28 countFollowers",
+      "helper/helpers.js:32 hasFollower",
+      "helper/helpers.js:37 countFollowers"
+    ],
+    "callSites": [
+      "controllers/articles.js:49 findOne",
+      "controllers/articles.js:51 getFavorites",
+      "controllers/articles.js:52 countFavorites",
+      "controllers/articles.js:54 findAndCountAll",
+      "controllers/articles.js:58 getTagList",
+      "helper/helpers.js:13 hasUser",
+      "helper/helpers.js:16 countUsers",
+      "helper/helpers.js:23 getAuthor",
+      "helper/helpers.js:25 hasFollower",
+      "helper/helpers.js:28 countFollowers",
+      "helper/helpers.js:32 hasFollower",
+      "helper/helpers.js:37 countFollowers",
+      "middleware/authentication.js:16 findOne"
+    ],
+    "assumedWeight": 30
+  },
+  {
+    "endpoint": "GET /api/articles/:slug",
+    "handler": "controllers/articles.js#singleArticle",
+    "readsTogether": [
+      "Articles",
+      "Favorites",
+      "Followers",
+      "TagList",
+      "Tags",
+      "Users"
+    ],
+    "writes": [],
+    "queryCount": 9,
+    "features": [
+      "attributes",
+      "include",
+      "where"
+    ],
+    "nPlusOneSites": [],
+    "callSites": [
+      "controllers/articles.js:158 findOne",
+      "helper/helpers.js:13 hasUser",
+      "helper/helpers.js:16 countUsers",
+      "helper/helpers.js:23 getAuthor",
+      "helper/helpers.js:25 hasFollower",
+      "helper/helpers.js:28 countFollowers",
+      "helper/helpers.js:32 hasFollower",
+      "helper/helpers.js:37 countFollowers",
+      "middleware/authentication.js:16 findOne"
+    ],
+    "assumedWeight": 25
+  },
+  {
+    "endpoint": "GET /api/articles/:slug/comments",
+    "handler": "controllers/comments.js#allComments",
+    "readsTogether": [
+      "Articles",
+      "Comments",
+      "Followers",
+      "Users"
+    ],
+    "writes": [],
+    "queryCount": 8,
+    "features": [
+      "attributes",
+      "include",
+      "where"
+    ],
+    "nPlusOneSites": [
+      "helper/helpers.js:23 getAuthor",
+      "helper/helpers.js:25 hasFollower",
+      "helper/helpers.js:28 countFollowers",
+      "helper/helpers.js:32 hasFollower",
+      "helper/helpers.js:37 countFollowers"
+    ],
+    "callSites": [
+      "controllers/comments.js:16 findOne",
+      "controllers/comments.js:19 getComments",
+      "helper/helpers.js:23 getAuthor",
+      "helper/helpers.js:25 hasFollower",
+      "helper/helpers.js:28 countFollowers",
+      "helper/helpers.js:32 hasFollower",
+      "helper/helpers.js:37 countFollowers",
+      "middleware/authentication.js:16 findOne"
+    ],
+    "assumedWeight": 20
+  },
+  {
+    "endpoint": "GET /api/articles/feed",
+    "handler": "controllers/articles.js#articlesFeed",
+    "readsTogether": [
+      "Articles",
+      "Favorites",
+      "Followers",
+      "TagList",
+      "Tags",
+      "Users"
+    ],
+    "writes": [],
+    "queryCount": 11,
+    "features": [
+      "attributes",
+      "include",
+      "limit",
+      "offset",
+      "order",
+      "where"
+    ],
+    "nPlusOneSites": [
+      "controllers/articles.js:139 getTagList",
+      "helper/helpers.js:13 hasUser",
+      "helper/helpers.js:16 countUsers",
+      "helper/helpers.js:23 getAuthor",
+      "helper/helpers.js:25 hasFollower",
+      "helper/helpers.js:28 countFollowers",
+      "helper/helpers.js:32 hasFollower",
+      "helper/helpers.js:37 countFollowers"
+    ],
+    "callSites": [
+      "controllers/articles.js:128 getFollowing",
+      "controllers/articles.js:130 findAndCountAll",
+      "controllers/articles.js:139 getTagList",
+      "helper/helpers.js:13 hasUser",
+      "helper/helpers.js:16 countUsers",
+      "helper/helpers.js:23 getAuthor",
+      "helper/helpers.js:25 hasFollower",
+      "helper/helpers.js:28 countFollowers",
+      "helper/helpers.js:32 hasFollower",
+      "helper/helpers.js:37 countFollowers",
+      "middleware/authentication.js:16 findOne"
+    ],
+    "assumedWeight": 15
+  },
+  {
+    "endpoint": "GET /api/user",
+    "handler": "controllers/user.js#currentUser",
+    "readsTogether": [
+      "Users"
+    ],
+    "writes": [],
+    "queryCount": 1,
+    "features": [
+      "attributes",
+      "where"
+    ],
+    "nPlusOneSites": [],
+    "callSites": [
+      "middleware/authentication.js:16 findOne"
+    ],
+    "assumedWeight": 10
+  },
+  {
+    "endpoint": "GET /api/tags",
+    "handler": "routes/tags.js#<router.get />",
+    "readsTogether": [
+      "Tags"
+    ],
+    "writes": [],
+    "queryCount": 1,
+    "features": [],
+    "nPlusOneSites": [],
+    "callSites": [
+      "routes/tags.js:9 findAll"
+    ],
+    "assumedWeight": 10
+  },
+  {
+    "endpoint": "GET /api/profiles/:username",
+    "handler": "controllers/profiles.js#getProfile",
+    "readsTogether": [
+      "Followers",
+      "Users"
+    ],
+    "writes": [],
+    "queryCount": 7,
+    "features": [
+      "attributes",
+      "where"
+    ],
+    "nPlusOneSites": [],
+    "callSites": [
+      "controllers/profiles.js:11 findOne",
+      "helper/helpers.js:23 getAuthor",
+      "helper/helpers.js:25 hasFollower",
+      "helper/helpers.js:28 countFollowers",
+      "helper/helpers.js:32 hasFollower",
+      "helper/helpers.js:37 countFollowers",
+      "middleware/authentication.js:16 findOne"
+    ],
+    "assumedWeight": 8
+  },
+  {
+    "endpoint": "POST /api/users",
+    "handler": "controllers/users.js#signUp",
+    "readsTogether": [
+      "Users"
+    ],
+    "writes": [
+      "Users"
+    ],
+    "queryCount": 2,
+    "features": [
+      "where"
+    ],
+    "nPlusOneSites": [],
+    "callSites": [
+      "controllers/users.js:19 findOne",
+      "controllers/users.js:24 create"
+    ],
+    "assumedWeight": 2
+  },
+  {
+    "endpoint": "POST /api/users/login",
+    "handler": "controllers/users.js#signIn",
+    "readsTogether": [
+      "Users"
+    ],
+    "writes": [],
+    "queryCount": 1,
+    "features": [
+      "where"
+    ],
+    "nPlusOneSites": [],
+    "callSites": [
+      "controllers/users.js:45 findOne"
+    ],
+    "assumedWeight": 2
+  },
+  {
+    "endpoint": "PUT /api/user",
+    "handler": "controllers/user.js#updateUser",
+    "readsTogether": [
+      "Users"
+    ],
+    "writes": [
+      "Users"
+    ],
+    "queryCount": 2,
+    "features": [
+      "attributes",
+      "where"
+    ],
+    "nPlusOneSites": [],
+    "callSites": [
+      "controllers/user.js:40 save",
+      "middleware/authentication.js:16 findOne"
+    ],
+    "assumedWeight": 2
+  },
+  {
+    "endpoint": "POST /api/articles",
+    "handler": "controllers/articles.js#createArticle",
+    "readsTogether": [
+      "Articles",
+      "Favorites",
+      "Followers",
+      "Tags",
+      "Users"
+    ],
+    "writes": [
+      "Articles",
+      "TagList",
+      "Tags",
+      "Users"
+    ],
+    "queryCount": 15,
+    "features": [
+      "attributes",
+      "where"
+    ],
+    "nPlusOneSites": [
+      "controllers/articles.js:96 findByPk",
+      "controllers/articles.js:99 addTagList",
+      "controllers/articles.js:101 create",
+      "controllers/articles.js:103 addTagList"
+    ],
+    "callSites": [
+      "controllers/articles.js:85 findOne",
+      "controllers/articles.js:88 create",
+      "controllers/articles.js:96 findByPk",
+      "controllers/articles.js:99 addTagList",
+      "controllers/articles.js:101 create",
+      "controllers/articles.js:103 addTagList",
+      "controllers/articles.js:110 setAuthor",
+      "helper/helpers.js:13 hasUser",
+      "helper/helpers.js:16 countUsers",
+      "helper/helpers.js:23 getAuthor",
+      "helper/helpers.js:25 hasFollower",
+      "helper/helpers.js:28 countFollowers",
+      "helper/helpers.js:32 hasFollower",
+      "helper/helpers.js:37 countFollowers",
+      "middleware/authentication.js:16 findOne"
+    ],
+    "assumedWeight": 2
+  },
+  {
+    "endpoint": "PUT /api/articles/:slug",
+    "handler": "controllers/articles.js#updateArticle",
+    "readsTogether": [
+      "Articles",
+      "Favorites",
+      "Followers",
+      "TagList",
+      "Tags",
+      "Users"
+    ],
+    "writes": [
+      "Articles"
+    ],
+    "queryCount": 10,
+    "features": [
+      "attributes",
+      "include",
+      "where"
+    ],
+    "nPlusOneSites": [],
+    "callSites": [
+      "controllers/articles.js:181 findOne",
+      "controllers/articles.js:198 save",
+      "helper/helpers.js:13 hasUser",
+      "helper/helpers.js:16 countUsers",
+      "helper/helpers.js:23 getAuthor",
+      "helper/helpers.js:25 hasFollower",
+      "helper/helpers.js:28 countFollowers",
+      "helper/helpers.js:32 hasFollower",
+      "helper/helpers.js:37 countFollowers",
+      "middleware/authentication.js:16 findOne"
+    ],
+    "assumedWeight": 2
+  },
+  {
+    "endpoint": "DELETE /api/articles/:slug",
+    "handler": "controllers/articles.js#deleteArticle",
+    "readsTogether": [
+      "Articles",
+      "TagList",
+      "Tags",
+      "Users"
+    ],
+    "writes": [
+      "Articles"
+    ],
+    "queryCount": 3,
+    "features": [
+      "attributes",
+      "include",
+      "where"
+    ],
+    "nPlusOneSites": [],
+    "callSites": [
+      "controllers/articles.js:217 findOne",
+      "controllers/articles.js:227 destroy",
+      "middleware/authentication.js:16 findOne"
+    ],
+    "assumedWeight": 2
+  },
+  {
+    "endpoint": "POST /api/profiles/:username/follow",
+    "handler": "controllers/profiles.js#followToggler",
+    "readsTogether": [
+      "Followers",
+      "Users"
+    ],
+    "writes": [
+      "Followers"
+    ],
+    "queryCount": 9,
+    "features": [
+      "attributes",
+      "where"
+    ],
+    "nPlusOneSites": [],
+    "callSites": [
+      "controllers/profiles.js:33 findOne",
+      "controllers/profiles.js:40 addFollower",
+      "controllers/profiles.js:42 removeFollower",
+      "helper/helpers.js:23 getAuthor",
+      "helper/helpers.js:25 hasFollower",
+      "helper/helpers.js:28 countFollowers",
+      "helper/helpers.js:32 hasFollower",
+      "helper/helpers.js:37 countFollowers",
+      "middleware/authentication.js:16 findOne"
+    ],
+    "assumedWeight": 2
+  },
+  {
+    "endpoint": "DELETE /api/profiles/:username/follow",
+    "handler": "controllers/profiles.js#followToggler",
+    "readsTogether": [
+      "Followers",
+      "Users"
+    ],
+    "writes": [
+      "Followers"
+    ],
+    "queryCount": 9,
+    "features": [
+      "attributes",
+      "where"
+    ],
+    "nPlusOneSites": [],
+    "callSites": [
+      "controllers/profiles.js:33 findOne",
+      "controllers/profiles.js:40 addFollower",
+      "controllers/profiles.js:42 removeFollower",
+      "helper/helpers.js:23 getAuthor",
+      "helper/helpers.js:25 hasFollower",
+      "helper/helpers.js:28 countFollowers",
+      "helper/helpers.js:32 hasFollower",
+      "helper/helpers.js:37 countFollowers",
+      "middleware/authentication.js:16 findOne"
+    ],
+    "assumedWeight": 2
+  },
+  {
+    "endpoint": "POST /api/articles/:slug/favorite",
+    "handler": "controllers/favorites.js#favoriteToggler",
+    "readsTogether": [
+      "Articles",
+      "Favorites",
+      "Followers",
+      "TagList",
+      "Tags",
+      "Users"
+    ],
+    "writes": [
+      "Favorites"
+    ],
+    "queryCount": 11,
+    "features": [
+      "attributes",
+      "include",
+      "where"
+    ],
+    "nPlusOneSites": [],
+    "callSites": [
+      "controllers/favorites.js:17 findOne",
+      "controllers/favorites.js:34 addUser",
+      "controllers/favorites.js:35 removeUser",
+      "helper/helpers.js:13 hasUser",
+      "helper/helpers.js:16 countUsers",
+      "helper/helpers.js:23 getAuthor",
+      "helper/helpers.js:25 hasFollower",
+      "helper/helpers.js:28 countFollowers",
+      "helper/helpers.js:32 hasFollower",
+      "helper/helpers.js:37 countFollowers",
+      "middleware/authentication.js:16 findOne"
+    ],
+    "assumedWeight": 2
+  },
+  {
+    "endpoint": "DELETE /api/articles/:slug/favorite",
+    "handler": "controllers/favorites.js#favoriteToggler",
+    "readsTogether": [
+      "Articles",
+      "Favorites",
+      "Followers",
+      "TagList",
+      "Tags",
+      "Users"
+    ],
+    "writes": [
+      "Favorites"
+    ],
+    "queryCount": 11,
+    "features": [
+      "attributes",
+      "include",
+      "where"
+    ],
+    "nPlusOneSites": [],
+    "callSites": [
+      "controllers/favorites.js:17 findOne",
+      "controllers/favorites.js:34 addUser",
+      "controllers/favorites.js:35 removeUser",
+      "helper/helpers.js:13 hasUser",
+      "helper/helpers.js:16 countUsers",
+      "helper/helpers.js:23 getAuthor",
+      "helper/helpers.js:25 hasFollower",
+      "helper/helpers.js:28 countFollowers",
+      "helper/helpers.js:32 hasFollower",
+      "helper/helpers.js:37 countFollowers",
+      "middleware/authentication.js:16 findOne"
+    ],
+    "assumedWeight": 2
+  },
+  {
+    "endpoint": "POST /api/articles/:slug/comments",
+    "handler": "controllers/comments.js#createComment",
+    "readsTogether": [
+      "Articles",
+      "Followers",
+      "Users"
+    ],
+    "writes": [
+      "Comments"
+    ],
+    "queryCount": 8,
+    "features": [
+      "attributes",
+      "where"
+    ],
+    "nPlusOneSites": [],
+    "callSites": [
+      "controllers/comments.js:45 findOne",
+      "controllers/comments.js:48 create",
+      "helper/helpers.js:23 getAuthor",
+      "helper/helpers.js:25 hasFollower",
+      "helper/helpers.js:28 countFollowers",
+      "helper/helpers.js:32 hasFollower",
+      "helper/helpers.js:37 countFollowers",
+      "middleware/authentication.js:16 findOne"
+    ],
+    "assumedWeight": 2
+  },
+  {
+    "endpoint": "DELETE /api/articles/:slug/comments/:commentId",
+    "handler": "controllers/comments.js#deleteComment",
+    "readsTogether": [
+      "Comments",
+      "Users"
+    ],
+    "writes": [
+      "Comments"
+    ],
+    "queryCount": 3,
+    "features": [
+      "attributes",
+      "where"
+    ],
+    "nPlusOneSites": [],
+    "callSites": [
+      "controllers/comments.js:72 findByPk",
+      "controllers/comments.js:79 destroy",
+      "middleware/authentication.js:16 findOne"
+    ],
+    "assumedWeight": 2
+  }
+]

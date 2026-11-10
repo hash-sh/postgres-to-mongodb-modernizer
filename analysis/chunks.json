@@ -1,0 +1,55 @@
+[
+  {
+    "id": "slice1_users_profiles",
+    "slice": 1,
+    "endpoints": [
+      "GET /api/user",
+      "GET /api/profiles/:username",
+      "POST /api/users",
+      "POST /api/users/login",
+      "PUT /api/user",
+      "POST /api/profiles/:username/follow",
+      "DELETE /api/profiles/:username/follow"
+    ],
+    "files": [
+      "index.js",
+      "middleware/authentication.js",
+      "controllers/profiles.js",
+      "helper/helpers.js",
+      "controllers/users.js",
+      "controllers/user.js"
+    ]
+  },
+  {
+    "id": "slice2_articles_feed",
+    "slice": 2,
+    "endpoints": [
+      "GET /api/articles",
+      "GET /api/articles/:slug",
+      "GET /api/articles/feed",
+      "POST /api/articles",
+      "PUT /api/articles/:slug",
+      "DELETE /api/articles/:slug"
+    ],
+    "files": [
+      "controllers/articles.js"
+    ]
+  },
+  {
+    "id": "slice3_comments_favorites_tags",
+    "slice": 3,
+    "endpoints": [
+      "GET /api/articles/:slug/comments",
+      "GET /api/tags",
+      "POST /api/articles/:slug/favorite",
+      "DELETE /api/articles/:slug/favorite",
+      "POST /api/articles/:slug/comments",
+      "DELETE /api/articles/:slug/comments/:commentId"
+    ],
+    "files": [
+      "controllers/comments.js",
+      "routes/tags.js",
+      "controllers/favorites.js"
+    ]
+  }
+]

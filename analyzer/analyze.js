@@ -255,6 +255,10 @@ function analyzeCalls(files, models, mixinIndex) {
         const c = p.node.callee;
         if (c.type === "Identifier" && imported[c.name] && !modelNames.has(c.name)) {
           if (!functions[key].calls.includes(c.name)) functions[key].calls.push(c.name);
+          if (p.findParent((q) => q.isForOfStatement() || q.isForStatement() || q.isWhileStatement())) {
+            functions[key].loopCalls = functions[key].loopCalls || [];
+            if (!functions[key].loopCalls.includes(c.name)) functions[key].loopCalls.push(c.name);
+          }
           return;
         }
         if (c.type !== "MemberExpression" && c.type !== "OptionalMemberExpression") return;
@@ -274,6 +278,8 @@ function analyzeCalls(files, models, mixinIndex) {
         site.file = file;
         site.line = p.node.loc.start.line;
         site.function = fnName;
+        // N+1 detector: a query inside a loop body runs once per row of an earlier query.
+        if (p.findParent((q) => q.isForOfStatement() || q.isForStatement() || q.isForInStatement() || q.isWhileStatement())) site.inLoop = true;
         site.op = site.op || (READ.has(method) ? "read" : method === "sync" ? "ddl" : "write");
         site.features = features(site.options);
         callSites.push(site);
